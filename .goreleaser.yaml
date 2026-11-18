@@ -43,9 +43,6 @@ builds:
       - goos: darwin
         goarch: ppc64le
 
-release:
-  disable: true
-
 archives:
   - id: archive_noncgo
     builds: [build_noncgo]

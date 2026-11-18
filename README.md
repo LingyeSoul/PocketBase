@@ -28,6 +28,19 @@
 > and full backward compatibility is not guaranteed before reaching v1.0.0.
 
 
+## Building the admin UI
+
+The admin UI build artifacts are not committed. Build them before compiling the
+Go application (the release workflow does this automatically):
+
+```sh
+npm --prefix=./ui ci
+npm --prefix=./ui run build
+```
+
+Without `ui/dist` the default embed build will fail; use the `no_ui`
+build tag only if you intentionally build without the bundled dashboard.
+
 ## Alternative databases
 
 SQLite remains the default and the upstream-compatible mode. This fork also
