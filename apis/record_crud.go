@@ -12,6 +12,7 @@ import (
 	"ganigeorgiev.com/pocketbase/dbx"
 	"github.com/lingyesoul/pocketbase/core"
 	"github.com/lingyesoul/pocketbase/forms"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/filesystem"
 	"github.com/lingyesoul/pocketbase/tools/inflector"
 	"github.com/lingyesoul/pocketbase/tools/list"
@@ -81,7 +82,7 @@ func recordsList(e *core.RequestEvent) error {
 
 	// use rowid when available to minimize the need of a covering index with the "id" field
 	if !collection.IsView() {
-		searchProvider.CountCol("_rowid_")
+		searchProvider.CountCol(dbutils.CountColumnFor(e.App.DBDialect()))
 	}
 
 	records := []*core.Record{}

@@ -18,6 +18,7 @@ import (
 	"ganigeorgiev.com/pocketbase/dbx"
 	"github.com/fatih/color"
 	"github.com/lingyesoul/pocketbase/tools/cron"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/filesystem"
 	"github.com/lingyesoul/pocketbase/tools/hook"
 	"github.com/lingyesoul/pocketbase/tools/logger"
@@ -62,6 +63,10 @@ type DBConnectFunc func(dbPath string) (*dbx.DB, error)
 // BaseAppConfig defines a BaseApp configuration option
 type BaseAppConfig struct {
 	DBConnect        DBConnectFunc
+	AuxDBConnect     DBConnectFunc
+	DBDriver         string // sqlite (default), postgres, mysql or mariadb
+	DBDSN            string // required when DBDriver is not sqlite
+	AuxDBDSN         string // optional, defaults to DBDSN
 	DataDir          string
 	EncryptionEnv    string
 	QueryTimeout     time.Duration
@@ -78,12 +83,14 @@ var _ App = (*BaseApp)(nil)
 // BaseApp implements core.App and defines the base PocketBase app structure.
 type BaseApp struct {
 	config              *BaseAppConfig
+	configErr           error
 	txInfo              *TxAppInfo
 	store               *store.Store[string, any]
 	cron                *cron.Cron
 	settings            *Settings
 	subscriptionsBroker *subscriptions.Broker
 	logger              *slog.Logger
+	dialect             dbutils.Dialect
 	concurrentDB        dbx.Builder
 	nonconcurrentDB     dbx.Builder
 	auxConcurrentDB     dbx.Builder
@@ -222,7 +229,18 @@ func NewBaseApp(config BaseAppConfig) *BaseApp {
 	}
 
 	// apply config defaults
-	if app.config.DBConnect == nil {
+	if app.config.DBDriver == "" {
+		app.config.DBDriver = string(dbutils.DialectSQLite)
+	}
+	dialect, err := dbutils.NormalizeDialect(app.config.DBDriver)
+	if err != nil {
+		app.configErr = err
+		dialect = dbutils.DialectSQLite
+	} else {
+		app.config.DBDriver = string(dialect)
+	}
+	app.dialect = dialect
+	if app.config.DBConnect == nil && dialect.IsSQLite() {
 		app.config.DBConnect = DefaultDBConnect
 	}
 	if app.config.DataMaxOpenConns <= 0 {
@@ -410,6 +428,10 @@ func (app *BaseApp) IsBootstrapped() bool {
 //
 // It calls ClearBootstrap() if the application was already bootstrapped.
 func (app *BaseApp) Bootstrap() error {
+	if app.configErr != nil {
+		return app.configErr
+	}
+
 	event := &BootstrapEvent{}
 	event.App = app
 
@@ -1258,7 +1280,7 @@ func (app *BaseApp) OnBatchRequest() *hook.Hook[*BatchRequestEvent] {
 func (app *BaseApp) initDataDB() error {
 	dbPath := filepath.Join(app.DataDir(), dataDBFilename)
 
-	concurrentDB, err := app.config.DBConnect(dbPath)
+	concurrentDB, err := app.connectDataDB(dbPath)
 	if err != nil {
 		return err
 	}
@@ -1266,7 +1288,7 @@ func (app *BaseApp) initDataDB() error {
 	concurrentDB.DB().SetMaxIdleConns(app.config.DataMaxIdleConns)
 	concurrentDB.DB().SetConnMaxIdleTime(3 * time.Minute)
 
-	nonconcurrentDB, err := app.config.DBConnect(dbPath)
+	nonconcurrentDB, err := app.connectDataDB(dbPath)
 	if err != nil {
 		return err
 	}
@@ -1285,6 +1307,7 @@ func (app *BaseApp) initDataDB() error {
 		concurrentDB.ExecLogFunc = nonconcurrentDB.ExecLogFunc
 	}
 
+	app.dialect = app.resolveDialect(concurrentDB)
 	app.concurrentDB = concurrentDB
 	app.nonconcurrentDB = nonconcurrentDB
 
@@ -1320,7 +1343,7 @@ func (app *BaseApp) initAuxDB() error {
 	// (see https://ganigeorgiev.com/pocketbase/discussions/5607)
 	dbPath := filepath.Join(app.DataDir(), auxDBFilename)
 
-	concurrentDB, err := app.config.DBConnect(dbPath)
+	concurrentDB, err := app.connectAuxDB(dbPath)
 	if err != nil {
 		return err
 	}
@@ -1328,7 +1351,7 @@ func (app *BaseApp) initAuxDB() error {
 	concurrentDB.DB().SetMaxIdleConns(app.config.AuxMaxIdleConns)
 	concurrentDB.DB().SetConnMaxIdleTime(3 * time.Minute)
 
-	nonconcurrentDB, err := app.config.DBConnect(dbPath)
+	nonconcurrentDB, err := app.connectAuxDB(dbPath)
 	if err != nil {
 		return err
 	}
@@ -1336,6 +1359,9 @@ func (app *BaseApp) initAuxDB() error {
 	nonconcurrentDB.DB().SetMaxIdleConns(1)
 	nonconcurrentDB.DB().SetConnMaxIdleTime(3 * time.Minute)
 
+	if auxDialect := app.resolveDialect(concurrentDB); auxDialect != app.dialect {
+		return fmt.Errorf("auxiliary database dialect %q doesn't match the main database dialect %q", auxDialect, app.dialect)
+	}
 	app.auxConcurrentDB = concurrentDB
 	app.auxNonconcurrentDB = nonconcurrentDB
 
@@ -1449,19 +1475,21 @@ func (app *BaseApp) registerBaseHooks() {
 	})
 
 	app.Cron().Add("__pbDBOptimize__", "0 0 * * *", func() {
-		_, execErr := app.NonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
-		if execErr != nil {
-			app.Logger().Warn("Failed to run periodic PRAGMA wal_checkpoint for the main DB", slog.String("error", execErr.Error()))
-		}
+		if app.DBDialect().IsSQLite() {
+			_, execErr := app.NonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
+			if execErr != nil {
+				app.Logger().Warn("Failed to run periodic PRAGMA wal_checkpoint for the main DB", slog.String("error", execErr.Error()))
+			}
 
-		_, execErr = app.AuxNonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
-		if execErr != nil {
-			app.Logger().Warn("Failed to run periodic PRAGMA wal_checkpoint for the auxiliary DB", slog.String("error", execErr.Error()))
-		}
+			_, execErr = app.AuxNonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
+			if execErr != nil {
+				app.Logger().Warn("Failed to run periodic PRAGMA wal_checkpoint for the auxiliary DB", slog.String("error", execErr.Error()))
+			}
 
-		_, execErr = app.NonconcurrentDB().NewQuery("PRAGMA optimize").Execute()
-		if execErr != nil {
-			app.Logger().Warn("Failed to run periodic PRAGMA optimize", slog.String("error", execErr.Error()))
+			_, execErr = app.NonconcurrentDB().NewQuery("PRAGMA optimize").Execute()
+			if execErr != nil {
+				app.Logger().Warn("Failed to run periodic PRAGMA optimize", slog.String("error", execErr.Error()))
+			}
 		}
 	})
 
@@ -1684,9 +1712,11 @@ func (app *BaseApp) initLogger() error {
 
 		// force a checkpoint to minimize the risk of excessive wal file
 		// growth due to slower delete or vacuum
-		_, err = app.AuxNonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
-		if err != nil {
-			app.Logger().Warn("Failed to run PRAGMA wal_checkpoint after logs cleanup", "error", err)
+		if app.DBDialect().IsSQLite() {
+			_, err = app.AuxNonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
+			if err != nil {
+				app.Logger().Warn("Failed to run PRAGMA wal_checkpoint after logs cleanup", "error", err)
+			}
 		}
 	})
 

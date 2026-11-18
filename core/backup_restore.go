@@ -11,6 +11,7 @@ import (
 	"runtime"
 
 	"github.com/lingyesoul/pocketbase/tools/archive"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/osutils"
 	"github.com/lingyesoul/pocketbase/tools/security"
 )
@@ -137,49 +138,99 @@ func (app *BaseApp) RestoreBackup(ctx context.Context, name string) error {
 			}
 		}
 
-		// ensure that at least a database file exists
-		extractedDB := filepath.Join(extractedDataDir, "data.db")
-		if _, err := os.Stat(extractedDB); err != nil {
-			return fmt.Errorf("data.db file is missing or invalid: %w", err)
-		}
-
+		isSQLite := e.App.DBDialect().IsSQLite()
 		oldTempDataDir := filepath.Join(localTempDir, "old_pb_data_"+security.PseudorandomString(8))
 
-		replaceErr := e.App.RunInTransaction(func(txApp App) error {
-			return txApp.AuxRunInTransaction(func(txApp App) error {
-				// move the current pb_data content to a special temp location
-				// that will hold the old data between dirs replace
-				// (the temp dir will be automatically removed on the next app start)
-				if err := osutils.MoveDirContent(txApp.DataDir(), oldTempDataDir, e.Exclude...); err != nil {
-					return fmt.Errorf("failed to move the current pb_data content to a temp location: %w", err)
-				}
+		if isSQLite {
+			// ensure that at least a database file exists
+			extractedDB := filepath.Join(extractedDataDir, "data.db")
+			if _, err := os.Stat(extractedDB); err != nil {
+				return fmt.Errorf("data.db file is missing or invalid: %w", err)
+			}
 
-				// move the extracted archive content to the app's pb_data
-				if err := osutils.MoveDirContent(extractedDataDir, txApp.DataDir(), e.Exclude...); err != nil {
-					return fmt.Errorf("failed to move the extracted archive content to pb_data: %w", err)
-				}
-
-				return nil
-			})
-		})
-		if replaceErr != nil {
-			return replaceErr
-		}
-
-		revertDataDirChanges := func() error {
-			return e.App.RunInTransaction(func(txApp App) error {
+			replaceErr := e.App.RunInTransaction(func(txApp App) error {
 				return txApp.AuxRunInTransaction(func(txApp App) error {
-					if err := osutils.MoveDirContent(txApp.DataDir(), extractedDataDir, e.Exclude...); err != nil {
-						return fmt.Errorf("failed to revert the extracted dir change: %w", err)
+					// move the current pb_data content to a special temp location
+					// that will hold the old data between dirs replace
+					// (the temp dir will be automatically removed on the next app start)
+					if err := osutils.MoveDirContent(txApp.DataDir(), oldTempDataDir, e.Exclude...); err != nil {
+						return fmt.Errorf("failed to move the current pb_data content to a temp location: %w", err)
 					}
 
-					if err := osutils.MoveDirContent(oldTempDataDir, txApp.DataDir(), e.Exclude...); err != nil {
-						return fmt.Errorf("failed to revert old pb_data dir change: %w", err)
+					// move the extracted archive content to the app's pb_data
+					if err := osutils.MoveDirContent(extractedDataDir, txApp.DataDir(), e.Exclude...); err != nil {
+						return fmt.Errorf("failed to move the extracted archive content to pb_data: %w", err)
 					}
 
 					return nil
 				})
 			})
+			if replaceErr != nil {
+				return replaceErr
+			}
+		} else {
+			dataDumpPath, err := findBackupDump(extractedDataDir, e.App.DBDialect(), false)
+			if err != nil {
+				return err
+			}
+
+			dataDSN, err := externalDBDSN(e.App, false)
+			if err != nil {
+				return err
+			}
+			if err := restoreExternalDB(e.App.DBDialect(), dataDSN, dataDumpPath); err != nil {
+				return err
+			}
+
+			auxDSN, dsnErr := externalDBDSN(e.App, true)
+			if dsnErr != nil {
+				return dsnErr
+			}
+			if auxDSN != dataDSN {
+				auxDumpPath, auxErr := findBackupDump(extractedDataDir, e.App.DBDialect(), true)
+				if auxErr != nil {
+					return auxErr
+				}
+				if err := restoreExternalDB(e.App.DBDialect(), auxDSN, auxDumpPath); err != nil {
+					return err
+				}
+				_ = os.Remove(auxDumpPath)
+			}
+			_ = os.Remove(dataDumpPath)
+
+			if err := osutils.MoveDirContent(e.App.DataDir(), oldTempDataDir, e.Exclude...); err != nil {
+				return fmt.Errorf("failed to move the current pb_data content to a temp location: %w", err)
+			}
+			if err := osutils.MoveDirContent(extractedDataDir, e.App.DataDir(), e.Exclude...); err != nil {
+				return fmt.Errorf("failed to move the extracted archive content to pb_data: %w", err)
+			}
+		}
+
+		revertDataDirChanges := func() error {
+			if isSQLite {
+				return e.App.RunInTransaction(func(txApp App) error {
+					return txApp.AuxRunInTransaction(func(txApp App) error {
+						if err := osutils.MoveDirContent(txApp.DataDir(), extractedDataDir, e.Exclude...); err != nil {
+							return fmt.Errorf("failed to revert the extracted dir change: %w", err)
+						}
+
+						if err := osutils.MoveDirContent(oldTempDataDir, txApp.DataDir(), e.Exclude...); err != nil {
+							return fmt.Errorf("failed to revert old pb_data dir change: %w", err)
+						}
+
+						return nil
+					})
+				})
+			}
+
+			if err := osutils.MoveDirContent(e.App.DataDir(), extractedDataDir, e.Exclude...); err != nil {
+				return fmt.Errorf("failed to revert the extracted dir change: %w", err)
+			}
+			if err := osutils.MoveDirContent(oldTempDataDir, e.App.DataDir(), e.Exclude...); err != nil {
+				return fmt.Errorf("failed to revert old pb_data dir change: %w", err)
+			}
+
+			return nil
 		}
 
 		// restart the app
@@ -193,4 +244,14 @@ func (app *BaseApp) RestoreBackup(ctx context.Context, name string) error {
 
 		return nil
 	})
+}
+
+func findBackupDump(dir string, dialect dbutils.Dialect, auxiliary bool) (string, error) {
+	name := databaseDumpFilename(dialect, auxiliary)
+	path := filepath.Join(dir, name)
+	if _, err := os.Stat(path); err != nil {
+		return "", fmt.Errorf("%s file is missing or invalid: %w", name, err)
+	}
+
+	return path, nil
 }

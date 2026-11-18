@@ -38,7 +38,13 @@ func (app *BaseApp) FindAllCollections(collectionTypes ...string) ([]*Collection
 		q.AndWhere(dbx.In("type", list.ToInterfaceSlice(types)...))
 	}
 
-	err := q.OrderBy("rowid ASC").All(&collections)
+	if app.DBDialect().IsSQLite() {
+		q.OrderBy("rowid ASC")
+	} else {
+		q.OrderBy("created ASC").AndOrderBy("id ASC")
+	}
+
+	err := q.All(&collections)
 	if err != nil {
 		return nil, err
 	}
@@ -274,16 +280,25 @@ func normalizeViewQueryId(app App, query string) (string, error) {
 		return "", err
 	}
 
+	castTextType := "TEXT"
+	if app.DBDialect().IsMySQL() {
+		castTextType = "CHAR"
+	}
+
 	columns := make([]string, 0, len(rawParsed.columns))
 	for _, col := range rawParsed.columns {
 		if col.alias == FieldNameId {
-			columns = append(columns, fmt.Sprintf("CAST([[%s]] as TEXT) [[%s]]", col.alias, col.alias))
+			columns = append(columns, fmt.Sprintf("CAST([[%s]] as %s) [[%s]]", col.alias, castTextType, col.alias))
 		} else {
 			columns = append(columns, "[["+col.alias+"]]")
 		}
 	}
 
-	query = fmt.Sprintf("SELECT %s FROM (%s)", strings.Join(columns, ","), query)
+	if app.DBDialect().IsMySQL() {
+		query = fmt.Sprintf("SELECT %s FROM (%s) AS pb_view_source", strings.Join(columns, ","), query)
+	} else {
+		query = fmt.Sprintf("SELECT %s FROM (%s)", strings.Join(columns, ","), query)
+	}
 
 	return query, nil
 }

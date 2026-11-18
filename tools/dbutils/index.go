@@ -1,6 +1,8 @@
 package dbutils
 
 import (
+	"fmt"
+	"hash/crc32"
 	"regexp"
 	"strings"
 
@@ -35,14 +37,52 @@ func (idx Index) IsValid() bool {
 	return idx.IndexName != "" && idx.TableName != "" && len(idx.Columns) > 0
 }
 
-// Build returns a "CREATE INDEX" SQL string from the current index parts.
+// Build returns a "CREATE INDEX" SQLite SQL string from the current index parts.
 //
 // Returns empty string if idx.IsValid() is false.
 func (idx Index) Build() string {
+	sql, _ := idx.BuildFor(DialectSQLite)
+	return sql
+}
+
+// BuildFor returns a "CREATE INDEX" SQL string for the provided dialect.
+//
+// MySQL/MariaDB partial unique indexes are rewritten to preserve their
+// uniqueness semantics: MySQL uses a functional key part and MariaDB uses a
+// deterministic hidden generated column (see PartialUniqueColumnName).
+func (idx Index) BuildFor(dialect Dialect) (string, error) {
 	if !idx.IsValid() {
-		return ""
+		return "", nil
 	}
 
+	partialColumn, isPartialUnique := idx.PartialUniqueColumn()
+	if isPartialUnique && !dialect.IsSQLite() && !dialect.IsPostgres() {
+		if dialect.IsMariaDB() {
+			return idx.buildIndex(dialect, []IndexColumn{{Name: idx.PartialUniqueColumnName()}}, "")
+		}
+
+		// MySQL 8.0.13+ functional key part.
+		return idx.buildMySQLFunctionalUnique(partialColumn)
+	}
+
+	if idx.Unique && idx.Where != "" && dialect.IsMySQL() && !isPartialUnique {
+		return "", fmt.Errorf("partial unique indexes are not supported by %s", dialect)
+	}
+
+	where := idx.Where
+	columns := idx.Columns
+	if isPartialUnique && dialect.IsMySQL() {
+		// non-MariaDB MySQL is handled above; this branch is unreachable
+		where = ""
+	} else if idx.Where != "" && dialect.IsMySQL() {
+		// Non-unique partial indexes can safely index all rows.
+		where = ""
+	}
+
+	return idx.buildIndex(dialect, columns, where)
+}
+
+func (idx Index) buildIndex(dialect Dialect, columns []IndexColumn, where string) (string, error) {
 	var str strings.Builder
 
 	str.WriteString("CREATE ")
@@ -53,30 +93,29 @@ func (idx Index) Build() string {
 
 	str.WriteString("INDEX ")
 
-	if idx.Optional {
+	if idx.Optional && (dialect.IsSQLite() || dialect.IsPostgres() || dialect.IsMariaDB()) {
 		str.WriteString("IF NOT EXISTS ")
 	}
 
-	if idx.SchemaName != "" {
-		str.WriteString("`")
-		str.WriteString(idx.SchemaName)
-		str.WriteString("`.")
+	indexName := strings.Trim(idx.IndexName, "`\"'[]")
+	if idx.SchemaName != "" && dialect.IsSQLite() {
+		str.WriteString(dialect.QuoteIdentifier(idx.SchemaName))
+		str.WriteString(".")
+		str.WriteString(dialect.QuoteIdentifier(indexName))
+	} else {
+		str.WriteString(dialect.QuoteIdentifier(indexName))
 	}
+	str.WriteString(" ON ")
 
-	str.WriteString("`")
-	str.WriteString(idx.IndexName)
-	str.WriteString("` ")
+	str.WriteString(quoteQualifiedIdentifier(dialect, idx.TableName))
+	str.WriteString(" (")
 
-	str.WriteString("ON `")
-	str.WriteString(idx.TableName)
-	str.WriteString("` (")
-
-	if len(idx.Columns) > 1 {
+	if len(columns) > 1 {
 		str.WriteString("\n  ")
 	}
 
 	var hasCol bool
-	for _, col := range idx.Columns {
+	for _, col := range columns {
 		trimmedColName := strings.TrimSpace(col.Name)
 		if trimmedColName == "" {
 			continue
@@ -86,20 +125,21 @@ func (idx Index) Build() string {
 			str.WriteString(",\n  ")
 		}
 
-		if strings.Contains(col.Name, "(") || strings.Contains(col.Name, " ") {
-			// most likely an expression
-			str.WriteString(trimmedColName)
-		} else {
-			// regular identifier
-			str.WriteString("`")
-			str.WriteString(trimmedColName)
-			str.WriteString("`")
+		isExpression := strings.Contains(trimmedColName, "(") || strings.Contains(trimmedColName, " ")
+		quoted := quoteIndexIdentifier(dialect, trimmedColName)
+
+		switch {
+		case strings.EqualFold(col.Collate, "nocase") && dialect.IsPostgres():
+			if !isExpression {
+				quoted = "lower(" + quoted + ")"
+			}
+		case strings.EqualFold(col.Collate, "nocase") && dialect.IsMySQL():
+			quoted += " COLLATE " + dialect.CaseInsensitiveCollation()
+		case col.Collate != "" && dialect.IsSQLite():
+			quoted += " COLLATE " + col.Collate
 		}
 
-		if col.Collate != "" {
-			str.WriteString(" COLLATE ")
-			str.WriteString(col.Collate)
-		}
+		str.WriteString(quoted)
 
 		if col.Sort != "" {
 			str.WriteString(" ")
@@ -109,18 +149,103 @@ func (idx Index) Build() string {
 		hasCol = true
 	}
 
-	if hasCol && len(idx.Columns) > 1 {
+	if hasCol && len(columns) > 1 {
 		str.WriteString("\n")
 	}
 
 	str.WriteString(")")
 
-	if idx.Where != "" {
+	if where != "" {
 		str.WriteString(" WHERE ")
-		str.WriteString(idx.Where)
+		str.WriteString(rewriteIndexWhere(dialect, where))
 	}
 
-	return str.String()
+	return str.String(), nil
+}
+
+func (idx Index) buildMySQLFunctionalUnique(column string) (string, error) {
+	column = strings.Trim(column, "`\"'[] ")
+	if column == "" {
+		return "", fmt.Errorf("invalid partial unique index %q", idx.IndexName)
+	}
+
+	return fmt.Sprintf(
+		"CREATE UNIQUE INDEX %s ON %s ((NULLIF(%s, '')))",
+		DialectMySQL.QuoteIdentifier(strings.Trim(idx.IndexName, "`\"'[]")),
+		quoteQualifiedIdentifier(DialectMySQL, idx.TableName),
+		DialectMySQL.QuoteIdentifier(column),
+	), nil
+}
+
+// PartialUniqueColumn returns the single column of a simple "column != ”" partial unique index.
+func (idx Index) PartialUniqueColumn() (string, bool) {
+	if !idx.Unique || len(idx.Columns) != 1 || idx.Where == "" {
+		return "", false
+	}
+
+	column := strings.TrimSpace(idx.Columns[0].Name)
+	if column == "" || strings.ContainsAny(column, " ()") {
+		return "", false
+	}
+
+	where := strings.TrimSpace(idx.Where)
+	where = strings.TrimSuffix(where, ";")
+	where = strings.TrimSpace(where)
+
+	for _, op := range []string{"!=", "<>"} {
+		parts := strings.SplitN(where, op, 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		left := strings.Trim(strings.TrimSpace(parts[0]), "`\"'[] ")
+		right := strings.TrimSpace(parts[1])
+		if strings.EqualFold(left, column) && (right == "''" || right == `""`) {
+			return column, true
+		}
+	}
+
+	return "", false
+}
+
+// PartialUniqueColumnName returns the deterministic hidden generated column name
+// used by MariaDB to emulate a partial unique index.
+func (idx Index) PartialUniqueColumnName() string {
+	return fmt.Sprintf("_pb_uq_%08x", crc32.ChecksumIEEE([]byte(idx.IndexName)))
+}
+
+func quoteQualifiedIdentifier(dialect Dialect, name string) string {
+	name = strings.TrimSpace(name)
+	if strings.ContainsAny(name, " ()") {
+		return name
+	}
+
+	parts := strings.Split(name, ".")
+	for i, part := range parts {
+		parts[i] = dialect.QuoteIdentifier(strings.Trim(part, "`\"'[]"))
+	}
+
+	return strings.Join(parts, ".")
+}
+
+func quoteIndexIdentifier(dialect Dialect, name string) string {
+	if strings.Contains(name, "(") || strings.Contains(name, " ") {
+		return name
+	}
+
+	return dialect.QuoteIdentifier(strings.Trim(name, "`\"'[]"))
+}
+
+func rewriteIndexWhere(dialect Dialect, where string) string {
+	if dialect.IsSQLite() {
+		return where
+	}
+
+	if dialect.IsPostgres() {
+		where = strings.ReplaceAll(where, "`", "\"")
+	}
+
+	return where
 }
 
 // ParseIndex parses the provided "CREATE INDEX" SQL string into Index struct.

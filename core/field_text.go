@@ -161,13 +161,19 @@ func (f *TextField) SetHidden(hidden bool) {
 // ColumnType implements [Field.ColumnType] interface method.
 func (f *TextField) ColumnType(app App) string {
 	if f.PrimaryKey {
-		// note: the default is just a last resort fallback to avoid empty
-		// string values in case the record was inserted with raw sql and
-		// it is not actually used when operating with the db abstraction
-		return "TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL"
+		return appPrimaryKeyColumnType(app)
 	}
 
-	return "TEXT DEFAULT '' NOT NULL"
+	if app.DBDialect().IsMySQL() {
+		if f.System {
+			return appIndexedTextColumnType(app, 255)
+		}
+		if f.Max <= 0 || f.Max > 768 {
+			return appLongTextColumnType(app, true)
+		}
+	}
+
+	return appIndexedTextColumnType(app, f.Max)
 }
 
 // PrepareValue implements [Field.PrepareValue] interface method.
@@ -203,10 +209,15 @@ func (f *TextField) ValidateValue(ctx context.Context, app App, record *Record) 
 			// (@todo eventually may get replaced in the future with a system unique constraint to avoid races or wrapping the request in a transaction)
 			if f.Pattern != defaultLowercaseRecordIdPattern {
 				var exists int
+				expr := "id = {:id} COLLATE NOCASE"
+				if !app.DBDialect().IsSQLite() {
+					expr = "LOWER(id) = LOWER({:id})"
+				}
+
 				err := app.ConcurrentDB().
 					Select("(1)").
 					From(record.TableName()).
-					Where(dbx.NewExp("id = {:id} COLLATE NOCASE", dbx.Params{"id": newVal})).
+					Where(dbx.NewExp(expr, dbx.Params{"id": newVal})).
 					Limit(1).
 					Row(&exists)
 				if exists > 0 || (err != nil && !errors.Is(err, sql.ErrNoRows)) {

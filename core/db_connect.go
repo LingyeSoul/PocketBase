@@ -4,6 +4,8 @@ package core
 
 import (
 	"ganigeorgiev.com/pocketbase/dbx"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "modernc.org/sqlite"
 )
 

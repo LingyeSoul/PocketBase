@@ -192,10 +192,10 @@ func (f *FileField) IsMultiple() bool {
 // ColumnType implements [Field.ColumnType] interface method.
 func (f *FileField) ColumnType(app App) string {
 	if f.IsMultiple() {
-		return "JSON DEFAULT '[]' NOT NULL"
+		return appJSONColumnType(app, "[]", true)
 	}
 
-	return "TEXT DEFAULT '' NOT NULL"
+	return appIndexedTextColumnType(app, 255)
 }
 
 // PrepareValue implements [Field.PrepareValue] interface method.

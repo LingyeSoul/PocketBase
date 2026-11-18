@@ -10,6 +10,7 @@ import (
 
 	"ganigeorgiev.com/pocketbase/dbx"
 	"github.com/lingyesoul/pocketbase/tools/cron"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/filesystem"
 	"github.com/lingyesoul/pocketbase/tools/hook"
 	"github.com/lingyesoul/pocketbase/tools/mailer"
@@ -150,6 +151,15 @@ type App interface {
 	// ---------------------------------------------------------------
 	// DB methods
 	// ---------------------------------------------------------------
+
+	// DBDialect returns the SQL dialect of the active database connection.
+	DBDialect() dbutils.Dialect
+
+	// FindIndexTableName returns the table that owns the provided index name.
+	FindIndexTableName(indexName string) (string, error)
+
+	// FindAllViews returns all persistent views with their create statement.
+	FindAllViews() ([]ViewInfo, error)
 
 	// DB returns the default app data.db builder instance.
 	//

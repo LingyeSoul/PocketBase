@@ -35,6 +35,9 @@ type PocketBase struct {
 
 	devFlag           bool
 	dataDirFlag       string
+	dbDriverFlag      string
+	dbDSNFlag         string
+	auxDBDSNFlag      string
 	encryptionEnvFlag string
 	queryTimeout      int
 	hideStartBanner   bool
@@ -51,6 +54,9 @@ type Config struct {
 	// optional default values for the console flags
 	DefaultDev           bool
 	DefaultDataDir       string // if not set, it will fallback to "./pb_data"
+	DefaultDBDriver      string // sqlite (default), postgres, mysql or mariadb
+	DefaultDBDSN         string // required for non-sqlite drivers
+	DefaultAuxDBDSN      string // optional, defaults to DefaultDBDSN
 	DefaultEncryptionEnv string
 	DefaultQueryTimeout  time.Duration // default to core.DefaultQueryTimeout (in seconds)
 
@@ -113,6 +119,9 @@ func NewWithConfig(config Config) *PocketBase {
 		},
 		devFlag:           config.DefaultDev,
 		dataDirFlag:       config.DefaultDataDir,
+		dbDriverFlag:      config.DefaultDBDriver,
+		dbDSNFlag:         config.DefaultDBDSN,
+		auxDBDSNFlag:      config.DefaultAuxDBDSN,
 		encryptionEnvFlag: config.DefaultEncryptionEnv,
 		hideStartBanner:   config.HideStartBanner,
 	}
@@ -129,6 +138,9 @@ func NewWithConfig(config Config) *PocketBase {
 	pb.App = core.NewBaseApp(core.BaseAppConfig{
 		IsDev:            pb.devFlag,
 		DataDir:          pb.dataDirFlag,
+		DBDriver:         pb.dbDriverFlag,
+		DBDSN:            pb.dbDSNFlag,
+		AuxDBDSN:         pb.auxDBDSNFlag,
 		EncryptionEnv:    pb.encryptionEnvFlag,
 		QueryTimeout:     time.Duration(pb.queryTimeout) * time.Second,
 		DataMaxOpenConns: config.DataMaxOpenConns,
@@ -222,6 +234,27 @@ func (pb *PocketBase) eagerParseFlags(config *Config) error {
 		"dir",
 		config.DefaultDataDir,
 		"the PocketBase data directory",
+	)
+
+	pb.RootCmd.PersistentFlags().StringVar(
+		&pb.dbDriverFlag,
+		"dbDriver",
+		config.DefaultDBDriver,
+		"database driver/dialect: sqlite, postgres, mysql or mariadb",
+	)
+
+	pb.RootCmd.PersistentFlags().StringVar(
+		&pb.dbDSNFlag,
+		"dbDSN",
+		config.DefaultDBDSN,
+		"database connection string (required for non-sqlite drivers)",
+	)
+
+	pb.RootCmd.PersistentFlags().StringVar(
+		&pb.auxDBDSNFlag,
+		"auxDBDSN",
+		config.DefaultAuxDBDSN,
+		"optional auxiliary database connection string (defaults to dbDSN)",
 	)
 
 	pb.RootCmd.PersistentFlags().StringVar(

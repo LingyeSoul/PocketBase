@@ -55,6 +55,8 @@ func (m *MultiMatchSubquery) Build(db *dbx.DB, params dbx.Params) string {
 		if j.On != nil {
 			mergedJoins.WriteString(" ON ")
 			mergedJoins.WriteString(j.On.Build(db, params))
+		} else if strings.HasPrefix(j.TableName, "LATERAL ") || strings.HasPrefix(j.TableName, "JSON_TABLE(") {
+			mergedJoins.WriteString(" ON TRUE")
 		}
 	}
 

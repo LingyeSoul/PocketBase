@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"ganigeorgiev.com/pocketbase/dbx"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/inflector"
 	"github.com/lingyesoul/pocketbase/tools/search"
 	"github.com/lingyesoul/pocketbase/tools/security"
@@ -59,6 +60,11 @@ type RecordFieldResolver struct {
 	listRuleJoins       []ruleJoin
 	joinAliasSuffix     string // used for uniqueness in the flatten collection list rule join
 	baseCollectionAlias string
+}
+
+// Dialect implements the optional search dialect provider interface.
+func (r *RecordFieldResolver) Dialect() dbutils.Dialect {
+	return r.app.DBDialect()
 }
 
 // AllowedFields returns a copy of the resolver's allowed fields.
@@ -137,9 +143,13 @@ func (r *RecordFieldResolver) UpdateQuery(query *dbx.SelectQuery) error {
 		r.updateQueryWithDeduplicateConstraint(query)
 
 		for _, join := range r.joins {
+			on := join.On
+			if on == nil && isJSONTableJoin(join.TableName) {
+				on = dbx.NewExp("TRUE")
+			}
 			query.LeftJoin(
 				(join.TableName + " " + join.TableAlias),
-				join.On,
+				on,
 			)
 		}
 	}
@@ -197,9 +207,13 @@ func (r *RecordFieldResolver) updateQueryWithCollectionListRule(c *Collection, t
 		r.updateQueryWithDeduplicateConstraint(query)
 
 		for _, j := range cloneR.joins {
+			on := j.On
+			if on == nil && isJSONTableJoin(j.TableName) {
+				on = dbx.NewExp("TRUE")
+			}
 			query.LeftJoin(
 				(j.TableName + " " + j.TableAlias),
-				j.On,
+				on,
 			)
 		}
 	}
@@ -407,7 +421,7 @@ func (r *RecordFieldResolver) registerJoin(tableName string, tableAlias string, 
 
 	// (see updateQueryWithCollectionListRule)
 	if !r.allowHiddenFields {
-		c, _ := r.loadCollection(tableName)
+		c, _ := r.loadCollection(strings.TrimPrefix(tableName, "LATERAL "))
 
 		// ignore non-collections since the table name could be an expression (e.g. json) or some other subquery
 		if c != nil {
@@ -589,4 +603,8 @@ func splitModifier(combined string) (string, string, error) {
 	}
 
 	return "", "", fmt.Errorf("unknown modifier in %q", combined)
+}
+
+func isJSONTableJoin(tableName string) bool {
+	return strings.HasPrefix(tableName, "LATERAL ") || strings.HasPrefix(tableName, "JSON_TABLE(")
 }

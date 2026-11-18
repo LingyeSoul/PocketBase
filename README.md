@@ -28,6 +28,75 @@
 > and full backward compatibility is not guaranteed before reaching v1.0.0.
 
 
+## Alternative databases
+
+SQLite remains the default and the upstream-compatible mode. This fork also
+supports PostgreSQL, MySQL and MariaDB through the same `core.App` API:
+
+```sh
+# PostgreSQL
+./pocketbase serve \
+  --dbDriver=postgres \
+  --dbDSN="postgres://user:password@127.0.0.1:5432/pocketbase?sslmode=disable"
+
+# MySQL or MariaDB (use --dbDriver=mariadb for MariaDB-specific DDL)
+./pocketbase serve \
+  --dbDriver=mysql \
+  --dbDSN="user:password@tcp(127.0.0.1:3306)/pocketbase?parseTime=false&charset=utf8mb4"
+
+./pocketbase serve \
+  --dbDriver=mariadb \
+  --dbDSN="user:password@tcp(127.0.0.1:3306)/pocketbase?parseTime=false&charset=utf8mb4"
+```
+
+The same options are available in `pocketbase.Config` as `DefaultDBDriver`,
+`DefaultDBDSN` and `DefaultAuxDBDSN`. For programmatic use, set
+`core.BaseAppConfig.DBDriver`, `DBDSN` and optionally `AuxDBDSN`, or keep using
+the `DBConnect` hook for a fully custom connection.
+
+Driver notes:
+
+- PostgreSQL uses the pure Go `pgx/v5` driver and is tested against PostgreSQL 18.
+- MySQL uses `go-sql-driver/mysql` and is tested against MySQL 8.4 (8.0.13+ is
+  required for functional indexes and expression defaults).
+- MariaDB uses the same MySQL driver and is tested against MariaDB 11.8.
+- `--auxDBDSN` is optional; when omitted the auxiliary database uses the same
+  DSN as the main database.
+- One-click backups require `pg_dump`/`pg_restore` or `mysqldump`/`mysql` to be
+  available in `PATH` for non-SQLite databases.
+- Reduce `DataMaxOpenConns`/`AuxMaxOpenConns` for server databases so the total
+  pool size stays below the database `max_connections` limit.
+
+Known MySQL/MariaDB limitations:
+
+- Text fields that may be indexed use `VARCHAR(768)`; longer unindexed text is
+  stored as `LONGTEXT`. A unique index that needs more key bytes than the
+  InnoDB limit must be shortened or enforced by the application.
+- Partial unique indexes are emulated with MySQL functional indexes and with
+  hidden generated columns on MariaDB. Only the common `column != ''` form is
+  supported; other partial unique expressions are rejected with an error.
+- MariaDB and MySQL use their case-insensitive collations for email/username
+  indexes; PostgreSQL uses `lower(...)` expression indexes.
+- JSON values are stored as text so the API output is not normalized by the
+  database JSON type.
+- `@rowid` sorting and record counting map to the `id` column on non-SQLite
+  databases.
+- The `strftime` filter function supports the common SQLite format specifiers
+  and simple date modifiers; unsupported format/modifier combinations return a
+  validation error instead of silently producing a different result.
+- Raw SQL in user migrations and view collections is dialect-specific. Existing
+  SQLite SQL is not translated automatically.
+- External databases do not make the whole application horizontally scalable:
+  realtime subscriptions, cron and file storage remain process-local.
+
+For the integration smoke test, set a test DSN and run:
+
+```sh
+PB_TEST_DB_DRIVER=postgres \
+PB_TEST_DB_DSN="postgres://postgres@127.0.0.1:5432/pocketbase_test?sslmode=disable" \
+go test ./tests -run TestMultiDBSmoke -count=1
+```
+
 ## API SDK clients
 
 The easiest way to interact with the PocketBase Web APIs is to use one of the official SDK clients:

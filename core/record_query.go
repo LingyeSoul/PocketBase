@@ -561,8 +561,14 @@ func (app *BaseApp) FindAuthRecordByEmail(collectionModelOrIdentifier any, email
 
 	index, ok := dbutils.FindSingleColumnUniqueIndex(collection.Indexes, FieldNameEmail)
 	if ok && strings.EqualFold(index.Columns[0].Collate, "nocase") {
-		// case-insensitive search
-		expr = dbx.NewExp("[["+FieldNameEmail+"]] = {:email} COLLATE NOCASE", dbx.Params{"email": email})
+		switch {
+		case app.DBDialect().IsSQLite():
+			expr = dbx.NewExp("[["+FieldNameEmail+"]] = {:email} COLLATE NOCASE", dbx.Params{"email": email})
+		case app.DBDialect().IsPostgres():
+			expr = dbx.NewExp("LOWER([["+FieldNameEmail+"]]) = LOWER({:email})", dbx.Params{"email": email})
+		default:
+			expr = dbx.HashExp{FieldNameEmail: email}
+		}
 	} else {
 		expr = dbx.HashExp{FieldNameEmail: email}
 	}

@@ -8,9 +8,11 @@ import (
 
 	"ganigeorgiev.com/fexpr"
 	"ganigeorgiev.com/pocketbase/dbx"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 )
 
-var TokenFunctions = map[string]func(
+var TokenFunctionsWithDialect = map[string]func(
+	dialect dbutils.Dialect,
 	argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error),
 	args ...fexpr.Token,
 ) (*ResolverResult, error){
@@ -25,7 +27,7 @@ var TokenFunctions = map[string]func(
 	// Or in other words, if a collection has "orgs" multiple relation field pointing to "orgs" collection that has "office" as "geoPoint" field,
 	// then the filter: `geoDistance(orgs.office.lon, orgs.office.lat, 1, 2) < 200`
 	// will evaluate to true if for at-least-one of the "orgs.office" records the function result in a value satisfying the condition (aka. "result < 200").
-	"geoDistance": func(argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error), args ...fexpr.Token) (*ResolverResult, error) {
+	"geoDistance": func(dialect dbutils.Dialect, argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error), args ...fexpr.Token) (*ResolverResult, error) {
 		if len(args) != 4 {
 			return nil, fmt.Errorf("[geoDistance] expected 4 arguments, got %d", len(args))
 		}
@@ -81,7 +83,7 @@ var TokenFunctions = map[string]func(
 	//
 	// A multi-match constraint will be also applied in case the time-value
 	// is an identifier as a result of a multi-value relation field.
-	"strftime": func(argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error), args ...fexpr.Token) (*ResolverResult, error) {
+	"strftime": func(dialect dbutils.Dialect, argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error), args ...fexpr.Token) (*ResolverResult, error) {
 		totalArgs := len(args)
 
 		if totalArgs < 1 {
@@ -91,6 +93,10 @@ var TokenFunctions = map[string]func(
 		// limit the number of arguments to prevent abuse
 		if totalArgs > 10 {
 			return nil, fmt.Errorf("[strftime] too many arguments (max allowed 10, got %d)", totalArgs)
+		}
+
+		if !dialect.IsSQLite() {
+			return resolveStrftimeForDialect(dialect, argTokenResolverFunc, args)
 		}
 
 		// format arg
@@ -182,6 +188,77 @@ var TokenFunctions = map[string]func(
 
 		return result, nil
 	},
+}
+
+// TokenFunctions exposes the SQLite variants for backward compatibility.
+var TokenFunctions = map[string]func(
+	argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error),
+	args ...fexpr.Token,
+) (*ResolverResult, error){
+	"geoDistance": func(argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error), args ...fexpr.Token) (*ResolverResult, error) {
+		return TokenFunctionsWithDialect["geoDistance"](dbutils.DialectSQLite, argTokenResolverFunc, args...)
+	},
+	"strftime": func(argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error), args ...fexpr.Token) (*ResolverResult, error) {
+		return TokenFunctionsWithDialect["strftime"](dbutils.DialectSQLite, argTokenResolverFunc, args...)
+	},
+}
+
+func resolveStrftimeForDialect(
+	dialect dbutils.Dialect,
+	argTokenResolverFunc func(fexpr.Token) (*ResolverResult, error),
+	args []fexpr.Token,
+) (*ResolverResult, error) {
+	if len(args) < 1 {
+		return nil, errors.New("[strftime] expected at least 1 arguments")
+	}
+	if args[0].Type != fexpr.TokenText {
+		return nil, errors.New("[strftime] expects the first argument to be a format string")
+	}
+
+	format := args[0].Literal
+
+	if len(args) == 1 {
+		identifier, err := dbutils.StrftimeFor(dialect, format, "NULL", nil)
+		if err != nil {
+			return nil, err
+		}
+		return &ResolverResult{Identifier: identifier, NullFallback: NullFallbackEnforced}, nil
+	}
+
+	timeValueArgResult, err := argTokenResolverFunc(args[1])
+	if err != nil {
+		return nil, fmt.Errorf("[strftime] failed to resolve time-value argument: %w", err)
+	}
+
+	modifiers := make([]string, 0, len(args)-2)
+	for i, arg := range args[2:] {
+		if arg.Type != fexpr.TokenText {
+			return nil, fmt.Errorf("[strftime] invalid modifier argument %d - can be only string", i)
+		}
+		modifiers = append(modifiers, arg.Literal)
+	}
+
+	identifier, err := dbutils.StrftimeFor(dialect, format, timeValueArgResult.Identifier, modifiers)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &ResolverResult{
+		Identifier:   identifier,
+		Params:       timeValueArgResult.Params,
+		NullFallback: NullFallbackEnforced,
+	}
+
+	if timeValueArgResult.MultiMatchSubQuery != nil {
+		multiIdentifier, err := dbutils.StrftimeFor(dialect, format, timeValueArgResult.MultiMatchSubQuery.ValueIdentifier, modifiers)
+		if err != nil {
+			return nil, err
+		}
+		result.MultiMatchSubQuery = timeValueArgResult.MultiMatchSubQuery
+		result.MultiMatchSubQuery.ValueIdentifier = multiIdentifier
+	}
+
+	return result, nil
 }
 
 func concatUniqueParams(destParams, newParams dbx.Params) error {

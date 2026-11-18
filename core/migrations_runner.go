@@ -248,9 +248,15 @@ func (r *MigrationsRunner) initMigrationsTable() error {
 		return nil // already inited
 	}
 
+	appliedType := "INTEGER"
+	if !r.app.DBDialect().IsSQLite() {
+		appliedType = "BIGINT"
+	}
+
 	rawQuery := fmt.Sprintf(
-		"CREATE TABLE IF NOT EXISTS {{%s}} (file VARCHAR(255) PRIMARY KEY NOT NULL, applied INTEGER NOT NULL)",
+		"CREATE TABLE IF NOT EXISTS {{%s}} (file VARCHAR(255) PRIMARY KEY NOT NULL, applied %s NOT NULL)",
 		r.tableName,
+		appliedType,
 	)
 
 	_, err := r.app.DB().NewQuery(rawQuery).Execute()
@@ -299,13 +305,19 @@ func (r *MigrationsRunner) lastAppliedMigrations(limit int) ([]string, error) {
 		names[i] = migration.File
 	}
 
-	err := r.app.DB().Select("file").
+	query := r.app.DB().Select("file").
 		From(r.tableName).
 		Where(dbx.Not(dbx.HashExp{"applied": nil})).
-		AndWhere(dbx.HashExp{"file": names}).
+		AndWhere(dbx.HashExp{"file": names})
+
+	if r.app.DBDialect().IsSQLite() {
 		// unify microseconds and seconds applied time for backward compatibility
-		OrderBy("substr(applied||'0000000000000000', 0, 17) DESC").
-		AndOrderBy("file DESC").
+		query.OrderBy("substr(applied||'0000000000000000', 0, 17) DESC")
+	} else {
+		query.OrderBy("applied DESC")
+	}
+
+	err := query.AndOrderBy("file DESC").
 		Limit(int64(limit)).
 		Column(&files)
 

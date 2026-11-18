@@ -142,10 +142,10 @@ func (f *SelectField) IsMultiple() bool {
 // ColumnType implements [Field.ColumnType] interface method.
 func (f *SelectField) ColumnType(app App) string {
 	if f.IsMultiple() {
-		return "JSON DEFAULT '[]' NOT NULL"
+		return appJSONColumnType(app, "[]", true)
 	}
 
-	return "TEXT DEFAULT '' NOT NULL"
+	return appIndexedTextColumnType(app, 255)
 }
 
 // PrepareValue implements [Field.PrepareValue] interface method.

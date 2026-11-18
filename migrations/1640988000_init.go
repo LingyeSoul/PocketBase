@@ -34,28 +34,32 @@ func init() {
 
 		// -----------------------------------------------------------
 
-		_, execerr := txApp.DB().NewQuery(`
-			CREATE TABLE {{_collections}} (
-				[[id]]         TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,
-				[[system]]     BOOLEAN DEFAULT FALSE NOT NULL,
-				[[type]]       TEXT DEFAULT "base" NOT NULL,
-				[[name]]       TEXT UNIQUE NOT NULL,
-				[[fields]]     JSON DEFAULT "[]" NOT NULL,
-				[[indexes]]    JSON DEFAULT "[]" NOT NULL,
-				[[listRule]]   TEXT DEFAULT NULL,
-				[[viewRule]]   TEXT DEFAULT NULL,
-				[[createRule]] TEXT DEFAULT NULL,
-				[[updateRule]] TEXT DEFAULT NULL,
-				[[deleteRule]] TEXT DEFAULT NULL,
-				[[options]]    JSON DEFAULT "{}" NOT NULL,
-				[[created]]    TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%fZ')) NOT NULL,
-				[[updated]]    TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%fZ')) NOT NULL
-			);
+		if txApp.DBDialect().IsSQLite() {
+			_, execerr := txApp.DB().NewQuery(`
+				CREATE TABLE {{_collections}} (
+					[[id]]         TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,
+					[[system]]     BOOLEAN DEFAULT FALSE NOT NULL,
+					[[type]]       TEXT DEFAULT "base" NOT NULL,
+					[[name]]       TEXT UNIQUE NOT NULL,
+					[[fields]]     JSON DEFAULT "[]" NOT NULL,
+					[[indexes]]    JSON DEFAULT "[]" NOT NULL,
+					[[listRule]]   TEXT DEFAULT NULL,
+					[[viewRule]]   TEXT DEFAULT NULL,
+					[[createRule]] TEXT DEFAULT NULL,
+					[[updateRule]] TEXT DEFAULT NULL,
+					[[deleteRule]] TEXT DEFAULT NULL,
+					[[options]]    JSON DEFAULT "{}" NOT NULL,
+					[[created]]    TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%fZ')) NOT NULL,
+					[[updated]]    TEXT DEFAULT (strftime('%Y-%m-%d %H:%M:%fZ')) NOT NULL
+				);
 
-			CREATE INDEX IF NOT EXISTS idx__collections_type on {{_collections}} ([[type]]);
-		`).Execute()
-		if execerr != nil {
-			return fmt.Errorf("_collections exec error: %w", execerr)
+				CREATE INDEX IF NOT EXISTS idx__collections_type on {{_collections}} ([[type]]);
+			`).Execute()
+			if execerr != nil {
+				return fmt.Errorf("_collections exec error: %w", execerr)
+			}
+		} else if err := createPortableCollectionsTable(txApp); err != nil {
+			return fmt.Errorf("_collections exec error: %w", err)
 		}
 
 		if err := createMFAsCollection(txApp); err != nil {
@@ -105,6 +109,10 @@ func init() {
 }
 
 func createParamsTable(txApp core.App) error {
+	if !txApp.DBDialect().IsSQLite() {
+		return createPortableParamsTable(txApp)
+	}
+
 	_, execErr := txApp.DB().NewQuery(`
 		CREATE TABLE {{_params}} (
 			[[id]]      TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,

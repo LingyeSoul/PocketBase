@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"ganigeorgiev.com/pocketbase/dbx"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/types"
 )
 
@@ -56,7 +57,7 @@ func (app *BaseApp) LogsStats(expr dbx.Expression) ([]*LogsStatsItem, error) {
 	result := []*LogsStatsItem{}
 
 	query := app.LogQuery().
-		Select("count(id) as total", "strftime('%Y-%m-%d %H:00:00', created) as date").
+		Select("count(id) as total", dbutils.TruncateHourFor(app.DBDialect(), "created")+" as date").
 		GroupBy("date")
 
 	if expr != nil {

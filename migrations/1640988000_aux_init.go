@@ -7,6 +7,10 @@ import (
 func init() {
 	core.SystemMigrations.Add(&core.Migration{
 		Up: func(txApp core.App) error {
+			if !txApp.DBDialect().IsSQLite() {
+				return createPortableLogsTable(txApp)
+			}
+
 			_, execErr := txApp.AuxDB().NewQuery(`
 				CREATE TABLE IF NOT EXISTS {{_logs}} (
 					[[id]]      TEXT PRIMARY KEY DEFAULT ('r'||lower(hex(randomblob(7)))) NOT NULL,

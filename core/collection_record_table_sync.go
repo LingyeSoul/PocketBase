@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 
-	"ganigeorgiev.com/pocketbase/dbx"
 	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
 	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/security"
@@ -39,7 +38,7 @@ func (app *BaseApp) SyncRecordTableSchema(newCollection *Collection, oldCollecti
 			}
 
 			// create table
-			if _, err := txApp.DB().CreateTable(tableName, cols).Execute(); err != nil {
+			if _, err := txApp.DB().CreateTable(tableName, cols, txApp.DBDialect().CreateTableOptions()...).Execute(); err != nil {
 				return err
 			}
 
@@ -113,7 +112,7 @@ func (app *BaseApp) SyncRecordTableSchema(newCollection *Collection, oldCollecti
 				toRename[tempName] = field.GetName()
 
 				// rename
-				_, err := txApp.DB().RenameColumn(newTableName, oldField.GetName(), tempName).Execute()
+				err := renameColumn(txApp, newTableName, oldField.GetName(), tempName)
 				if err != nil {
 					return fmt.Errorf("failed to rename column %s - %w", oldField.GetName(), err)
 				}
@@ -122,7 +121,7 @@ func (app *BaseApp) SyncRecordTableSchema(newCollection *Collection, oldCollecti
 
 		// set the actual columns name
 		for tempName, actualName := range toRename {
-			_, err := txApp.DB().RenameColumn(newTableName, tempName, actualName).Execute()
+			err := renameColumn(txApp, newTableName, tempName, actualName)
 			if err != nil {
 				return err
 			}
@@ -142,11 +141,13 @@ func (app *BaseApp) SyncRecordTableSchema(newCollection *Collection, oldCollecti
 		return txErr
 	}
 
-	// run optimize per the SQLite recommendations
-	// (https://www.sqlite.org/pragma.html#pragma_optimize)
-	_, optimizeErr := app.NonconcurrentDB().NewQuery("PRAGMA optimize").Execute()
-	if optimizeErr != nil {
-		app.Logger().Warn("Failed to run PRAGMA optimize after record table sync", slog.String("error", optimizeErr.Error()))
+	if app.DBDialect().IsSQLite() {
+		// run optimize per the SQLite recommendations
+		// (https://www.sqlite.org/pragma.html#pragma_optimize)
+		_, optimizeErr := app.NonconcurrentDB().NewQuery("PRAGMA optimize").Execute()
+		if optimizeErr != nil {
+			app.Logger().Warn("Failed to run PRAGMA optimize after record table sync", slog.String("error", optimizeErr.Error()))
+		}
 	}
 
 	return nil
@@ -183,15 +184,7 @@ func normalizeSingleVsMultipleFieldChanges(app App, newCollection *Collection, o
 
 			// temporary drop all views to prevent reference errors during the columns renaming
 			// (this is used as an "alternative" to the writable_schema PRAGMA)
-			views := []struct {
-				Name string `db:"name"`
-				SQL  string `db:"sql"`
-			}{}
-			err := txApp.DB().Select("name", "sql").
-				From("sqlite_master").
-				AndWhere(dbx.NewExp("sql is not null")).
-				AndWhere(dbx.HashExp{"type": "view"}).
-				All(&views)
+			views, err := txApp.FindAllViews()
 			if err != nil {
 				return err
 			}
@@ -206,7 +199,7 @@ func normalizeSingleVsMultipleFieldChanges(app App, newCollection *Collection, o
 			oldTempName := "_" + newField.GetName() + security.PseudorandomString(5)
 
 			// rename temporary the original column to something else to allow inserting a new one in its place
-			_, err = txApp.DB().RenameColumn(newCollection.Name, originalName, oldTempName).Execute()
+			err = renameColumn(txApp, newCollection.Name, originalName, oldTempName)
 			if err != nil {
 				return err
 			}
@@ -217,60 +210,24 @@ func normalizeSingleVsMultipleFieldChanges(app App, newCollection *Collection, o
 				return err
 			}
 
-			var copyQuery *dbx.Query
-
+			var copyExpr string
 			if !isOldMultiple && isNewMultiple {
 				// single -> multiple (convert to array)
-				copyQuery = txApp.DB().NewQuery(fmt.Sprintf(
-					`UPDATE {{%s}} set [[%s]] = (
-							CASE
-								WHEN COALESCE([[%s]], '') = ''
-								THEN '[]'
-								ELSE (
-									CASE
-										WHEN json_valid([[%s]]) AND json_type([[%s]]) == 'array'
-										THEN [[%s]]
-										ELSE json_array([[%s]])
-									END
-								)
-							END
-						)`,
-					newCollection.Name,
-					originalName,
-					oldTempName,
-					oldTempName,
-					oldTempName,
-					oldTempName,
-					oldTempName,
-				))
+				copyExpr = dbutils.JSONNormalizeArrayFor(txApp.DBDialect(), oldTempName)
 			} else {
 				// multiple -> single (keep only the last element)
 				//
 				// note: for file fields the actual file objects are not
 				// deleted allowing additional custom handling via migration
-				copyQuery = txApp.DB().NewQuery(fmt.Sprintf(
-					`UPDATE {{%s}} set [[%s]] = (
-						CASE
-							WHEN COALESCE([[%s]], '[]') = '[]'
-							THEN ''
-							ELSE (
-								CASE
-									WHEN json_valid([[%s]]) AND json_type([[%s]]) == 'array'
-									THEN COALESCE(json_extract([[%s]], '$[#-1]'), '')
-									ELSE [[%s]]
-								END
-							)
-						END
-					)`,
-					newCollection.Name,
-					originalName,
-					oldTempName,
-					oldTempName,
-					oldTempName,
-					oldTempName,
-					oldTempName,
-				))
+				copyExpr = dbutils.JSONLastElementFor(txApp.DBDialect(), oldTempName)
 			}
+
+			copyQuery := txApp.DB().NewQuery(fmt.Sprintf(
+				"UPDATE {{%s}} SET [[%s]] = %s",
+				newCollection.Name,
+				originalName,
+				copyExpr,
+			))
 
 			// copy the normalized values
 			_, err = copyQuery.Execute()
@@ -309,11 +266,10 @@ func dropCollectionIndexes(app App, collection *Collection) error {
 			// note: don't check IsValid because the index table name may not be populated
 			// (https://ganigeorgiev.com/pocketbase/discussions/7689)
 			if parsed.IndexName == "" {
-				return fmt.Errorf("failed to dop index - missing index name: %s", raw)
+				return fmt.Errorf("failed to drop index - missing index name: %s", raw)
 			}
 
-			_, err := txApp.DB().NewQuery(fmt.Sprintf("DROP INDEX IF EXISTS [[%s]]", parsed.IndexName)).Execute()
-			if err != nil {
+			if err := dropCollectionIndex(txApp, collection.Name, parsed); err != nil {
 				return err
 			}
 		}
@@ -348,7 +304,7 @@ func createCollectionIndexes(app App, collection *Collection) error {
 				continue
 			}
 
-			if _, err := txApp.DB().NewQuery(parsed.Build()).Execute(); err != nil {
+			if err := createCollectionIndex(txApp, parsed); err != nil {
 				errs[strconv.Itoa(i)] = validation.NewError(
 					"validation_invalid_index_expression",
 					fmt.Sprintf("Failed to create index %s - %v.", parsed.IndexName, err.Error()),

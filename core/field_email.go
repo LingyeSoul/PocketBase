@@ -110,7 +110,7 @@ func (f *EmailField) SetHidden(hidden bool) {
 
 // ColumnType implements [Field.ColumnType] interface method.
 func (f *EmailField) ColumnType(app App) string {
-	return "TEXT DEFAULT '' NOT NULL"
+	return appIndexedTextColumnType(app, 255)
 }
 
 // PrepareValue implements [Field.PrepareValue] interface method.

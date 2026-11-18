@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"ganigeorgiev.com/pocketbase/dbx"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/inflector"
 	"github.com/lingyesoul/pocketbase/tools/list"
 )
@@ -65,6 +66,15 @@ type FieldResolver interface {
 func NewSimpleFieldResolver(allowedFields ...string) *SimpleFieldResolver {
 	return &SimpleFieldResolver{
 		allowedFields: allowedFields,
+		dialect:       dbutils.DialectSQLite,
+	}
+}
+
+// NewSimpleFieldResolverWithDialect creates a SimpleFieldResolver for the provided dialect.
+func NewSimpleFieldResolverWithDialect(dialect dbutils.Dialect, allowedFields ...string) *SimpleFieldResolver {
+	return &SimpleFieldResolver{
+		allowedFields: allowedFields,
+		dialect:       dialect,
 	}
 }
 
@@ -74,6 +84,16 @@ func NewSimpleFieldResolver(allowedFields ...string) *SimpleFieldResolver {
 // If `allowedFields` are empty no fields filtering is applied.
 type SimpleFieldResolver struct {
 	allowedFields []string
+	dialect       dbutils.Dialect
+}
+
+// Dialect implements the optional search dialect provider interface.
+func (r *SimpleFieldResolver) Dialect() dbutils.Dialect {
+	if r.dialect == "" {
+		return dbutils.DialectSQLite
+	}
+
+	return r.dialect
 }
 
 // UpdateQuery implements `search.UpdateQuery` interface.
@@ -113,12 +133,18 @@ func (r *SimpleFieldResolver) Resolve(field string) (*ResolverResult, error) {
 		}
 	}
 
+	column := inflector.Columnify(parts[0])
+	path := strings.TrimPrefix(jsonPath.String(), "$")
+
+	if r.Dialect().IsSQLite() {
+		return &ResolverResult{
+			NullFallback: NullFallbackDisabled,
+			Identifier:   fmt.Sprintf("JSON_EXTRACT([[%s]], '$%s')", column, path),
+		}, nil
+	}
+
 	return &ResolverResult{
 		NullFallback: NullFallbackDisabled,
-		Identifier: fmt.Sprintf(
-			"JSON_EXTRACT([[%s]], '%s')",
-			inflector.Columnify(parts[0]),
-			jsonPath.String(),
-		),
+		Identifier:   dbutils.JSONExtractFor(r.Dialect(), column, strings.TrimPrefix(path, ".")),
 	}, nil
 }

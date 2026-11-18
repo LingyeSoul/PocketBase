@@ -9,6 +9,7 @@ import (
 
 	"ganigeorgiev.com/fexpr"
 	"ganigeorgiev.com/pocketbase/dbx"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 	"github.com/lingyesoul/pocketbase/tools/security"
 	"github.com/lingyesoul/pocketbase/tools/store"
 	"github.com/spf13/cast"
@@ -175,34 +176,35 @@ func resolveTokenizedExpr(expr fexpr.Expr, fieldResolver FieldResolver) (dbx.Exp
 		return nil, fmt.Errorf("invalid right operand %q - %v", expr.Right.Literal, rErr)
 	}
 
-	return buildResolversExpr(lResult, expr.Op, rResult)
+	return buildResolversExpr(lResult, expr.Op, rResult, dialectOf(fieldResolver))
 }
 
 func buildResolversExpr(
 	left *ResolverResult,
 	op fexpr.SignOp,
 	right *ResolverResult,
+	dialect dbutils.Dialect,
 ) (dbx.Expression, error) {
 	var expr dbx.Expression
 
 	switch op {
 	case fexpr.SignEq, fexpr.SignAnyEq:
-		expr = resolveEqualExpr(true, left, right)
+		expr = resolveEqualExpr(true, left, right, dialect)
 	case fexpr.SignNeq, fexpr.SignAnyNeq:
-		expr = resolveEqualExpr(false, left, right)
+		expr = resolveEqualExpr(false, left, right, dialect)
 	case fexpr.SignLike, fexpr.SignAnyLike:
 		// the right side is a column and therefor wrap it with "%" for contains like behavior
 		if len(right.Params) == 0 {
-			expr = dbx.NewExp(fmt.Sprintf("%s LIKE ('%%' || %s || '%%') ESCAPE '\\'", left.Identifier, right.Identifier), left.Params)
+			expr = dbx.NewExp(dbutils.LikeFor(dialect, left.Identifier, right.Identifier, false, true), left.Params)
 		} else {
-			expr = dbx.NewExp(fmt.Sprintf("%s LIKE %s ESCAPE '\\'", left.Identifier, right.Identifier), mergeParams(left.Params, wrapLikeParams(right.Params)))
+			expr = dbx.NewExp(dbutils.LikeFor(dialect, left.Identifier, right.Identifier, false, false), mergeParams(left.Params, wrapLikeParams(right.Params)))
 		}
 	case fexpr.SignNlike, fexpr.SignAnyNlike:
 		// the right side is a column and therefor wrap it with "%" for not-contains like behavior
 		if len(right.Params) == 0 {
-			expr = dbx.NewExp(fmt.Sprintf("%s NOT LIKE ('%%' || %s || '%%') ESCAPE '\\'", left.Identifier, right.Identifier), left.Params)
+			expr = dbx.NewExp(dbutils.LikeFor(dialect, left.Identifier, right.Identifier, true, true), left.Params)
 		} else {
-			expr = dbx.NewExp(fmt.Sprintf("%s NOT LIKE %s ESCAPE '\\'", left.Identifier, right.Identifier), mergeParams(left.Params, wrapLikeParams(right.Params)))
+			expr = dbx.NewExp(dbutils.LikeFor(dialect, left.Identifier, right.Identifier, true, false), mergeParams(left.Params, wrapLikeParams(right.Params)))
 		}
 	case fexpr.SignLt, fexpr.SignAnyLt:
 		expr = dbx.NewExp(fmt.Sprintf("%s < %s", left.Identifier, right.Identifier), mergeParams(left.Params, right.Params))
@@ -222,9 +224,10 @@ func buildResolversExpr(
 	if !isAnyMatchOp(op) {
 		if left.MultiMatchSubQuery != nil && right.MultiMatchSubQuery != nil {
 			mm := &manyVsManyExpr{
-				left:  left,
-				right: right,
-				op:    op,
+				left:    left,
+				right:   right,
+				op:      op,
+				dialect: dialect,
 			}
 
 			expr = dbx.Enclose(dbx.And(expr, mm))
@@ -234,6 +237,7 @@ func buildResolversExpr(
 				subQuery:     left.MultiMatchSubQuery,
 				op:           op,
 				otherOperand: right,
+				dialect:      dialect,
 			}
 
 			expr = dbx.Enclose(dbx.And(expr, mm))
@@ -244,6 +248,7 @@ func buildResolversExpr(
 				op:           op,
 				otherOperand: left,
 				inverse:      true,
+				dialect:      dialect,
 			}
 
 			expr = dbx.Enclose(dbx.And(expr, mm))
@@ -295,6 +300,9 @@ func resolveToken(token fexpr.Token, fieldResolver FieldResolver) (*ResolverResu
 		if err != nil || result.Identifier == "" {
 			for k, v := range normalizedIdentifiers {
 				if strings.EqualFold(k, token.Literal) {
+					if dialectOf(fieldResolver).IsPostgres() && (k == "true" || k == "false") {
+						v = strings.ToUpper(k)
+					}
 					return &ResolverResult{Identifier: v}, nil
 				}
 			}
@@ -317,13 +325,13 @@ func resolveToken(token fexpr.Token, fieldResolver FieldResolver) (*ResolverResu
 			Params:     dbx.Params{placeholder: cast.ToFloat64(token.Literal)},
 		}, nil
 	case fexpr.TokenFunction:
-		fn, ok := TokenFunctions[token.Literal]
+		fn, ok := TokenFunctionsWithDialect[token.Literal]
 		if !ok {
 			return nil, fmt.Errorf("unknown function %q", token.Literal)
 		}
 
 		args, _ := token.Meta.([]fexpr.Token)
-		return fn(func(argToken fexpr.Token) (*ResolverResult, error) {
+		return fn(dialectOf(fieldResolver), func(argToken fexpr.Token) (*ResolverResult, error) {
 			return resolveToken(argToken, fieldResolver)
 		}, args...)
 	}
@@ -337,19 +345,25 @@ func resolveToken(token fexpr.Token, fieldResolver FieldResolver) (*ResolverResu
 // The expression `a = "" OR a is null` tends to perform better than
 // `COALESCE(a, "") = ""` since the direct match can be accomplished
 // with a seek while the COALESCE will induce a table scan.
-func resolveEqualExpr(equal bool, left, right *ResolverResult) dbx.Expression {
+func resolveEqualExpr(equal bool, left, right *ResolverResult, dialect dbutils.Dialect) dbx.Expression {
 	equalOp := "="
-	nullEqualOp := "IS"
 	concatOp := "OR"
 	nullExpr := "IS NULL"
-	if !equal {
-		// always use `IS NOT` instead of `!=` because direct non-equal comparisons
-		// to nullable column values that are actually NULL yields to NULL instead of TRUE, eg.:
-		// `'example' != nullableColumn` -> NULL even if nullableColumn row value is NULL
-		equalOp = "IS NOT"
-		nullEqualOp = equalOp
-		concatOp = "AND"
-		nullExpr = "IS NOT NULL"
+	if dialect.IsSQLite() {
+		if !equal {
+			// always use `IS NOT` instead of `!=` because direct non-equal comparisons
+			// to nullable column values that are actually NULL yields to NULL instead of TRUE, eg.:
+			// `'example' != nullableColumn` -> NULL even if nullableColumn row value is NULL
+			equalOp = "IS NOT"
+			concatOp = "AND"
+			nullExpr = "IS NOT NULL"
+		}
+	} else {
+		if !equal {
+			equalOp = "<>"
+			concatOp = "AND"
+			nullExpr = "IS NOT NULL"
+		}
 	}
 
 	// no coalesce fallback (eg. compare to a json field)
@@ -358,7 +372,7 @@ func resolveEqualExpr(equal bool, left, right *ResolverResult) dbx.Expression {
 	if left.NullFallback == NullFallbackDisabled ||
 		right.NullFallback == NullFallbackDisabled {
 		return dbx.NewExp(
-			fmt.Sprintf("%s %s %s", left.Identifier, nullEqualOp, right.Identifier),
+			equalityExpr(left.Identifier, right.Identifier, equal, dialect),
 			mergeParams(left.Params, right.Params),
 		)
 	}
@@ -371,7 +385,7 @@ func resolveEqualExpr(equal bool, left, right *ResolverResult) dbx.Expression {
 
 	// both operands are empty
 	if isLeftEmpty && isRightEmpty {
-		return dbx.NewExp(fmt.Sprintf("'' %s ''", equalOp), mergeParams(left.Params, right.Params))
+		return dbx.NewExp(directCompareExpr("''", "''", equal, dialect), mergeParams(left.Params, right.Params))
 	}
 
 	// direct compare since at least one of the operands is known to be non-empty
@@ -386,7 +400,7 @@ func resolveEqualExpr(equal bool, left, right *ResolverResult) dbx.Expression {
 			rightIdentifier = "''"
 		}
 		return dbx.NewExp(
-			fmt.Sprintf("%s %s %s", leftIdentifier, equalOp, rightIdentifier),
+			directCompareExpr(leftIdentifier, rightIdentifier, equal, dialect),
 			mergeParams(left.Params, right.Params),
 		)
 	}
@@ -395,7 +409,7 @@ func resolveEqualExpr(equal bool, left, right *ResolverResult) dbx.Expression {
 	// "" IS NOT b AND b IS NOT NULL
 	if isLeftEmpty {
 		return dbx.NewExp(
-			fmt.Sprintf("('' %s %s %s %s %s)", equalOp, right.Identifier, concatOp, right.Identifier, nullExpr),
+			fmt.Sprintf("(%s %s %s %s)", directCompareExpr("''", right.Identifier, equal, dialect), concatOp, right.Identifier, nullExpr),
 			mergeParams(left.Params, right.Params),
 		)
 	}
@@ -404,7 +418,7 @@ func resolveEqualExpr(equal bool, left, right *ResolverResult) dbx.Expression {
 	// a IS NOT "" AND a IS NOT NULL
 	if isRightEmpty {
 		return dbx.NewExp(
-			fmt.Sprintf("(%s %s '' %s %s %s)", left.Identifier, equalOp, concatOp, left.Identifier, nullExpr),
+			fmt.Sprintf("(%s %s %s %s)", directCompareExpr(left.Identifier, "''", equal, dialect), concatOp, left.Identifier, nullExpr),
 			mergeParams(left.Params, right.Params),
 		)
 	}
@@ -633,9 +647,10 @@ var _ dbx.Expression = (*manyVsManyExpr)(nil)
 // Expects leftSubQuery and rightSubQuery to return a subquery with a
 // single "multiMatchValue" column.
 type manyVsManyExpr struct {
-	left  *ResolverResult
-	right *ResolverResult
-	op    fexpr.SignOp
+	left    *ResolverResult
+	right   *ResolverResult
+	op      fexpr.SignOp
+	dialect dbutils.Dialect
 }
 
 // Build converts the expression into a SQL fragment.
@@ -662,6 +677,7 @@ func (e *manyVsManyExpr) Build(db *dbx.DB, params dbx.Params) string {
 			// doesn't matter whether it is applied on the left or right subquery operand
 			AfterBuild: dbx.Not, // inverse for the not-exist expression
 		},
+		e.dialect,
 	)
 
 	if buildErr != nil {
@@ -693,6 +709,7 @@ type manyVsOneExpr struct {
 	op           fexpr.SignOp
 	inverse      bool
 	nullFallback NullFallbackPreference
+	dialect      dbutils.Dialect
 }
 
 // Build converts the expression into a SQL fragment.
@@ -720,9 +737,9 @@ func (e *manyVsOneExpr) Build(db *dbx.DB, params dbx.Params) string {
 	var buildErr error
 
 	if e.inverse {
-		whereExpr, buildErr = buildResolversExpr(r2, e.op, r1)
+		whereExpr, buildErr = buildResolversExpr(r2, e.op, r1, e.dialect)
 	} else {
-		whereExpr, buildErr = buildResolversExpr(r1, e.op, r2)
+		whereExpr, buildErr = buildResolversExpr(r1, e.op, r2, e.dialect)
 	}
 
 	if buildErr != nil {
@@ -735,4 +752,47 @@ func (e *manyVsOneExpr) Build(db *dbx.DB, params dbx.Params) string {
 		alias,
 		whereExpr.Build(db, params),
 	)
+}
+
+type dialectProvider interface {
+	Dialect() dbutils.Dialect
+}
+
+func dialectOf(fieldResolver FieldResolver) dbutils.Dialect {
+	if provider, ok := fieldResolver.(dialectProvider); ok {
+		return provider.Dialect()
+	}
+
+	return dbutils.DialectSQLite
+}
+
+func equalityExpr(left string, right string, equal bool, dialect dbutils.Dialect) string {
+	switch {
+	case dialect.IsPostgres():
+		if equal {
+			return left + " IS NOT DISTINCT FROM " + right
+		}
+		return left + " IS DISTINCT FROM " + right
+	case dialect.IsMySQL():
+		if equal {
+			return left + " <=> " + right
+		}
+		return "NOT (" + left + " <=> " + right + ")"
+	default:
+		if equal {
+			return left + " IS " + right
+		}
+		return left + " IS NOT " + right
+	}
+}
+
+func directCompareExpr(left string, right string, equal bool, dialect dbutils.Dialect) string {
+	if dialect.IsSQLite() {
+		if equal {
+			return left + " = " + right
+		}
+		return left + " IS NOT " + right
+	}
+
+	return equalityExpr(left, right, equal, dialect)
 }

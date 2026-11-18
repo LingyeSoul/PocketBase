@@ -3,6 +3,8 @@ package search
 import (
 	"fmt"
 	"strings"
+
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
 )
 
 const (
@@ -24,14 +26,16 @@ type SortField struct {
 
 // BuildExpr resolves the sort field into a valid db sort expression.
 func (s *SortField) BuildExpr(fieldResolver FieldResolver) (string, error) {
+	dialect := dialectOf(fieldResolver)
+
 	// special case for random sort
 	if s.Name == randomSortKey {
-		return "RANDOM()", nil
+		return dbutils.RandomFor(dialect), nil
 	}
 
 	// special case for the builtin SQLite rowid column
 	if s.Name == rowidSortKey {
-		return fmt.Sprintf("[[_rowid_]] %s", s.Direction), nil
+		return fmt.Sprintf("%s %s", dbutils.RowIDFor(dialect), s.Direction), nil
 	}
 
 	result, err := fieldResolver.Resolve(s.Name)

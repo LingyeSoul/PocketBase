@@ -202,34 +202,51 @@ func createZip(be *BackupEvent, tempZipPath string) error {
 		},
 	})
 
-	// copy data.db
+	// copy data database
 	// ---------------------------------------------------------------
+	isSQLite := be.App.DBDialect().IsSQLite()
+	dataFilename := dataDBFilename
+	dataTempPath := filepath.Join(localTempDir, dataFilename)
 	dataStartTime := time.Now()
-	tempDataDBPath := filepath.Join(localTempDir, dataDBFilename)
 
-	_, err = be.App.ConcurrentDB().NewQuery("VACUUM INTO {:path}").Bind(dbx.Params{"path": tempDataDBPath}).Execute()
-	if err != nil {
-		return err
+	if isSQLite {
+		_, err = be.App.ConcurrentDB().NewQuery("VACUUM INTO {:path}").Bind(dbx.Params{"path": dataTempPath}).Execute()
+		if err != nil {
+			return err
+		}
+	} else {
+		dsn, dsnErr := externalDBDSN(be.App, false)
+		if dsnErr != nil {
+			return dsnErr
+		}
+
+		dataFilename = databaseDumpFilename(be.App.DBDialect(), false)
+		dataTempPath = filepath.Join(localTempDir, dataFilename)
+		if err := dumpExternalDB(be.App.DBDialect(), dsn, dataTempPath); err != nil {
+			return err
+		}
 	}
 
 	// eagerly stop listening for deleted files since we already have what we needed
 	be.App.onFilesystemDelete().Unbind(tempFilesHookId)
 
 	be.App.Logger().Debug(
-		logPrefix+dataDBFilename+" copy completed",
+		logPrefix+dataFilename+" copy completed",
 		slog.Float64("execTime", float64(time.Since(dataStartTime))/float64(time.Millisecond)),
 	)
 
-	err = zipper.copyFileToZip(tempDataDBPath, dataDBFilename)
+	err = zipper.copyFileToZip(dataTempPath, dataFilename)
 	if err != nil {
-		_ = os.Remove(tempDataDBPath)
+		_ = os.Remove(dataTempPath)
 		return err
 	}
-	_ = os.Remove(tempDataDBPath)
+	_ = os.Remove(dataTempPath)
 
-	excluded.Set(normalizePathExclude(dataDBFilename), struct{}{})
-	excluded.Set(normalizePathExclude(dataDBFilename+"-wal"), struct{}{})
-	excluded.Set(normalizePathExclude(dataDBFilename+"-shm"), struct{}{})
+	if isSQLite {
+		excluded.Set(normalizePathExclude(dataDBFilename), struct{}{})
+		excluded.Set(normalizePathExclude(dataDBFilename+"-wal"), struct{}{})
+		excluded.Set(normalizePathExclude(dataDBFilename+"-shm"), struct{}{})
+	}
 
 	// init to-be-created files tracker
 	// ---------------------------------------------------------------
@@ -248,38 +265,67 @@ func createZip(be *BackupEvent, tempZipPath string) error {
 		},
 	})
 
-	// copy auxiliary.db
+	// copy auxiliary database
 	// ---------------------------------------------------------------
 	auxStartTime := time.Now()
-	tempAuxDBPath := filepath.Join(localTempDir, auxDBFilename)
+	auxFilename := auxDBFilename
+	auxTempPath := filepath.Join(localTempDir, auxFilename)
+	writeAux := true
 
-	_, err = be.App.AuxConcurrentDB().NewQuery("VACUUM INTO {:path}").Bind(dbx.Params{"path": tempAuxDBPath}).Execute()
-	if err != nil {
-		return err
+	if isSQLite {
+		_, err = be.App.AuxConcurrentDB().NewQuery("VACUUM INTO {:path}").Bind(dbx.Params{"path": auxTempPath}).Execute()
+		if err != nil {
+			return err
+		}
+	} else {
+		dataDSN, dsnErr := externalDBDSN(be.App, false)
+		if dsnErr != nil {
+			return dsnErr
+		}
+		auxDSN, dsnErr := externalDBDSN(be.App, true)
+		if dsnErr != nil {
+			return dsnErr
+		}
+
+		if auxDSN == dataDSN {
+			writeAux = false
+		} else {
+			auxFilename = databaseDumpFilename(be.App.DBDialect(), true)
+			auxTempPath = filepath.Join(localTempDir, auxFilename)
+			if err := dumpExternalDB(be.App.DBDialect(), auxDSN, auxTempPath); err != nil {
+				return err
+			}
+		}
 	}
 
-	be.App.Logger().Debug(
-		logPrefix+auxDBFilename+" copy completed",
-		slog.Float64("execTime", float64(time.Since(auxStartTime))/float64(time.Millisecond)),
-	)
+	if writeAux {
+		be.App.Logger().Debug(
+			logPrefix+auxFilename+" copy completed",
+			slog.Float64("execTime", float64(time.Since(auxStartTime))/float64(time.Millisecond)),
+		)
 
-	err = zipper.copyFileToZip(tempAuxDBPath, auxDBFilename)
-	if err != nil {
-		_ = os.Remove(tempAuxDBPath)
-		return err
+		err = zipper.copyFileToZip(auxTempPath, auxFilename)
+		if err != nil {
+			_ = os.Remove(auxTempPath)
+			return err
+		}
+		_ = os.Remove(auxTempPath)
+
+		if isSQLite {
+			excluded.Set(normalizePathExclude(auxDBFilename), struct{}{})
+			excluded.Set(normalizePathExclude(auxDBFilename+"-wal"), struct{}{})
+			excluded.Set(normalizePathExclude(auxDBFilename+"-shm"), struct{}{})
+		}
 	}
-	_ = os.Remove(tempAuxDBPath)
 
-	excluded.Set(normalizePathExclude(auxDBFilename), struct{}{})
-	excluded.Set(normalizePathExclude(auxDBFilename+"-wal"), struct{}{})
-	excluded.Set(normalizePathExclude(auxDBFilename+"-shm"), struct{}{})
-
-	// try to run manual checkpoints to ensure that all wal writes during the
-	// previous VACUUM INTO are transferred and don't accumulate
-	// (errors are ignore because some drivers may not support the wal_checkpoint pragma)
-	// ---------------------------------------------------------------
-	_, _ = be.App.NonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
-	_, _ = be.App.AuxNonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
+	if isSQLite {
+		// try to run manual checkpoints to ensure that all wal writes during the
+		// previous VACUUM INTO are transferred and don't accumulate
+		// (errors are ignore because some drivers may not support the wal_checkpoint pragma)
+		// ---------------------------------------------------------------
+		_, _ = be.App.NonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
+		_, _ = be.App.AuxNonconcurrentDB().NewQuery("PRAGMA wal_checkpoint(TRUNCATE)").Execute()
+	}
 
 	// copy the rest of the pb_data
 	// ---------------------------------------------------------------

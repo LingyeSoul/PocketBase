@@ -263,7 +263,7 @@ func (s *Provider) Exec(items any) (*Result, error) {
 		}
 		if expr != "" {
 			// ensure that _rowid_ expressions are always prefixed with the first FROM table
-			if sortField.Name == rowidSortKey && !strings.Contains(expr, ".") {
+			if sortField.Name == rowidSortKey && dialectOf(s.fieldResolver).IsSQLite() && !strings.Contains(expr, ".") {
 				queryInfo := modelsQuery.Info()
 				if len(queryInfo.From) > 0 {
 					expr = "[[" + inflector.Columnify(queryInfo.From[0]) + "]]." + expr

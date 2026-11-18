@@ -21,6 +21,10 @@ func fieldIdChecksum(typ, name string) string {
 // normalize system collection and field ids
 func init() {
 	core.SystemMigrations.Register(func(txApp core.App) error {
+		if !txApp.DBDialect().IsSQLite() {
+			return nil
+		}
+
 		collections := []*core.Collection{}
 		err := txApp.CollectionQuery().
 			AndWhere(dbx.In(

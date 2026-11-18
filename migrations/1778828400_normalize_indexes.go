@@ -12,6 +12,10 @@ import (
 // see https://ganigeorgiev.com/pocketbase/discussions/7689
 func init() {
 	core.SystemMigrations.Register(func(txApp core.App) error {
+		if !txApp.DBDialect().IsSQLite() {
+			return nil
+		}
+
 		collections, err := txApp.FindAllCollections()
 		if err != nil {
 			return err

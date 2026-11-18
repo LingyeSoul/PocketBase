@@ -9,6 +9,10 @@ import (
 // add new OTP sentTo text field (if not already)
 func init() {
 	core.SystemMigrations.Register(func(txApp core.App) error {
+		if !txApp.DBDialect().IsSQLite() {
+			return nil
+		}
+
 		otpCollection, err := txApp.FindCollectionByNameOrId(core.CollectionNameOTPs)
 		if err != nil {
 			return err

@@ -3,7 +3,9 @@ package core
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
+	"time"
 
 	"ganigeorgiev.com/pocketbase/dbx"
 )
@@ -29,10 +31,25 @@ func (app *BaseApp) runInTransaction(db dbx.Builder, fn func(txApp App) error, i
 		return fn(app)
 	case *dbx.DB:
 		var txApp *BaseApp
-		txErr := txOrDB.Transactional(func(tx *dbx.Tx) error {
-			txApp = app.createTxApp(tx, isForAuxDB)
-			return fn(txApp)
-		})
+		var txErr error
+		attempts := 1
+		if !app.DBDialect().IsSQLite() {
+			attempts = defaultMaxLockRetries
+		}
+
+		for attempt := 1; attempt <= attempts; attempt++ {
+			txApp = nil
+			txErr = txOrDB.Transactional(func(tx *dbx.Tx) error {
+				txApp = app.createTxApp(tx, isForAuxDB)
+				return fn(txApp)
+			})
+
+			if txErr == nil || attempt == attempts || !isRetryableTransactionError(txErr) {
+				break
+			}
+
+			time.Sleep(getDefaultRetryInterval(attempt))
+		}
 
 		// execute all after event calls on transaction complete
 		if txApp != nil && txApp.txInfo != nil {
@@ -109,4 +126,21 @@ func (a *TxAppInfo) runAfterFuncs(txErr error) error {
 	}
 
 	return nil
+}
+
+func isRetryableTransactionError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	msg := strings.ToLower(err.Error())
+
+	return strings.Contains(msg, "deadlock detected") ||
+		strings.Contains(msg, "could not serialize access") ||
+		strings.Contains(msg, "sqlstate 40001") ||
+		strings.Contains(msg, "sqlstate 40p01") ||
+		strings.Contains(msg, "deadlock found") ||
+		strings.Contains(msg, "lock wait timeout exceeded") ||
+		strings.Contains(msg, "error 1213") ||
+		strings.Contains(msg, "error 1205")
 }
