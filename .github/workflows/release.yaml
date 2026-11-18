@@ -38,6 +38,14 @@ jobs:
       - name: Build Admin dashboard UI
         run: npm --prefix=./ui ci && npm --prefix=./ui run build
 
+      - name: Verify committed UI dist is up to date
+        run: |
+          if [ -n "$(git status --porcelain -- ui/dist)" ]; then
+            git status --porcelain -- ui/dist
+            echo "ui/dist is stale; rebuild it and commit the result."
+            exit 1
+          fi
+
       - name: Run tests
         run: go test ./...
 

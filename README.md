@@ -30,16 +30,18 @@
 
 ## Building the admin UI
 
-The admin UI build artifacts are not committed. Build them before compiling the
-Go application (the release workflow does this automatically):
+The admin UI build artifacts are committed under `ui/dist` so `go build` and
+downstream module consumers embed the dashboard without extra tooling. Rebuild
+and commit them after changing the UI sources:
 
 ```sh
 npm --prefix=./ui ci
 npm --prefix=./ui run build
 ```
 
-Without `ui/dist` the default embed build will fail; use the `no_ui`
-build tag only if you intentionally build without the bundled dashboard.
+The release workflow rebuilds the dashboard from the tagged source and fails
+the release if the committed `ui/dist` is stale. Use the `no_ui` build tag only
+if you intentionally build without the bundled dashboard.
 
 ## Alternative databases
 
