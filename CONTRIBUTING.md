@@ -1,5 +1,10 @@
 # Contributing to PocketBase
 
+> **Scope of this file** — This repository is a private fork of PocketBase v0.42.3 maintained for
+> self-hosting a single-binary backend. External contributions are not accepted here; the
+> upstream contribution rules below do not apply to this repository. The build and run
+> instructions are still accurate and are kept as the local development guide.
+
 If you stumble on a problem that you want to fix, please consider opening a discussion with your suggested fix as inline code, git diff attachment (`git diff > mychange.diff`) or link to your fork **(if not obvious - LLM contributions are not welcome no matter of their validity)**.
 
 This document describes how to modify and work with the codebase.

@@ -1,5 +1,11 @@
 # Security
 
+> **Scope of this file** — This repository is a private fork of PocketBase v0.42.3 that is built
+> and run by its maintainer only. There is no disclosure process for changes made in this fork;
+> the policy below describes the **upstream** project and is kept as a reference for bugs that
+> exist in the unmodified upstream code. Report upstream issues through the channels below,
+> never through this repository.
+
 If you want to responsibly report a security issue, you can either submit a [**private bug**](https://ganigeorgiev.com/pocketbase/discussions/new/Bugs?private=1) OR send an e-mail to **support@pocketbase.io**.
 
 Please reach out as a human! This means:

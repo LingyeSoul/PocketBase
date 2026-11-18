@@ -8,6 +8,13 @@
     <a href="https://pkg.go.dev/ganigeorgiev.com/pocketbase/pocketbase" target="_blank" rel="noopener"><img src="https://godoc.org/ganigeorgiev.com/pocketbase/pocketbase?status.svg" alt="Go package documentation" /></a>
 </p>
 
+> **Fork notice** — This repository is a modified copy of [PocketBase](https://pocketbase.io)
+> **v0.42.3**, MIT licensed, © 2022 - present Gani Georgiev.
+> See [LICENSE.md](LICENSE.md) for the upstream license text and [LICENSE](LICENSE) for the
+> combined copyright notice. This copy is **not affiliated with or endorsed by** the PocketBase project.
+> Report bugs of the upstream code at https://ganigeorgiev.com/pocketbase/pocketbase;
+> report bugs of the changes made here in this repository.
+
 [PocketBase](https://pocketbase.io) is an open source Go backend that includes:
 
 - embedded database (_SQLite_) with **realtime subscriptions**
