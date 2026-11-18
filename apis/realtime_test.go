@@ -13,11 +13,11 @@ import (
 	"time"
 
 	"ganigeorgiev.com/pocketbase/dbx"
-	"ganigeorgiev.com/pocketbase/pocketbase/apis"
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/subscriptions"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/types"
+	"github.com/lingyesoul/pocketbase/apis"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tests"
+	"github.com/lingyesoul/pocketbase/tools/subscriptions"
+	"github.com/lingyesoul/pocketbase/tools/types"
 )
 
 func TestRealtimeConnect(t *testing.T) {

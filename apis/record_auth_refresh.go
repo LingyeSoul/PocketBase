@@ -1,8 +1,8 @@
 package apis
 
 import (
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/security"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tools/security"
 	"github.com/spf13/cast"
 )
 

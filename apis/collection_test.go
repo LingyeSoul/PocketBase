@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tests"
+	"github.com/lingyesoul/pocketbase/tools/list"
 )
 
 func TestCollectionsList(t *testing.T) {

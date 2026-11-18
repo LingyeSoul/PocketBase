@@ -6,8 +6,8 @@ import (
 	"errors"
 	"testing"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/picker"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/search"
+	"github.com/lingyesoul/pocketbase/tools/picker"
+	"github.com/lingyesoul/pocketbase/tools/search"
 )
 
 type brokenModifier struct {

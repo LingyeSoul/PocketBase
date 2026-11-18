@@ -24,10 +24,6 @@ import (
 	"strings"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/plugins/jsvm/internal/types/generated"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/routine"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/template"
 	"github.com/dop251/goja"
 	"github.com/dop251/goja_nodejs/buffer"
 	"github.com/dop251/goja_nodejs/console"
@@ -35,6 +31,10 @@ import (
 	"github.com/dop251/goja_nodejs/require"
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/plugins/jsvm/internal/types/generated"
+	"github.com/lingyesoul/pocketbase/tools/routine"
+	"github.com/lingyesoul/pocketbase/tools/template"
 )
 
 const typesFileName = "types.d.ts"

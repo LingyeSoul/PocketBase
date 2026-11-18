@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/plugins/jsvm"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
 	"ganigeorgiev.com/pocketbase/tygoja"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/plugins/jsvm"
+	"github.com/lingyesoul/pocketbase/tools/list"
 )
 
 const heading = `
@@ -1291,14 +1291,14 @@ func main() {
 		Packages: map[string][]string{
 			"ganigeorgiev.com/pocketbase/ozzo-validation/v4":          {"Error"},
 			"ganigeorgiev.com/pocketbase/dbx":                         {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/tools/security":   {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem": {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/tools/template":   {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/mails":            {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/apis":             {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/core":             {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase/forms":            {"*"},
-			"ganigeorgiev.com/pocketbase/pocketbase":                  {"*"},
+			"github.com/lingyesoul/pocketbase/tools/security":   {"*"},
+			"github.com/lingyesoul/pocketbase/tools/filesystem": {"*"},
+			"github.com/lingyesoul/pocketbase/tools/template":   {"*"},
+			"github.com/lingyesoul/pocketbase/mails":            {"*"},
+			"github.com/lingyesoul/pocketbase/apis":             {"*"},
+			"github.com/lingyesoul/pocketbase/core":             {"*"},
+			"github.com/lingyesoul/pocketbase/forms":            {"*"},
+			"github.com/lingyesoul/pocketbase":                  {"*"},
 			"path/filepath":                                           {"*"},
 			"os":                                                      {"*"},
 			"os/exec":                                                 {"Command"},

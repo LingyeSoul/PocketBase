@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/forms"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/router"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/forms"
+	"github.com/lingyesoul/pocketbase/tools/router"
 )
 
 // bindSettingsApi registers the settings api endpoints.

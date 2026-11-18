@@ -9,11 +9,11 @@ import (
 	"strings"
 
 	"ganigeorgiev.com/pocketbase/dbx"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/dbutils"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/inflector"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/search"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/security"
+	"github.com/lingyesoul/pocketbase/tools/dbutils"
+	"github.com/lingyesoul/pocketbase/tools/inflector"
+	"github.com/lingyesoul/pocketbase/tools/list"
+	"github.com/lingyesoul/pocketbase/tools/search"
+	"github.com/lingyesoul/pocketbase/tools/security"
 )
 
 var recordProxyType = reflect.TypeOf((*RecordProxy)(nil)).Elem()

@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/osutils"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/security"
+	"github.com/lingyesoul/pocketbase/tools/list"
+	"github.com/lingyesoul/pocketbase/tools/osutils"
+	"github.com/lingyesoul/pocketbase/tools/security"
 )
 
 func TestMoveDirContent(t *testing.T) {

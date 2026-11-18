@@ -6,8 +6,8 @@ import (
 
 	"ganigeorgiev.com/pocketbase/dbx"
 	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/types"
+	"github.com/lingyesoul/pocketbase/tools/list"
+	"github.com/lingyesoul/pocketbase/tools/types"
 )
 
 func init() {

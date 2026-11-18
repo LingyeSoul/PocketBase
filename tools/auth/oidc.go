@@ -9,10 +9,10 @@ import (
 	"strconv"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/auth/internal/jwk"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/security"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/types"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/lingyesoul/pocketbase/tools/auth/internal/jwk"
+	"github.com/lingyesoul/pocketbase/tools/security"
+	"github.com/lingyesoul/pocketbase/tools/types"
 	"github.com/spf13/cast"
 	"golang.org/x/oauth2"
 )

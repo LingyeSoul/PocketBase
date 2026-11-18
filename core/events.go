@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/auth"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/mailer"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/router"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/search"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/subscriptions"
+	"github.com/lingyesoul/pocketbase/tools/auth"
+	"github.com/lingyesoul/pocketbase/tools/filesystem"
+	"github.com/lingyesoul/pocketbase/tools/hook"
+	"github.com/lingyesoul/pocketbase/tools/mailer"
+	"github.com/lingyesoul/pocketbase/tools/router"
+	"github.com/lingyesoul/pocketbase/tools/search"
+	"github.com/lingyesoul/pocketbase/tools/subscriptions"
 	"golang.org/x/crypto/acme/autocert"
 )
 

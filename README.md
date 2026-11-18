@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    <a href="https://pkg.go.dev/ganigeorgiev.com/pocketbase/pocketbase" target="_blank" rel="noopener"><img src="https://godoc.org/ganigeorgiev.com/pocketbase/pocketbase?status.svg" alt="Go package documentation" /></a>
+    <a href="https://pkg.go.dev/github.com/lingyesoul/pocketbase" target="_blank" rel="noopener"><img src="https://pkg.go.dev/badge/github.com/lingyesoul/pocketbase.svg" alt="Go package documentation" /></a>
 </p>
 
 > **Fork notice** — This repository is a modified copy of [PocketBase](https://pocketbase.io)
@@ -63,8 +63,8 @@ Here is a minimal example:
     import (
         "log"
 
-        "ganigeorgiev.com/pocketbase/pocketbase"
-        "ganigeorgiev.com/pocketbase/pocketbase/core"
+        "github.com/lingyesoul/pocketbase"
+        "github.com/lingyesoul/pocketbase/core"
     )
 
     func main() {

@@ -16,16 +16,16 @@ import (
 	"strconv"
 	"strings"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/blob"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/internal/fileblob"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/internal/s3blob"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/internal/s3blob/s3"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/routine"
 	"github.com/disintegration/imaging"
 	"github.com/fatih/color"
 	"github.com/gabriel-vasile/mimetype"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/blob"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/internal/fileblob"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/internal/s3blob"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/internal/s3blob/s3"
+	"github.com/lingyesoul/pocketbase/tools/hook"
+	"github.com/lingyesoul/pocketbase/tools/list"
+	"github.com/lingyesoul/pocketbase/tools/routine"
 	"github.com/spf13/cast"
 
 	// manually register the webp decoder because disintegration/imaging does not support webp

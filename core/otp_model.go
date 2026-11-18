@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/types"
+	"github.com/lingyesoul/pocketbase/tools/hook"
+	"github.com/lingyesoul/pocketbase/tools/types"
 )
 
 const CollectionNameOTPs = "_otps"

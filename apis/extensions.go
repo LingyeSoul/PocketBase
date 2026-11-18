@@ -8,9 +8,9 @@ import (
 	"log/slog"
 	"os"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
-	"ganigeorgiev.com/pocketbase/pocketbase/ui"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tools/hook"
+	"github.com/lingyesoul/pocketbase/ui"
 )
 
 // bindUIExtensions binds the superuser UI extensions routes to the ServeEvent.Router.

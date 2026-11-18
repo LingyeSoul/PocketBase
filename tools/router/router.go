@@ -10,7 +10,7 @@ import (
 	"net"
 	"net/http"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
+	"github.com/lingyesoul/pocketbase/tools/hook"
 )
 
 type EventCleanupFunc func()

@@ -5,10 +5,10 @@ import (
 	"slices"
 	"strings"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/cron"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/router"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/routine"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tools/cron"
+	"github.com/lingyesoul/pocketbase/tools/router"
+	"github.com/lingyesoul/pocketbase/tools/routine"
 )
 
 // bindCronApi registers the crons api endpoint.

@@ -17,14 +17,14 @@ import (
 	"time"
 
 	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
-	"ganigeorgiev.com/pocketbase/pocketbase/apis"
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/mailer"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/router"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/types"
 	"github.com/dop251/goja"
+	"github.com/lingyesoul/pocketbase/apis"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tests"
+	"github.com/lingyesoul/pocketbase/tools/filesystem"
+	"github.com/lingyesoul/pocketbase/tools/mailer"
+	"github.com/lingyesoul/pocketbase/tools/router"
+	"github.com/lingyesoul/pocketbase/tools/types"
 	"github.com/spf13/cast"
 )
 

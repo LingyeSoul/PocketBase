@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/search"
+	"github.com/lingyesoul/pocketbase/tools/search"
 )
 
 func TestSortFieldBuildExpr(t *testing.T) {

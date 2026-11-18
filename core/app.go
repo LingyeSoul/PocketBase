@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"ganigeorgiev.com/pocketbase/dbx"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/cron"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/hook"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/mailer"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/store"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/subscriptions"
+	"github.com/lingyesoul/pocketbase/tools/cron"
+	"github.com/lingyesoul/pocketbase/tools/filesystem"
+	"github.com/lingyesoul/pocketbase/tools/hook"
+	"github.com/lingyesoul/pocketbase/tools/mailer"
+	"github.com/lingyesoul/pocketbase/tools/store"
+	"github.com/lingyesoul/pocketbase/tools/subscriptions"
 )
 
 // App defines the main PocketBase app interface.

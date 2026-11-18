@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/mailer"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/security"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tests"
+	"github.com/lingyesoul/pocketbase/tools/mailer"
+	"github.com/lingyesoul/pocketbase/tools/security"
 )
 
 func TestSettingsDelete(t *testing.T) {

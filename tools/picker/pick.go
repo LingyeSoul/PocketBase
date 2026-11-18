@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/search"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/tokenizer"
+	"github.com/lingyesoul/pocketbase/tools/search"
+	"github.com/lingyesoul/pocketbase/tools/tokenizer"
 )
 
 var ErrInvalidModifierData = errors.New("failed to apply some of the field modifiers for the provided data")

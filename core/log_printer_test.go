@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"ganigeorgiev.com/pocketbase/dbx"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/list"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/logger"
 	"github.com/fatih/color"
+	"github.com/lingyesoul/pocketbase/tools/list"
+	"github.com/lingyesoul/pocketbase/tools/logger"
 )
 
 func TestBaseAppLoggerLevelDevPrint(t *testing.T) {

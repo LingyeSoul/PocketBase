@@ -4,10 +4,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/apis"
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
 	"github.com/dop251/goja"
+	"github.com/lingyesoul/pocketbase/apis"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tests"
 )
 
 func TestHooksAppReset(t *testing.T) {

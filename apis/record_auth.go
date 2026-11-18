@@ -1,8 +1,8 @@
 package apis
 
 import (
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/router"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tools/router"
 )
 
 // bindRecordAuthApi registers the auth record api endpoints and

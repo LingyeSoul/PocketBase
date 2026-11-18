@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
-	"ganigeorgiev.com/pocketbase/pocketbase/core/validators"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
+	"github.com/lingyesoul/pocketbase/core/validators"
+	"github.com/lingyesoul/pocketbase/tests"
 )
 
 func TestUniqueId(t *testing.T) {

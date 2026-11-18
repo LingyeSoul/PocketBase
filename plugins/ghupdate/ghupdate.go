@@ -23,10 +23,10 @@ import (
 	"strconv"
 	"strings"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/archive"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/osutils"
 	"github.com/fatih/color"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tools/archive"
+	"github.com/lingyesoul/pocketbase/tools/osutils"
 	"github.com/spf13/cobra"
 )
 

@@ -5,9 +5,9 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
-	"ganigeorgiev.com/pocketbase/pocketbase/tests"
-	"ganigeorgiev.com/pocketbase/pocketbase/ui"
+	"github.com/lingyesoul/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/tests"
+	"github.com/lingyesoul/pocketbase/ui"
 )
 
 // note: don't run in parallel to avoid conflicts with the ui.DistDirFS nil test

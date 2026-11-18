@@ -3,7 +3,7 @@ package core_test
 import (
 	"testing"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
+	"github.com/lingyesoul/pocketbase/core"
 )
 
 func TestBaseRecordProxy(t *testing.T) {

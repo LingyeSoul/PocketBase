@@ -3,7 +3,7 @@ package core
 import (
 	"encoding/json/v2"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/types"
+	"github.com/lingyesoul/pocketbase/tools/types"
 )
 
 var (

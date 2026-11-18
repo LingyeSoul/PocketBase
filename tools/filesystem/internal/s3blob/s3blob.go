@@ -40,9 +40,9 @@ import (
 	"strconv"
 	"strings"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/blob"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/internal/s3blob/s3"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/routine"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/blob"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/internal/s3blob/s3"
+	"github.com/lingyesoul/pocketbase/tools/routine"
 )
 
 const defaultPageSize = 1000

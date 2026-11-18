@@ -16,9 +16,9 @@ import (
 	"strings"
 	"testing"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem/blob"
 	"github.com/gabriel-vasile/mimetype"
+	"github.com/lingyesoul/pocketbase/tools/filesystem"
+	"github.com/lingyesoul/pocketbase/tools/filesystem/blob"
 )
 
 func TestFilesystemExists(t *testing.T) {

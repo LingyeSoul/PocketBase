@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"runtime/debug"
 
-	"ganigeorgiev.com/pocketbase/pocketbase/core"
 	"github.com/fatih/color"
+	"github.com/lingyesoul/pocketbase/core"
 )
 
 const (

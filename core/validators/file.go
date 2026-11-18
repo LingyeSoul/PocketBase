@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	validation "ganigeorgiev.com/pocketbase/ozzo-validation/v4"
-	"ganigeorgiev.com/pocketbase/pocketbase/tools/filesystem"
 	"github.com/gabriel-vasile/mimetype"
+	"github.com/lingyesoul/pocketbase/tools/filesystem"
 )
 
 // UploadedFileSize checks whether the validated [*filesystem.File]
