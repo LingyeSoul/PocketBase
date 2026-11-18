@@ -50,6 +50,9 @@ archives:
     files:
       - LICENSE.md
       - CHANGELOG.md
+      # Ship the prebuilt dashboard as loose files for static hosting and
+      # release auditing. The binary still embeds the same assets.
+      - ui/dist/**
 
 checksum:
   name_template: 'checksums.txt'
