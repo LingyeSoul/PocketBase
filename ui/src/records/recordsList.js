@@ -1,3 +1,4 @@
+import { __t, __ } from "@/i18n";
 import { fieldsWithExcerpt } from "@/fields/relation/view";
 
 window.app = window.app || {};
@@ -238,7 +239,7 @@ window.app.components.recordsList = function(propsArg = {}) {
         selectAll(false);
 
         app.toasts.success(
-            `Successfully deleted ${idsToDelete.length} ${idsToDelete.length == 1 ? "record" : "records"}.`,
+            __t`Successfully deleted ${idsToDelete.length} ${__("record count")}.`,
         );
     }
 
@@ -529,7 +530,7 @@ window.app.components.recordsList = function(propsArg = {}) {
 
                                 return t.div(
                                     { className: "sticky-content txt-center txt-hint" },
-                                    t.div({ className: "txt-bold" }, "No records found."),
+                                    t.div({ className: "txt-bold" }, __("No records found.")),
                                     t.button(
                                         {
                                             hidden: () => props.filter?.length || props.collection?.type == "view",
@@ -540,7 +541,7 @@ window.app.components.recordsList = function(propsArg = {}) {
                                             },
                                         },
                                         t.i({ className: "ri-add-line" }),
-                                        t.span({ className: "txt" }, "New record"),
+                                        t.span({ className: "txt" }, __("New record")),
                                     ),
                                     t.button(
                                         {
@@ -552,7 +553,7 @@ window.app.components.recordsList = function(propsArg = {}) {
                                                 triggerOnchange();
                                             },
                                         },
-                                        t.span({ className: "txt" }, "Clear search"),
+                                        t.span({ className: "txt" }, __("Clear search")),
                                     ),
                                 );
                             }),
@@ -706,7 +707,7 @@ window.app.components.recordsList = function(propsArg = {}) {
                                 disabled: () => data.isLoading,
                                 onclick: () => loadRecords(),
                             },
-                            t.span({ className: "txt" }, "Load more"),
+                            t.span({ className: "txt" }, __("Load more")),
                         ),
                     ),
                 ),
@@ -721,9 +722,9 @@ window.app.components.recordsList = function(propsArg = {}) {
                 },
                 t.span(
                     { className: "txt" },
-                    "Selected ",
+                    __("Selected "),
                     t.strong(null, () => data.totalSelected),
-                    () => ` ${data.totalSelected == 1 ? "record" : "records"}`,
+                    () => ` ${__("record count")}`,
                 ),
                 t.button(
                     {
@@ -731,7 +732,7 @@ window.app.components.recordsList = function(propsArg = {}) {
                         className: "btn sm secondary pill m-r-auto",
                         onclick: () => selectAll(false),
                     },
-                    t.span({ className: "txt" }, "Reset"),
+                    t.span({ className: "txt" }, __("Reset")),
                 ),
                 () => {
                     if (props.collection?.type == "view") {
@@ -743,13 +744,13 @@ window.app.components.recordsList = function(propsArg = {}) {
                             className: "btn sm pill outline danger",
                             onclick: () => {
                                 app.modals.confirm(
-                                    "Do you really want to delete the selected records?",
+                                    __("Do you really want to delete the selected records?"),
                                     deleteSelected,
                                 );
                             },
                         },
                         t.i({ className: "ri-delete-bin-7-line", ariaHidden: true }),
-                        t.span({ className: "txt" }, "Delete"),
+                        t.span({ className: "txt" }, __("Delete")),
                     );
                 },
                 t.button(
@@ -830,7 +831,7 @@ function columnsDropdown(props, data) {
         {
             hidden: () => props.collection?.fields.length <= 1,
             type: "button",
-            title: "Toggle columns",
+            title: __("Toggle columns"),
             className: "btn sm secondary transparent circle",
             popoverTargetElement: dropdown,
         },

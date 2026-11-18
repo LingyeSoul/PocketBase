@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -84,7 +85,7 @@ window.app.components.recordFileThumb = function(propsArg = {}) {
             type: "button",
             draggable: false,
             className: () => `thumb ${props.extraClasses} ${data.isPreviewLoading ? "loading" : ""}`,
-            title: () => (data.hasPreview ? "Preview" : "Download") + " " + props.filename,
+            title: () => (data.hasPreview ? __("Preview") : __("Download")) + " " + props.filename,
             onclick: async (e) => {
                 e.stopPropagation();
 
@@ -108,7 +109,7 @@ window.app.components.recordFileThumb = function(propsArg = {}) {
             if (data.fileType == "image") {
                 const img = t.img({
                     draggable: false,
-                    alt: () => "Thumb of " + props.filename,
+                    alt: () => __("Thumb of ") + props.filename,
                     src: () => data.previewURL,
                     onerror: (err) => {
                         console.warn("[recordFileThumb] load err:", err);

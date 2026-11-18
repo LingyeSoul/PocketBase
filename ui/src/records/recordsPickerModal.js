@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -10,7 +11,7 @@ const defaultSettings = {
     collection: "", // model, id or name
     selectedIds: [],
     maxSelect: 1,
-    btnText: "Set selection",
+    btnText: __("Set selection"),
     onselect: function(records) {},
 };
 
@@ -297,7 +298,7 @@ function recordsPickerModal(settings = defaultSettings) {
                 {
                     type: "button",
                     className: "btn circle transparent",
-                    ariaLabel: app.attrs.tooltip("Add new record"),
+                    ariaLabel: app.attrs.tooltip(__("Add new record")),
                     onclick: () => {
                         app.modals.openRecordUpsert(data.collection);
                     },
@@ -343,7 +344,7 @@ function recordsPickerModal(settings = defaultSettings) {
                                 t.button(
                                     {
                                         className: "btn sm secondary transparent circle",
-                                        ariaLabel: app.attrs.tooltip("Edit"),
+                                        ariaLabel: app.attrs.tooltip(__("Edit")),
                                         onclick: (e) => {
                                             e.stopPropagation();
                                             app.modals.openRecordUpsert(data.collection, record);
@@ -371,11 +372,11 @@ function recordsPickerModal(settings = defaultSettings) {
                     },
                     t.div(
                         { className: "content txt-hint" },
-                        t.span({ className: "txt" }, "No records found."),
+                        t.span({ className: "txt" }, __("No records found.")),
                         t.button({
                             type: "button",
                             className: "btn sm secondary",
-                            textContent: "Clear search",
+                            textContent: __("Clear search"),
                             hidden: () => !data.searchTerm.trim().length,
                             onclick: () => {
                                 data.searchTerm = "";
@@ -388,9 +389,9 @@ function recordsPickerModal(settings = defaultSettings) {
                 { className: "block m-t-base" },
                 t.p(
                     { className: "txt-bold" },
-                    () => `Selected (${data.selected.length} of max ${settings.maxSelect || 1})`,
+                    () => __t`Selected (${data.selected.length} of max ${settings.maxSelect || 1})`,
                 ),
-                t.span({ className: "txt-hint", hidden: () => data.selected }, "No selected records."),
+                t.span({ className: "txt-hint", hidden: () => data.selected }, __("No selected records.")),
                 app.components.sortable({
                     className: "records-picker-selected-list",
                     data: () => data.selected,
@@ -401,7 +402,7 @@ function recordsPickerModal(settings = defaultSettings) {
                             t.span(
                                 {
                                     className: "link-hint",
-                                    title: "Remove",
+                                    title: __("Remove"),
                                     role: "button",
                                     onclick: () => toggleSelected(record),
                                 },
@@ -423,7 +424,7 @@ function recordsPickerModal(settings = defaultSettings) {
                     className: "btn transparent m-r-auto",
                     onclick: () => close(),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             // image thumb selector
             () => {
@@ -432,8 +433,8 @@ function recordsPickerModal(settings = defaultSettings) {
                 }
 
                 const options = [
-                    { value: "", label: "Original size" },
-                    { value: "100x100", label: "100x100 thumb" },
+                    { value: "", label: __("Original size") },
+                    { value: "100x100", label: __("100x100 thumb") },
                 ];
 
                 // find the related field and its thumbs
@@ -444,7 +445,7 @@ function recordsPickerModal(settings = defaultSettings) {
                 for (let thumb of thumbs) {
                     options.push({
                         value: thumb,
-                        label: `${thumb} thumb`,
+                        label: __t`${thumb} thumb`,
                     });
                 }
 

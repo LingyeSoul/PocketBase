@@ -1,9 +1,11 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 export function docsEmailChange(collection) {
     const baseURL = app.utils.getApiExampleURL();
 
     const actionTabs = [
-        { title: "Request email change", content: request },
-        { title: "Confirm email change", content: confirm },
+        { title: __("Request email change"), content: request },
+        { title: __("Confirm email change"), content: confirm },
     ];
 
     const data = store({
@@ -16,10 +18,10 @@ export function docsEmailChange(collection) {
             className: "content",
         },
         // description
-        t.p(null, `Sends ${collection.name} email change request.`),
+        t.p(null, __t`Sends ${collection.name} email change request.`),
         t.p(
             null,
-            "On successful email change all previously issued auth tokens for the specific record will be invalidated (and the user will be marked as verified if not already).",
+            __("On successful email change all previously issued auth tokens for the specific record will be invalidated (and the user will be marked as verified if not already)."),
         ),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
@@ -59,7 +61,7 @@ export function docsEmailChange(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -97,7 +99,7 @@ export function docsEmailChange(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -186,12 +188,12 @@ function request(collection) {
 
     return [
         // api
-        t.div({ className: "block" }, t.strong(null, "API details")),
+        t.div({ className: "block" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
             t.span({ className: "path" }, `/api/collections/${collection.name}/request-email-change`),
-            t.small({ className: "extra" }, "Requires", t.br(), "Authorization:TOKEN header"),
+            t.small({ className: "extra" }, __("Requires"), t.br(), __("Authorization:TOKEN header")),
         ),
         t.table(
             { className: "api-preview-table body-params" },
@@ -199,23 +201,23 @@ function request(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "newEmail ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The new email address to send the change email request."),
+                    t.td({ className: "min-width" }, "newEmail ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The new email address to send the change email request.")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),
@@ -247,7 +249,7 @@ function confirm(collection) {
 
     return [
         // api
-        t.div({ className: "block" }, t.strong(null, "API details")),
+        t.div({ className: "block" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -259,29 +261,29 @@ function confirm(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "token ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The token from the change email request email."),
+                    t.td({ className: "min-width" }, "token ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The token from the change email request email.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "password ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The account password to confirm the email change."),
+                    t.td({ className: "min-width" }, "password ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The account password to confirm the email change.")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

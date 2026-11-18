@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -83,7 +84,7 @@ function filePreviewModal(urlOrFactory) {
             if (data.fileType == "image") {
                 return t.img({
                     src: () => data.url,
-                    alt: () => `Preview ${data.filename}`,
+                    alt: () => __t`Preview ${data.filename}`,
                 });
             }
 
@@ -92,7 +93,7 @@ function filePreviewModal(urlOrFactory) {
                     data: data.url, // note: the reactive value doesn't trigger reload of the object
                     title: () => data.filename,
                 },
-                "Cannot preview the file.",
+                __("Cannot preview the file."),
             );
         }),
         t.footer(
@@ -101,7 +102,7 @@ function filePreviewModal(urlOrFactory) {
                 {
                     type: "button",
                     className: "link-hint filename-link",
-                    ariaDescription: app.attrs.tooltip("Open in new tab"),
+                    ariaDescription: app.attrs.tooltip(__("Open in new tab")),
                     onclick: () => openInNewTab(),
                     onauxclick: () => openInNewTab(),
                 },
@@ -113,7 +114,7 @@ function filePreviewModal(urlOrFactory) {
                     className: "btn transparent m-l-auto",
                     onclick: () => app.modals.close(),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
         ),
     );

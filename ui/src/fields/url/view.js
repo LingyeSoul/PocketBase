@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     record: undefined,
 //     field: undefined,
@@ -19,7 +20,7 @@ export function view(props) {
                 rel: "noopener noreferrer",
                 target: "_blank",
                 textContent: app.utils.truncate(value),
-                ariaDescription: app.attrs.tooltip("Open in new tab"),
+                ariaDescription: app.attrs.tooltip(__("Open in new tab")),
                 onclick: (e) => {
                     e.stopPropagation();
                 },

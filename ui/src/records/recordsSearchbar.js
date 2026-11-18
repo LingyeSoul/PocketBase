@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -46,7 +47,7 @@ window.app.components.recordsSearchbar = function(propsArg = {}) {
             },
         },
         app.components.searchbar({
-            placeholder: () => (!props.disabled && !props.collection?.id ? "Loading..." : "Search term or filter..."),
+            placeholder: () => (!props.disabled && !props.collection?.id ? "Loading..." : __("Search term or filter...")),
             historyKey: () => "pbRecordsSearchHistory_" + props.collection?.id,
             disabled: () => props.disabled || !props.collection,
             value: () => props.value,

@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -23,7 +25,7 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
         className: "",
         config: {}, // S3 config store (pass as a function in case the object is being replaced)
         configKey: "s3", // used for the fields error matching
-        toggleLabel: "Use S3 storage",
+        toggleLabel: __("Use S3 storage"),
         testFilesystem: "storage",
         before: null,
         after: null,
@@ -88,7 +90,7 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
                     { className: "col-lg-6" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: () => `${props.configKey}.endpoint` }, "Endpoint"),
+                        t.label({ htmlFor: () => `${props.configKey}.endpoint` }, __("Endpoint")),
                         t.input({
                             id: () => `${props.configKey}.endpoint`,
                             name: () => `${props.configKey}.endpoint`,
@@ -103,7 +105,7 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
                     { className: "col-lg-3" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: () => `${props.configKey}.bucket` }, "Bucket"),
+                        t.label({ htmlFor: () => `${props.configKey}.bucket` }, __("Bucket")),
                         t.input({
                             id: () => `${props.configKey}.bucket`,
                             name: () => `${props.configKey}.bucket`,
@@ -118,7 +120,7 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
                     { className: "col-lg-3" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: () => `${props.configKey}.region` }, "Region"),
+                        t.label({ htmlFor: () => `${props.configKey}.region` }, __("Region")),
                         t.input({
                             id: () => `${props.configKey}.region`,
                             name: () => `${props.configKey}.region`,
@@ -133,7 +135,7 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
                     { className: "col-lg-6" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: () => `${props.configKey}.accessKey` }, "Access key"),
+                        t.label({ htmlFor: () => `${props.configKey}.accessKey` }, __("Access key")),
                         t.input({
                             id: () => `${props.configKey}.accessKey`,
                             name: () => `${props.configKey}.accessKey`,
@@ -151,7 +153,7 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
                         {
                             className: () => `field ${props.config.enabled ? "" : "required"}`,
                         },
-                        t.label({ htmlFor: () => `${props.configKey}.secret` }, "Secret"),
+                        t.label({ htmlFor: () => `${props.configKey}.secret` }, __("Secret")),
                         t.input({
                             id: () => `${props.configKey}.secret`,
                             name: () => `${props.configKey}.secret`,
@@ -184,11 +186,11 @@ window.app.components.s3ConfigFields = function(propsArg = {}) {
                         }),
                         t.label(
                             { htmlFor: () => `${props.configKey}.forcePathStyle` },
-                            t.span({ className: "txt" }, "Force path-style addressing"),
+                            t.span({ className: "txt" }, __("Force path-style addressing")),
                             t.i({
                                 className: "ri-information-line link-hint",
                                 ariaDescription: app.attrs.tooltip(
-                                    `Forces the request to use path-style addressing, eg. "https://s3.amazonaws.com/BUCKET/KEY" instead of the default "https://BUCKET.s3.amazonaws.com/KEY".`,
+                                    __t`Forces the request to use path-style addressing, eg. "https://s3.amazonaws.com/BUCKET/KEY" instead of the default "https://BUCKET.s3.amazonaws.com/KEY".`,
                                 ),
                             }),
                         ),

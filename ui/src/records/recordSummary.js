@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -174,14 +175,14 @@ const showRecordSummaryDropdownNoDelay = function(target, record) {
                             e.stopImmediatePropagation();
                         },
                     },
-                    t.span({ className: "txt" }, "Edit relation record"),
+                    t.span({ className: "txt" }, __("Edit relation record")),
                     t.i({ className: "ri-external-link-line", ariaHidden: true }),
                 ),
                 t.button(
                     {
                         type: "button",
                         className: "link-hint",
-                        title: "Close",
+                        title: __("Close"),
                         onclick: () => hideRecordSummaryDropdown(target, 0),
                     },
                     t.i({ className: "ri-close-line", ariaHidden: true }),

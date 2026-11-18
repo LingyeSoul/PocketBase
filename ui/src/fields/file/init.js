@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { input } from "./input";
 import { onrecordduplicate } from "./onrecordduplicate";
 import { onrecordsave } from "./onrecordsave";
@@ -8,7 +9,7 @@ window.app = window.app || {};
 window.app.fieldTypes = window.app.fieldTypes || {};
 window.app.fieldTypes.file = {
     icon: "ri-image-line",
-    label: "File",
+    label: __("File"),
     settings,
     input,
     view,

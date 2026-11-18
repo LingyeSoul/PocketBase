@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     record: undefined,
 //     field: undefined,
@@ -19,7 +20,7 @@ export function view(props) {
             ) {
                 superuserYou = t.strong({
                     className: "txt",
-                    textContent: " (you)",
+                    textContent: __(" (you)"),
                 });
             }
 

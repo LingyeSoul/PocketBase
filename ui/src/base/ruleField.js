@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -35,7 +36,7 @@ window.app.components.ruleField = function(propsArg = {}) {
         help: undefined,
         value: null,
         nullable: true,
-        placeholder: "Leave empty to grant everyone access...",
+        placeholder: __("Leave empty to grant everyone access..."),
         autocomplete: (word) => [],
         oninput: (newVal) => {},
         onmount: (el) => {},
@@ -105,7 +106,7 @@ window.app.components.ruleField = function(propsArg = {}) {
             { htmlFor: uniqueId },
             (el) => {
                 if (!props.label) {
-                    return t.span({ className: "txt" }, "Rule");
+                    return t.span({ className: "txt" }, __("Rule"));
                 }
 
                 if (typeof props.label == "function") {
@@ -118,7 +119,7 @@ window.app.components.ruleField = function(propsArg = {}) {
 
                 return props.label;
             },
-            t.span({ hidden: () => !props.isLocked, className: "txt superusers-label" }, "(Superusers only)"),
+            t.span({ hidden: () => !props.isLocked, className: "txt superusers-label" }, __("(Superusers only)")),
         ),
         (el) => {
             if (props.isLocked) {
@@ -129,7 +130,7 @@ window.app.components.ruleField = function(propsArg = {}) {
                         disabled: () => props.disabled,
                         onclick: unlock,
                     },
-                    t.span({ className: "txt" }, "Unlock and set custom rule"),
+                    t.span({ className: "txt" }, __("Unlock and set custom rule")),
                     t.i({ className: "ri-lock-unlock-line", ariaHidden: true }),
                 );
             }
@@ -155,7 +156,7 @@ window.app.components.ruleField = function(propsArg = {}) {
                         onclick: lock,
                     },
                     t.i({ className: "ri-lock-line", ariaHidden: true }),
-                    t.span({ className: "txt" }, "Set superusers only"),
+                    t.span({ className: "txt" }, __("Set superusers only")),
                 ),
             ];
         },

@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { expandInfo } from "./expandInfo";
 import { fieldsInfo } from "./fieldsInfo";
 
@@ -52,9 +53,9 @@ export function docsAuthWithPassword(collection) {
         // description
         t.p(
             null,
-            "Authenticate with combination of ",
+            __("Authenticate with combination of "),
             t.strong(null, identityFields.join("/")),
-            " and ",
+            __(" and "),
             t.strong(null, "password"),
             ".",
         ),
@@ -91,7 +92,7 @@ export function docsAuthWithPassword(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -124,7 +125,7 @@ export function docsAuthWithPassword(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -141,7 +142,7 @@ export function docsAuthWithPassword(collection) {
             ],
         }),
         // api
-        t.div({ className: "block m-t-base" }, t.strong(null, "API details")),
+        t.div({ className: "block m-t-base" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -153,39 +154,39 @@ export function docsAuthWithPassword(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "identity ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, "identity ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(
                         null,
-                        app.utils.sentenize(identityFields.join(" or "), false),
-                        " of the record to authenticate.",
+                        app.utils.sentenize(identityFields.join(__(" or ")), false),
+                        __(" of the record to authenticate."),
                     ),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "identityField ", t.em(null, "(optional)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, "identityField ", t.em(null, __("(optional)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(
                         null,
-                        "In case of multiple identity fields, explicitly set the field name to use when searching for the auth record.",
+                        __("In case of multiple identity fields, explicitly set the field name to use when searching for the auth record."),
                         t.br(),
-                        "Leave it empty for auto detection.",
+                        __("Leave it empty for auto detection."),
                     ),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "password ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The auth record password."),
+                    t.td({ className: "min-width" }, "password ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The auth record password.")),
                 ),
             ),
         ),
@@ -195,9 +196,9 @@ export function docsAuthWithPassword(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "?query params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("?query params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -205,19 +206,19 @@ export function docsAuthWithPassword(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "expand"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, expandInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "fields"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, fieldsInfo()),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

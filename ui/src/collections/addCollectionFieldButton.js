@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -59,7 +60,7 @@ window.app.components.addCollectionFieldButton = function(collection) {
                 "html-popovertarget": uniqueId + "_dropdown",
             },
             t.i({ className: "ri-add-line", ariaHidden: true }),
-            t.span({ className: "txt" }, "New field"),
+            t.span({ className: "txt" }, __("New field")),
         ),
         t.div(
             {

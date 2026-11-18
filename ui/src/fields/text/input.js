@@ -1,3 +1,5 @@
+import { __ } from "@/i18n";
+
 // {
 //     collection: undefined,
 //     originalRecord: undefined,
@@ -48,7 +50,7 @@ export function input(props) {
                         name: () => props.field.name,
                         required: () => local.isRequired,
                         disabled: () => local.isDisabled,
-                        placeholder: () => (local.hasAutogenerate ? "Leave empty to autogenerate..." : ""),
+                        placeholder: () => (local.hasAutogenerate ? __("Leave empty to autogenerate...") : ""),
                         value: () => props.record[props.field.name] || "",
                         oninput: (e) => (props.record[props.field.name] = e.target.value || ""),
                     }),

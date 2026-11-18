@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -90,7 +91,7 @@ window.app.components.leaflet = function(propsArg = {}) {
             autoPan: true,
         }).addTo(map);
 
-        marker.bindTooltip("drag or right click anywhere on the map to move");
+        marker.bindTooltip(__("drag or right click anywhere on the map to move"));
 
         marker.on("moveend", (e) => {
             if (e.sourceTarget?._latlng) {
@@ -234,7 +235,7 @@ function initSearch(selectFunc = null) {
             { className: "field" },
             t.input({
                 type: "text",
-                placeholder: "Search address...",
+                placeholder: __("Search address..."),
                 value: () => data.searchTerm,
                 oninput: (e) => (data.searchTerm = e.target.value),
             }),
@@ -249,7 +250,7 @@ function initSearch(selectFunc = null) {
                     {
                         type: "button",
                         className: "link-hint",
-                        title: "Clear search",
+                        title: __("Clear search"),
                         onclick: () => reset(),
                     },
                     t.i({ className: "ri-close-line", ariaHidden: true }),
@@ -264,7 +265,7 @@ function initSearch(selectFunc = null) {
                 {
                     type: "button",
                     className: "dropdown-item",
-                    title: "Select address coordinates",
+                    title: __("Select address coordinates"),
                     onclick: () => selectFunc?.(item.lat, item.lon),
                 },
                 item.name,

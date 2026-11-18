@@ -1,3 +1,6 @@
+import { __ } from "@/i18n";
+import { languageDropdown } from "@/base/languagePicker";
+
 export function appHeader() {
     return () => {
         if (!app.store._ready || !app.store.showHeader || !app.store.superuser?.id) {
@@ -24,7 +27,7 @@ export function appHeader() {
             },
             t.a(
                 { href: "#/", className: "logo" },
-                t.img({ src: () => app.store.headerLogo, alt: "App logo" }),
+                t.img({ src: () => app.store.headerLogo, alt: __("App logo") }),
             ),
             t.nav(
                 {
@@ -56,6 +59,7 @@ export function appHeader() {
                 },
             ),
             t.div({ className: "flex-fill app-header-separator" }),
+            languageDropdown(),
             colorSchemeButton(),
             t.button(
                 {
@@ -82,7 +86,7 @@ export function appHeader() {
                         },
                     },
                     t.i({ className: "ri-group-line", ariaHidden: true }),
-                    t.span({ className: "txt" }, "Manage superusers"),
+                    t.span({ className: "txt" }, __("Manage superusers")),
                 ),
                 t.hr(),
                 t.button(
@@ -92,7 +96,7 @@ export function appHeader() {
                         onclick: () => app.pb.authStore.clear(),
                     },
                     t.i({ className: "ri-logout-circle-line", ariaHidden: true }),
-                    t.span({ className: "txt" }, "Logout"),
+                    t.span({ className: "txt" }, __("Logout")),
                 ),
             ),
         );
@@ -101,9 +105,9 @@ export function appHeader() {
 
 function colorSchemeButton() {
     const options = [
-        { value: "light", icon: "ri-sun-line", label: "Light" },
-        { value: "dark", icon: "ri-moon-line", label: "Dark" },
-        { value: "", icon: "ri-subtract-line", label: "Auto" },
+        { value: "light", icon: "ri-sun-line", label: __("Light") },
+        { value: "dark", icon: "ri-moon-line", label: __("Dark") },
+        { value: "", icon: "ri-subtract-line", label: __("Auto") },
     ];
 
     return [
@@ -112,7 +116,7 @@ function colorSchemeButton() {
                 type: "button",
                 className: "header-link color-scheme-picker",
                 "html-popovertarget": "color-scheme-dropdown",
-                title: "Color scheme",
+                title: __("Color scheme"),
             },
             t.i({
                 className: () => app.store.activeColorScheme == "dark" ? "ri-moon-line" : "ri-sun-line",

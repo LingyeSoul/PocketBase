@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { input } from "./input";
 import { settings } from "./settings";
 import { view } from "./view";
@@ -6,7 +7,7 @@ window.app = window.app || {};
 window.app.fieldTypes = window.app.fieldTypes || {};
 window.app.fieldTypes.editor = {
     icon: "ri-edit-2-line",
-    label: "Rich editor",
+    label: __("Rich editor"),
     settings,
     input,
     view,

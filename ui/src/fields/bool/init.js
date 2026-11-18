@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { input } from "./input";
 import { settings } from "./settings";
 import { view } from "./view";
@@ -6,7 +7,7 @@ window.app = window.app || {};
 window.app.fieldTypes = window.app.fieldTypes || {};
 window.app.fieldTypes.bool = {
     icon: "ri-toggle-line",
-    label: "Bool",
+    label: __("Bool"),
     settings,
     input,
     view,

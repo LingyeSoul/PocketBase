@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     originalCollection: undefined,
 //     collection: undefined,
@@ -22,8 +23,8 @@ export function settings(props) {
                         { className: "field" },
                         t.label(
                             { htmlFor: uniqueId + ".maxSize" },
-                            t.span(null, "Max size "),
-                            t.small(null, "(bytes)"),
+                            t.span(null, __("Max size ")),
+                            t.small(null, __("(bytes)")),
                         ),
                         t.input({
                             type: "number",
@@ -32,7 +33,7 @@ export function settings(props) {
                             min: 0,
                             step: 1,
                             max: Number.MAX_SAFE_INTEGER,
-                            placeholder: "Default to max ~5MB",
+                            placeholder: __("Default to max ~5MB"),
                             value: () => props.field.maxSize || "",
                             oninput: (e) => {
                                 // temp skip invalid numbers with leading 0 while typing to avoid reseting the entire input
@@ -54,7 +55,7 @@ export function settings(props) {
                     { className: "col-sm-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".help" }, "Help text"),
+                        t.label({ htmlFor: uniqueId + ".help" }, __("Help text")),
                         t.input({
                             type: "text",
                             id: uniqueId + ".help",
@@ -78,10 +79,10 @@ export function settings(props) {
                 }),
                 t.label(
                     { htmlFor: uniqueId + ".required" },
-                    t.span({ className: "txt" }, "Required"),
+                    t.span({ className: "txt" }, __("Required")),
                     t.i({
                         className: "ri-information-line link-hint",
-                        ariaDescription: app.attrs.tooltip("Requires the field value to be nonempty string."),
+                        ariaDescription: app.attrs.tooltip(__("Requires the field value to be nonempty string.")),
                     }),
                 ),
             ),
@@ -97,11 +98,11 @@ export function settings(props) {
                 }),
                 t.label(
                     { htmlFor: uniqueId + ".convertURLs" },
-                    t.span({ className: "txt" }, "Strip URLs domain"),
+                    t.span({ className: "txt" }, __("Strip URLs domain")),
                     t.i({
                         className: "ri-information-line link-hint",
                         ariaDescription: app.attrs.tooltip(
-                            "This could help making the editor content more portable between environments since there will be no local base url to replace.",
+                            __("This could help making the editor content more portable between environments since there will be no local base url to replace."),
                         ),
                     }),
                 ),

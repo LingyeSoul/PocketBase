@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { logLevel } from "./logLevel";
 
 window.app = window.app || {};
@@ -41,7 +42,7 @@ function downloadJSON(log) {
 
 function copyJSON(log) {
     app.utils.copyToClipboard(JSON.stringify(log, null, 2));
-    app.toasts.success("Log copied to clipboard!");
+    app.toasts.success(__("Log copied to clipboard!"));
 }
 
 function logPreviewModal(logIdOrModel, settings) {
@@ -116,11 +117,11 @@ function logPreviewModal(logIdOrModel, settings) {
         },
         t.header(
             { className: "modal-header" },
-            t.h5(null, "Log details"),
+            t.h5(null, __("Log details")),
             t.button(
                 {
                     className: "btn sm circle transparent m-l-auto",
-                    title: "More options",
+                    title: __("More options"),
                     "html-popovertarget": "log-meta-dropdown",
                 },
                 t.i({ className: "ri-more-line", ariaHidden: true }),
@@ -135,7 +136,7 @@ function logPreviewModal(logIdOrModel, settings) {
                         },
                     },
                     t.i({ className: "ri-braces-line", ariaHidden: true }),
-                    t.span({ className: "txt" }, "Copy JSON"),
+                    t.span({ className: "txt" }, __("Copy JSON")),
                 );
             }),
         ),
@@ -153,19 +154,19 @@ function logPreviewModal(logIdOrModel, settings) {
                     null,
                     t.tr(
                         null,
-                        t.th({ className: "col-field-name-id p-r-0" }, "id"),
+                        t.th({ className: "col-field-name-id p-r-0" }, __("id")),
                         t.td(null, () => data.log.id),
                         t.td({ className: "col-copy min-width" }, app.components.copyButton(data.log.id)),
                     ),
                     t.tr(
                         null,
-                        t.th({ className: "col-field-name-level p-r-0" }, "level"),
+                        t.th({ className: "col-field-name-level p-r-0" }, __("level")),
                         t.td(null, () => logLevel(data.log)),
                         t.td({ className: "col-copy min-width" }, app.components.copyButton(data.log.level)),
                     ),
                     t.tr(
                         null,
-                        t.th({ className: "col-field-name-created p-r-0" }, "created"),
+                        t.th({ className: "col-field-name-created p-r-0" }, __("created")),
                         t.td(
                             null,
                             app.components.formattedDate({
@@ -179,7 +180,7 @@ function logPreviewModal(logIdOrModel, settings) {
                         if (!data.isRequest) {
                             return t.tr(
                                 null,
-                                t.th({ className: "col-field-name-message p-r-0" }, "message"),
+                                t.th({ className: "col-field-name-message p-r-0" }, __("message")),
                                 t.td(null, () => app.utils.truncate(data.log.message, 1000)),
                                 t.td(
                                     { className: "col-copy min-width" },
@@ -213,7 +214,7 @@ function logPreviewModal(logIdOrModel, settings) {
                                         if (isEmpty) {
                                             return t.span({
                                                 className: "txt txt-hint",
-                                                textContent: "N/A",
+                                                textContent: __("N/A"),
                                             });
                                         }
 
@@ -259,7 +260,7 @@ function logPreviewModal(logIdOrModel, settings) {
                     className: "btn transparent m-r-auto",
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             t.button(
                 {
@@ -268,7 +269,7 @@ function logPreviewModal(logIdOrModel, settings) {
                     onclick: () => downloadJSON(data.log),
                 },
                 t.i({ className: "ri-download-line", ariaHidden: true }),
-                t.span({ className: "txt" }, "Download JSON"),
+                t.span({ className: "txt" }, __("Download JSON")),
             ),
         ),
     );

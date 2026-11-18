@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { expandInfo } from "./expandInfo";
 import { fieldsInfo } from "./fieldsInfo";
 
@@ -5,8 +6,8 @@ export function docsAuthWithOTP(collection) {
     const baseURL = app.utils.getApiExampleURL();
 
     const actionTabs = [
-        { title: "OTP request", content: otpRequest },
-        { title: "OTP auth", content: otpAuth },
+        { title: __("OTP request"), content: otpRequest },
+        { title: __("OTP auth"), content: otpAuth },
     ];
 
     const data = store({
@@ -19,16 +20,16 @@ export function docsAuthWithOTP(collection) {
             className: "content",
         },
         // description
-        t.p(null, "Authenticate with an one-time/short-lived password (OTP)."),
+        t.p(null, __("Authenticate with an one-time/short-lived password (OTP).")),
         t.p(
             null,
-            "On successful authentication the user will be also marked as verified (if the OTP source is email and the user is not verified already).",
+            __("On successful authentication the user will be also marked as verified (if the OTP source is email and the user is not verified already)."),
         ),
         t.p(
             null,
-            "Note that when requesting an OTP we return an ",
+            __("Note that when requesting an OTP we return an "),
             t.code(null, "otpId"),
-            " even if a user with the provided email doesn't exist as a very basic enumeration protection.",
+            __(" even if a user with the provided email doesn't exist as a very basic enumeration protection."),
         ),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
@@ -69,7 +70,7 @@ export function docsAuthWithOTP(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -108,7 +109,7 @@ export function docsAuthWithOTP(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -187,7 +188,7 @@ function otpRequest(collection) {
 
     return [
         // api
-        t.div(null, t.strong(null, "API details")),
+        t.div(null, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -199,23 +200,23 @@ function otpRequest(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "email ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The auth record email address to send the OTP request (if exists)."),
+                    t.td({ className: "min-width" }, "email ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The auth record email address to send the OTP request (if exists).")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),
@@ -259,7 +260,7 @@ function otpAuth(collection) {
 
     return [
         // api
-        t.div(null, t.strong(null, "API details")),
+        t.div(null, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -271,24 +272,24 @@ function otpAuth(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "otpId ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The id of the OTP request."),
+                    t.td({ className: "min-width" }, "otpId ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The id of the OTP request.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "password ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The one-time/short-lived password from the OTP request."),
+                    t.td({ className: "min-width" }, "password ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The one-time/short-lived password from the OTP request.")),
                 ),
             ),
         ),
@@ -298,9 +299,9 @@ function otpAuth(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "?query params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("?query params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -308,19 +309,19 @@ function otpAuth(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "expand"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, expandInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "fields"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, fieldsInfo()),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

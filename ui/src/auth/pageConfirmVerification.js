@@ -1,16 +1,19 @@
+import { __ } from "@/i18n";
 import PocketBase, { getTokenPayload } from "pocketbase";
+
+import { languageLinks } from "@/base/languagePicker";
 
 export function pageConfirmVerification(route) {
     const token = route.params?.token || "";
     const tokenPayload = getTokenPayload(token);
 
     if (!tokenPayload.email || !tokenPayload.collectionId) {
-        app.toasts.error("Invalid or expired verification token.");
+        app.toasts.error(__("Invalid or expired verification token."));
         window.location.hash = "#/";
         return;
     }
 
-    app.store.title = "Confirm verification";
+    app.store.title = __("Confirm verification");
 
     const data = store({
         isConfirming: false,
@@ -68,34 +71,35 @@ export function pageConfirmVerification(route) {
             pbEvent: "pageConfirmVerification",
             className: "wrapper sm m-auto p-b-base",
         },
+        languageLinks(),
         t.header(
             { className: "txt-center m-b-base" },
-            t.img({ className: "main-logo", src: () => app.store.mainLogo, ariaHidden: true, alt: "App logo" }),
+            t.img({ className: "main-logo", src: () => app.store.mainLogo, ariaHidden: true, alt: __("App logo") }),
             t.h5({ className: "m-t-10" }, () => app.store.title),
         ),
         () => {
             if (data.isConfirming) {
-                return t.div({ className: "block txt-center" }, t.span({ className: "loader" }, "Please wait..."));
+                return t.div({ className: "block txt-center" }, t.span({ className: "loader" }, __("Please wait...")));
             }
 
             if (data.isConfirmSuccess) {
                 return t.div(
                     { pbEvent: "confirmVerificationSuccessAlert", className: "alert success txt-center" },
-                    t.p(null, "Successfully verified ", t.strong(null, tokenPayload.email), "."),
+                    t.p(null, __("Successfully verified "), t.strong(null, tokenPayload.email), "."),
                 );
             }
 
             if (data.isResendSuccess) {
                 return t.div(
                     { pbEvent: "confirmVerificationResendAlert", className: "alert success txt-center" },
-                    t.p(null, "Please check your email for the new verification link."),
+                    t.p(null, __("Please check your email for the new verification link.")),
                 );
             }
 
             return [
                 t.div(
                     { pbEvent: "confirmVerificationErrorAlert", className: "alert danger txt-center m-b-base" },
-                    t.p(null, "Invalid or expired verification token."),
+                    t.p(null, __("Invalid or expired verification token.")),
                 ),
                 t.button(
                     {
@@ -104,7 +108,7 @@ export function pageConfirmVerification(route) {
                         disabled: () => data.isResending,
                         onclick: () => resend(),
                     },
-                    t.span({ className: "txt" }, "Resend"),
+                    t.span({ className: "txt" }, __("Resend")),
                 ),
             ];
         },

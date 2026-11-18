@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { input } from "./input";
 import { settings } from "./settings";
 import { view } from "./view";
@@ -6,7 +7,7 @@ window.app = window.app || {};
 window.app.fieldTypes = window.app.fieldTypes || {};
 window.app.fieldTypes.text = {
     icon: "ri-text",
-    label: "Plain text",
+    label: __("Plain text"),
     settings,
     input,
     view,

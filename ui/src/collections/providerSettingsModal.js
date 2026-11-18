@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -121,7 +122,7 @@ function providerSettingsModal(providerConfig, settings) {
                         { className: "field" },
                         t.label({
                             htmlFor: uniqueId + ".clientId",
-                            textContent: "Client ID",
+                            textContent: __("Client ID"),
                         }),
                         t.input({
                             type: "text",
@@ -140,7 +141,7 @@ function providerSettingsModal(providerConfig, settings) {
                         { className: "field" },
                         t.label({
                             htmlFor: uniqueId + ".clientSecret",
-                            textContent: "Client secret",
+                            textContent: __("Client secret"),
                         }),
                         t.input({
                             type: "password",
@@ -182,7 +183,7 @@ function providerSettingsModal(providerConfig, settings) {
                     className: "btn transparent m-r-auto",
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             t.button(
                 {
@@ -191,7 +192,7 @@ function providerSettingsModal(providerConfig, settings) {
                     className: "btn",
                     disabled: () => !data.hasChanges,
                 },
-                t.span({ className: "txt" }, "Set provider config"),
+                t.span({ className: "txt" }, __("Set provider config")),
             ),
         ),
     );

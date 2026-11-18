@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     collection: undefined,
 //     originalRecord: undefined,
@@ -154,7 +155,7 @@ export function input(props) {
                             {
                                 type: "button",
                                 className: "btn sm secondary transparent circle",
-                                ariaLabel: app.attrs.tooltip("Remove"),
+                                ariaLabel: app.attrs.tooltip(__("Remove")),
                                 onclick: () => remove(record.id),
                             },
                             t.i({ className: "ri-close-line", ariaHidden: true }),
@@ -186,7 +187,7 @@ export function input(props) {
                 },
             },
             t.i({ className: "ri-magic-line", ariaHidden: true }),
-            t.span({ className: "txt" }, "Open records picker"),
+            t.span({ className: "txt" }, __("Open records picker")),
         ),
     );
 

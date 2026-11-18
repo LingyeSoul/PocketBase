@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 import { expandInfo } from "./expandInfo";
 import { fieldsInfo } from "./fieldsInfo";
 import { filterSyntax } from "./filterSyntax";
@@ -57,7 +59,7 @@ export function docsList(collection) {
     return t.div(
         { pbEvent: "apiPreviewList", className: "content" },
         // description
-        t.p(null, `Fetch a paginated ${collection.name} records list, supporting sorting and filtering.`),
+        t.p(null, __t`Fetch a paginated ${collection.name} records list, supporting sorting and filtering.`),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
             historyKey: "pbLastSDK",
@@ -94,7 +96,7 @@ export function docsList(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -132,7 +134,7 @@ export function docsList(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -148,14 +150,14 @@ export function docsList(collection) {
             ],
         }),
         // api
-        t.div({ className: "block m-t-base" }, t.strong(null, "API details")),
+        t.div({ className: "block m-t-base" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert info api-preview-alert" },
             t.span({ className: "label method" }, "GET"),
             t.span({ className: "path" }, `/api/collections/${collection.name}/records`),
             () => {
                 if (isSuperusersOnly) {
-                    return t.small({ className: "extra" }, "Requires superuser Authorization:TOKEN header");
+                    return t.small({ className: "extra" }, __("Requires superuser Authorization:TOKEN header"));
                 }
             },
         ),
@@ -165,9 +167,9 @@ export function docsList(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "?query params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("?query params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -175,37 +177,37 @@ export function docsList(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "page"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "Number")),
-                    t.td(null, "The page (aka. offset) of the paginated list (default to 1)."),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("Number"))),
+                    t.td(null, __("The page (aka. offset) of the paginated list (default to 1).")),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "perPage"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "Number")),
-                    t.td(null, "Specify the max returned records per page (default to 30)."),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("Number"))),
+                    t.td(null, __("Specify the max returned records per page (default to 30).")),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "sort"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(
                         null,
                         t.p(
                             null,
-                            "Specify the records order attribute(s).",
+                            __("Specify the records order attribute(s)."),
                             t.br(),
-                            "Add -/+ (default) in front of the attribute for DESC / ASC order.",
+                            __("Add -/+ (default) in front of the attribute for DESC / ASC order."),
                         ),
                         t.p(
                             null,
-                            "For example:",
+                            __("For example:"),
                             app.components.codeBlock({
                                 value: `// DESC by created and ASC by id\n?sort=-created,id`,
                             }),
                         ),
                         t.p(
                             null,
-                            "In addition to the collection non-hidden fields, the following special sort fields could be also used: ",
+                            __("In addition to the collection non-hidden fields, the following special sort fields could be also used: "),
                             t.code(null, "@random"),
                             " ",
                             t.code({ hidden: () => collection.type == "view" }, "@rowid"),
@@ -216,13 +218,13 @@ export function docsList(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "filter"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(
                         null,
-                        t.p(null, "Filter the returned records. For example:"),
+                        t.p(null, __("Filter the returned records. For example:")),
                         app.components.codeBlock({
                             value: `?filter=(id='abc' && created>'2022-01-01')`,
-                            footnote: "All query params must be properly URL encoded (the SDKs do this automatically).",
+                            footnote: __("All query params must be properly URL encoded (the SDKs do this automatically)."),
                         }),
                         filterSyntax(),
                     ),
@@ -230,46 +232,46 @@ export function docsList(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "expand"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, expandInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "fields"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, fieldsInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "skipTotal"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "Boolean")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("Boolean"))),
                     t.td(
                         null,
                         t.p(
                             null,
-                            "If set to ",
+                            __("If set to "),
                             t.code(null, "1/true"),
-                            " the total counts query will be skipped and the response fields ",
+                            __(" the total counts query will be skipped and the response fields "),
                             t.code(null, "totalItems"),
-                            " and ",
+                            __(" and "),
                             t.code(null, "totalPages"),
-                            " will have -1 value.",
+                            __(" will have -1 value."),
                         ),
                         t.p(
                             null,
-                            "This could drastically speed up the search queries when the total counters are not needed or cursor based pagination is used.",
-                            " For optimization purposes, it is set by default in the ",
+                            __("This could drastically speed up the search queries when the total counters are not needed or cursor based pagination is used."),
+                            __(" For optimization purposes, it is set by default in the "),
                             t.code(null, "getFirstListItem()"),
-                            " and ",
+                            __(" and "),
                             t.code(null, "getFullList()"),
-                            " SDKs methods.",
+                            __(" SDKs methods."),
                         ),
                     ),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

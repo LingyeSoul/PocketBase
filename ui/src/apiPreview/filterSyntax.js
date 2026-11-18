@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 export function filterSyntax() {
     const data = store({
         show: false,
@@ -14,13 +15,13 @@ export function filterSyntax() {
             () => {
                 if (data.show) {
                     return [
-                        t.span({ className: "txt" }, "Hide details"),
+                        t.span({ className: "txt" }, __("Hide details")),
                         t.i({ className: "ri-arrow-up-s-line", ariaHidden: true }),
                     ];
                 }
 
                 return [
-                    t.span({ className: "txt" }, "Show details"),
+                    t.span({ className: "txt" }, __("Show details")),
                     t.i({ className: "ri-arrow-down-s-line", ariaHidden: true }),
                 ];
             },
@@ -31,55 +32,55 @@ export function filterSyntax() {
                 { className: "block p-t-5" },
                 t.p(
                     null,
-                    "The filter syntax follows the format ",
+                    __("The filter syntax follows the format "),
                     t.code(
                         null,
                         t.span({ className: "txt-success" }, "OPERAND"),
                         t.span({ className: "txt-danger" }, " OPERATOR "),
                         t.span({ className: "txt-success" }, "OPERAND"),
                     ),
-                    ", where:",
+                    __(", where:"),
                 ),
                 t.ul(
                     null,
                     t.li(
                         null,
                         t.span({ className: "txt-code txt-success" }, "OPERAND"),
-                        " could be any of the above field literal, function, string (single or double quoted), number, null, true, false",
+                        __(" could be any of the above field literal, function, string (single or double quoted), number, null, true, false"),
                     ),
                     t.li(
                         null,
                         t.span({ className: "txt-code txt-danger" }, "OPERATOR"),
-                        " is one of:",
+                        __(" is one of:"),
                         t.ul(
                             null,
-                            t.li(null, t.code({ className: "filter-op" }, "="), " Equal"),
-                            t.li(null, t.code({ className: "filter-op" }, "!="), " Not equal"),
-                            t.li(null, t.code({ className: "filter-op" }, ">"), " Greater than"),
-                            t.li(null, t.code({ className: "filter-op" }, ">="), " Greater than or equal"),
-                            t.li(null, t.code({ className: "filter-op" }, "<"), " Less than"),
-                            t.li(null, t.code({ className: "filter-op" }, "<="), " Less than or equal"),
+                            t.li(null, t.code({ className: "filter-op" }, "="), __(" Equal")),
+                            t.li(null, t.code({ className: "filter-op" }, "!="), __(" Not equal")),
+                            t.li(null, t.code({ className: "filter-op" }, ">"), __(" Greater than")),
+                            t.li(null, t.code({ className: "filter-op" }, ">="), __(" Greater than or equal")),
+                            t.li(null, t.code({ className: "filter-op" }, "<"), __(" Less than")),
+                            t.li(null, t.code({ className: "filter-op" }, "<="), __(" Less than or equal")),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "~"),
-                                " Like/Contains",
+                                __(" Like/Contains"),
                                 t.div(
                                     { className: "txt-sm txt-hint" },
                                     t.em(
                                         null,
-                                        "(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)",
+                                        __("(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)"),
                                     ),
                                 ),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "!~"),
-                                " NOT Like/Contains",
+                                __(" NOT Like/Contains"),
                                 t.div(
                                     { className: "txt-sm txt-hint" },
                                     t.em(
                                         null,
-                                        "(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)",
+                                        __("(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)"),
                                     ),
                                 ),
                             ),
@@ -87,73 +88,73 @@ export function filterSyntax() {
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?="),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Equal",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Equal"),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?!="),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Not equal",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Not equal"),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?>"),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Greater than",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Greater than"),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?>="),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Greater than or equal",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Greater than or equal"),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?<"),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Less than",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Less than"),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?<="),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Less than or equal",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Less than or equal"),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?~"),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " Like/Contains",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" Like/Contains"),
                                 t.div(
                                     { className: "txt-sm txt-hint" },
                                     t.em(
                                         null,
-                                        "(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)",
+                                        __("(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)"),
                                     ),
                                 ),
                             ),
                             t.li(
                                 null,
                                 t.code({ className: "filter-op" }, "?!~"),
-                                t.span({ className: "txt-hint" }, " Any/At-least-one-of"),
-                                " NOT Like/Contains",
+                                t.span({ className: "txt-hint" }, __(" Any/At-least-one-of")),
+                                __(" NOT Like/Contains"),
                                 t.div(
                                     { className: "txt-sm txt-hint" },
                                     t.em(
                                         null,
-                                        "(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)",
+                                        __("(auto wraps the right string OPERAND in a \"%\" for wildcard match if not explicitly set)"),
                                     ),
                                 ),
                             ),
                         ),
                         t.p(
                             null,
-                            "To group and combine several expressions you could use brackets ",
+                            __("To group and combine several expressions you could use brackets "),
                             t.code(null, "(...)"),
-                            ", ",
+                            __(", "),
                             t.code(null, "&&"),
-                            ", (AND) and ",
+                            __(", (AND) and "),
                             t.code(null, "||"),
                             " (OR) tokens.",
                         ),

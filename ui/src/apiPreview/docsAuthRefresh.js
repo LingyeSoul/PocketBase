@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { expandInfo } from "./expandInfo";
 import { fieldsInfo } from "./fieldsInfo";
 
@@ -59,12 +60,12 @@ export function docsAuthRefresh(collection) {
             className: "content",
         },
         // description
-        t.p(null, "Returns a new auth response (token and record data) for an already authenticated record."),
+        t.p(null, __("Returns a new auth response (token and record data) for an already authenticated record.")),
         t.p(
             null,
-            "This method is usually called by users on page/screen reload to ensure that the previously stored data in ",
+            __("This method is usually called by users on page/screen reload to ensure that the previously stored data in "),
             t.code(null, "pb.authStore"),
-            " is still valid and up-to-date.",
+            __(" is still valid and up-to-date."),
         ),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
@@ -93,7 +94,7 @@ export function docsAuthRefresh(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -120,7 +121,7 @@ export function docsAuthRefresh(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -136,12 +137,12 @@ export function docsAuthRefresh(collection) {
             ],
         }),
         // api
-        t.div({ className: "m-t-base" }, t.strong(null, "API details")),
+        t.div({ className: "m-t-base" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
             t.span({ className: "path" }, `/api/collections/${collection.name}/auth-refresh`),
-            t.small({ className: "extra" }, "Requires", t.br(), "Authorization:TOKEN header"),
+            t.small({ className: "extra" }, __("Requires"), t.br(), __("Authorization:TOKEN header")),
         ),
         t.table(
             { className: "api-preview-table query-params" },
@@ -149,9 +150,9 @@ export function docsAuthRefresh(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "?query params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("?query params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -159,19 +160,19 @@ export function docsAuthRefresh(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "expand"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, expandInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "fields"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, fieldsInfo()),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

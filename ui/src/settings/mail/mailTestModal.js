@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -15,11 +16,11 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
     const testRequestKey = "email_test_request";
 
     const templateOptions = [
-        { label: "Verification", value: "verification" },
-        { label: "Password reset", value: "password-reset" },
-        { label: "Confirm email change", value: "email-change" },
+        { label: __("Verification"), value: "verification" },
+        { label: __("Password reset"), value: "password-reset" },
+        { label: __("Confirm email change"), value: "email-change" },
         { label: "OTP", value: "otp" },
-        { label: "Login alert", value: "login-alert" },
+        { label: __("Login alert"), value: "login-alert" },
     ];
 
     const data = store({
@@ -55,7 +56,7 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
             data.isSending = false;
             app.pb.cancelRequest(testRequestKey);
             app.modals.close();
-            app.toasts.error("Test email send timeout.");
+            app.toasts.error(__("Test email send timeout."));
         }, 15000);
 
         try {
@@ -68,7 +69,7 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
                 requestKey: testRequestKey,
             });
 
-            app.toasts.success("Successfully sent test email.");
+            app.toasts.success(__("Successfully sent test email."));
 
             app.modals.close();
         } catch (err) {
@@ -103,7 +104,7 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
                 watchers.forEach((w) => w?.unwatch());
             },
         },
-        t.header({ className: "modal-header" }, t.h5({ className: "m-auto" }, "Send test email")),
+        t.header({ className: "modal-header" }, t.h5({ className: "m-auto" }, __("Send test email"))),
         t.form(
             {
                 id: uniqueId,
@@ -139,15 +140,15 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
                         { className: "col-lg-12" },
                         t.div(
                             { className: "field" },
-                            t.label({ htmlFor: uniqueId + ".collection" }, "Auth collection"),
+                            t.label({ htmlFor: uniqueId + ".collection" }, __("Auth collection")),
                             app.components.select({
                                 id: uniqueId + ".collection",
                                 name: "collection",
                                 required: true,
                                 placeholder: () =>
                                     data.isAuthCollectionsLoading
-                                        ? "Loading auth collections..."
-                                        : "Select auth collection",
+                                        ? __("Loading auth collections...")
+                                        : __("Select auth collection"),
                                 options: () =>
                                     data.authCollections.map((c) => {
                                         return { value: c.id, label: c.name };
@@ -164,7 +165,7 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
                     { className: "col-lg-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".email" }, "To email address"),
+                        t.label({ htmlFor: uniqueId + ".email" }, __("To email address")),
                         t.input({
                             id: uniqueId + ".email",
                             name: "email",
@@ -186,7 +187,7 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
                     onclick: () => app.modals.close(),
                     disabled: () => data.isSending,
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             t.button(
                 {
@@ -196,7 +197,7 @@ function mailTestModal(preselectedCollectionIdOrName = "", template = "") {
                     disabled: () => data.isSending || !data.canSubmit,
                 },
                 t.i({ className: "ri-mail-send-line", ariaHidden: true }),
-                t.span({ className: "txt" }, "Send"),
+                t.span({ className: "txt" }, __("Send")),
             ),
         ),
     );

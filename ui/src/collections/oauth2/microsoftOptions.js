@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 window.app = window.app || {};
 window.app.oauth2 = window.app.oauth2 || {};
 
@@ -8,82 +9,82 @@ window.app.oauth2.microsoft = function(providerInfo, namePrefix, data) {
     const idTokenEmailClaimOptions = [
         {
             value: "",
-            selected: `Graph API "mail" field (default)`,
+            selected: __t`Graph API "mail" field (default)`,
             label: () => {
                 return t.div(
                     { className: "option-content" },
-                    t.strong(null, "Graph API ", t.code(null, "mail"), " field (default)"),
+                    t.strong(null, "Graph API ", t.code(null, "mail"), __(" field (default)")),
                     t.br(),
                     t.small(
                         { className: "txt-hint" },
-                        `Extracts the "mail" field from the Graph API /me endpoint (this is a historical default and it is generally accepted to be safe in controlled/single-tenant AD setup).`,
+                        __t`Extracts the "mail" field from the Graph API /me endpoint (this is a historical default and it is generally accepted to be safe in controlled/single-tenant AD setup).`,
                     ),
                 );
             },
         },
         {
             value: "email",
-            selected: `"email" id_token claim`,
+            selected: __t`"email" id_token claim`,
             label: () => {
                 return t.div(
                     { className: "option-content" },
-                    t.strong(null, t.code(null, "email"), " id_token claim"),
+                    t.strong(null, t.code(null, "email"), __(" id_token claim")),
                     t.br(),
                     t.small(
                         { className: "txt-hint" },
-                        `Extracts the "email" token field (since ~2023 by default Microsoft populates it only if the email is considered verified, unless manually configured otherwise).`,
+                        __t`Extracts the "email" token field (since ~2023 by default Microsoft populates it only if the email is considered verified, unless manually configured otherwise).`,
                     ),
                 );
             },
         },
         {
             value: "email_and_xms_edov",
-            selected: `"email" + "xms_edov" id_token claims`,
+            selected: __t`"email" + "xms_edov" id_token claims`,
             label: () => {
                 return t.div(
                     { className: "option-content" },
-                    t.strong(null, t.code(null, "email"), " + ", t.code(null, "xms_edov"), " id_token claims"),
+                    t.strong(null, t.code(null, "email"), " + ", t.code(null, "xms_edov"), __(" id_token claims")),
                     t.br(),
                     t.small(
                         { className: "txt-hint" },
-                        `Extracts the "email" token field but also checks if the domain owner has been verified.`,
+                        __t`Extracts the "email" token field but also checks if the domain owner has been verified.`,
                     ),
                 );
             },
         },
         {
             value: "verified_primary_email",
-            selected: `"verified_primary_email" id_token claim`,
+            selected: __t`"verified_primary_email" id_token claim`,
             label: () => {
                 return t.div(
                     { className: "option-content" },
-                    t.strong(null, t.code(null, "verified_primary_email"), " id_token claim"),
+                    t.strong(null, t.code(null, "verified_primary_email"), __(" id_token claim")),
                     t.br(),
                     t.small(
                         { className: "txt-hint" },
-                        `Extracts the configured user's "PrimaryAuthoritativeEmail" attribute value.`,
+                        __t`Extracts the configured user's "PrimaryAuthoritativeEmail" attribute value.`,
                     ),
                 );
             },
         },
         {
             value: "any_verified",
-            selected: `Either "verified_primary_email" OR "email" + "xms_edov" id_token claims`,
+            selected: __t`Either "verified_primary_email" OR "email" + "xms_edov" id_token claims`,
             label: () => {
                 return t.div(
                     { className: "option-content" },
                     t.strong(
                         null,
-                        "Either ",
+                        __("Either "),
                         t.code(null, "verified_primary_email"),
-                        " OR ",
+                        __(" OR "),
                         t.code(null, "email"),
                         " + ",
                         t.code(null, "xms_edov"),
-                        " id_token claims",
+                        __(" id_token claims"),
                     ),
                     t.br(),
-                    t.small({ className: "txt-hint" }, "Extracts the first nonempty value from the two options."),
+                    t.small({ className: "txt-hint" }, __("Extracts the first nonempty value from the two options.")),
                 );
             },
         },
@@ -98,7 +99,7 @@ window.app.oauth2.microsoft = function(providerInfo, namePrefix, data) {
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".authURL" }, "Auth URL"),
+                    t.label({ htmlFor: uniqueId + ".authURL" }, __("Auth URL")),
                     t.input({
                         id: uniqueId + ".authURL",
                         name: namePrefix + ".authURL",
@@ -110,14 +111,14 @@ window.app.oauth2.microsoft = function(providerInfo, namePrefix, data) {
                 ),
                 t.div(
                     { className: "field-help" },
-                    "Ex. https://login.microsoftonline.com/YOUR_DIRECTORY_TENANT_ID/oauth2/v2.0/authorize",
+                    __("Ex. https://login.microsoftonline.com/YOUR_DIRECTORY_TENANT_ID/oauth2/v2.0/authorize"),
                 ),
             ),
             t.div(
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".tokenURL" }, "Token URL"),
+                    t.label({ htmlFor: uniqueId + ".tokenURL" }, __("Token URL")),
                     t.input({
                         id: uniqueId + ".tokenURL",
                         name: namePrefix + ".tokenURL",
@@ -129,14 +130,14 @@ window.app.oauth2.microsoft = function(providerInfo, namePrefix, data) {
                 ),
                 t.div(
                     { className: "field-help" },
-                    "Ex. https://login.microsoftonline.com/YOUR_DIRECTORY_TENANT_ID/oauth2/v2.0/token",
+                    __("Ex. https://login.microsoftonline.com/YOUR_DIRECTORY_TENANT_ID/oauth2/v2.0/token"),
                 ),
             ),
             t.div(
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".extra.idTokenEmailClaim" }, "Extract email from"),
+                    t.label({ htmlFor: uniqueId + ".extra.idTokenEmailClaim" }, __("Extract email from")),
                     app.components.select({
                         id: uniqueId + ".extra.idTokenEmailClaim",
                         options: idTokenEmailClaimOptions,
@@ -149,16 +150,16 @@ window.app.oauth2.microsoft = function(providerInfo, namePrefix, data) {
                 ),
                 t.div(
                     { className: "field-help" },
-                    t.p(null, "The default minimal required scopes are: ", t.code(null, "User.Read"), () => {
+                    t.p(null, __("The default minimal required scopes are: "), t.code(null, "User.Read"), () => {
                         if (data.config.extra?.idTokenEmailClaim) {
-                            return [" and ", t.code(null, "openid"), " (for the id_token)"];
+                            return [__(" and "), t.code(null, "openid"), " (for the id_token)"];
                         }
                     }, "."),
                     t.p(
                         null,
-                        "Any optional claim such as ",
+                        __("Any optional claim such as "),
                         t.code(null, "email"),
-                        " may need to be explicitly allowed depending on your tenant setup.",
+                        __(" may need to be explicitly allowed depending on your tenant setup."),
                     ),
                 ),
             ),

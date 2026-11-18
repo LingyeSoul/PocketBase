@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 export function passwordAuthAccordion(collection) {
     const uniqueId = "passwordAuth_" + app.utils.randomString();
 
@@ -46,10 +47,10 @@ export function passwordAuthAccordion(collection) {
         t.summary(
             null,
             t.i({ className: "ri-lock-password-line", ariaHidden: true }),
-            t.span({ className: "txt", textContent: "Identity/Password" }),
+            t.span({ className: "txt", textContent: __("Identity/Password") }),
             t.span({
                 className: () => `label m-l-auto ${data.config.enabled ? "success" : ""}`,
-                textContent: () => (data.config.enabled ? "Enabled" : "Disabled"),
+                textContent: () => (data.config.enabled ? __("Enabled") : __("Disabled")),
             }),
             () => {
                 if (!app.store.errors?.passwordAuth) {
@@ -58,7 +59,7 @@ export function passwordAuthAccordion(collection) {
 
                 return t.i({
                     className: "ri-error-warning-fill txt-danger",
-                    ariaDescription: app.attrs.tooltip("Has errors", "left"),
+                    ariaDescription: app.attrs.tooltip(__("Has errors"), "left"),
                 });
             },
         ),
@@ -78,7 +79,7 @@ export function passwordAuthAccordion(collection) {
                     }),
                     t.label({
                         htmlFor: uniqueId + ".enabled",
-                        textContent: "Enable",
+                        textContent: __("Enable"),
                     }),
                 ),
             ),
@@ -88,7 +89,7 @@ export function passwordAuthAccordion(collection) {
                     { className: "field" },
                     t.label({
                         htmlFor: uniqueId + ".identityFields",
-                        textContent: "Identity fields",
+                        textContent: __("Identity fields"),
                     }),
                     app.components.select({
                         id: uniqueId + ".identityFields",
@@ -104,7 +105,7 @@ export function passwordAuthAccordion(collection) {
                 ),
                 t.div(
                     { className: "field-help" },
-                    "Only non-hidden fields with UNIQUE index constraint can be selected.",
+                    __("Only non-hidden fields with UNIQUE index constraint can be selected."),
                 ),
             ),
         ),

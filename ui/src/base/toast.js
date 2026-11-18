@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 const toasts = new Map();
 
 const toastsContainer = t.div({ className: "toasts-container" });
@@ -135,7 +136,7 @@ function addToast(textOrElem, options = {}) {
                     {
                         type: "button",
                         className: "m-l-auto btn circle sm transparent secondary toast-remove",
-                        title: "Clear",
+                        title: __("Clear"),
                         onclick: () => removeToast(toastRef),
                     },
                     t.i({ className: "ri-close-line", ariaHidden: true }),

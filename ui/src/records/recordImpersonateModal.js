@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -75,7 +76,7 @@ function recordImpersonateModal(record) {
             { className: "modal-header" },
             t.h6(
                 null,
-                "Generate nonrenewable auth token for ",
+                __("Generate nonrenewable auth token for "),
                 t.strong(null, () => record.email || record.id),
             ),
         ),
@@ -93,7 +94,7 @@ function recordImpersonateModal(record) {
                 },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + "_duration" }, "Token duration (in seconds)"),
+                    t.label({ htmlFor: uniqueId + "_duration" }, __("Token duration (in seconds)")),
                     t.input({
                         id: uniqueId + "_duration",
                         type: "number",
@@ -101,7 +102,7 @@ function recordImpersonateModal(record) {
                         min: 0,
                         step: 1,
                         placeholder: () =>
-                            `Default to the collection settings (${data.collection?.authToken?.duration || 0}s)`,
+                            __t`Default to the collection settings (${data.collection?.authToken?.duration || 0}s)`,
                         value: (e) => data.duration || "",
                         oninput: (e) => (data.duration = parseInt(e.target.value, 10)),
                     }),
@@ -139,7 +140,7 @@ function recordImpersonateModal(record) {
                                 href: import.meta.env.PB_JS_SDK_URL,
                                 target: "_blank",
                                 rel: "noopener noreferrer",
-                                textContent: "JS SDK docs",
+                                textContent: __("JS SDK docs"),
                             }),
                         ),
                     },
@@ -161,7 +162,7 @@ function recordImpersonateModal(record) {
                                 href: import.meta.env.PB_DART_SDK_URL,
                                 target: "_blank",
                                 rel: "noopener noreferrer",
-                                textContent: "Dart SDK docs",
+                                textContent: __("Dart SDK docs"),
                             }),
                         ),
                     },
@@ -177,7 +178,7 @@ function recordImpersonateModal(record) {
                     disabled: () => data.isLoading,
                     onclick: () => app.modals.close(),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             t.button(
                 {
@@ -187,7 +188,7 @@ function recordImpersonateModal(record) {
                     "className": () => `btn expanded-lg ${data.isLoading ? "loading" : ""}`,
                     "disabled": () => data.isLoading,
                 },
-                t.span({ className: "txt" }, "Generate token"),
+                t.span({ className: "txt" }, __("Generate token")),
             ),
             t.button(
                 {
@@ -196,7 +197,7 @@ function recordImpersonateModal(record) {
                     className: () => `btn secondary expanded-lg ${data.isLoading ? "loading" : ""}`,
                     onclick: () => reset(),
                 },
-                t.span({ className: "txt" }, "Generate new one"),
+                t.span({ className: "txt" }, __("Generate new one")),
             ),
         ),
     );

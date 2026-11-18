@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     get collection: undefined,
 //     get originalRecord: undefined,
@@ -26,7 +27,7 @@ export function input(props) {
                     { className: "field-list-item p-0" },
                     t.div(
                         { className: "fields" },
-                        t.div({ className: "field addon" }, t.label({ htmlFor: uniqueId + ".lon" }, "Longitude:")),
+                        t.div({ className: "field addon" }, t.label({ htmlFor: uniqueId + ".lon" }, __("Longitude:"))),
                         t.div(
                             { className: "field" },
                             t.input({
@@ -46,7 +47,7 @@ export function input(props) {
                             }),
                         ),
                         t.span({ className: "delimiter" }),
-                        t.div({ className: "field addon" }, t.label({ htmlFor: uniqueId + ".lat" }, "Latitude:")),
+                        t.div({ className: "field addon" }, t.label({ htmlFor: uniqueId + ".lat" }, __("Latitude:"))),
                         t.div(
                             { className: "field" },
                             t.input({

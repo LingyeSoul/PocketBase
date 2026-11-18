@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     collection: undefined,
 //     originalRecord: undefined,
@@ -77,7 +78,7 @@ export function input(props) {
                     {
                         hidden: () => isValidStringifiedJSON(local.value.trim()),
                         className: "json-state",
-                        ariaDescription: app.attrs.tooltip("Invalid JSON", "left"),
+                        ariaDescription: app.attrs.tooltip(__("Invalid JSON"), "left"),
                     },
                     t.i({ className: "ri-error-warning-fill txt-danger", ariaHidden: true }),
                 ),
@@ -85,7 +86,7 @@ export function input(props) {
                     {
                         hidden: () => !isValidStringifiedJSON(local.value.trim()),
                         className: "json-state",
-                        ariaDescription: app.attrs.tooltip("Valid JSON", "left"),
+                        ariaDescription: app.attrs.tooltip(__("Valid JSON"), "left"),
                     },
                     t.i({ className: "ri-checkbox-circle-fill txt-success", ariaHidden: true }),
                 ),

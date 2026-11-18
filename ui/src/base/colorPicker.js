@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -102,7 +103,7 @@ window.app.components.colorPicker = function(propsArg = {}) {
             {
                 hidden: () => !props.predefinedColors.length,
                 type: "button",
-                title: "Predefined colors",
+                title: __("Predefined colors"),
                 className: "link-hint predefined-colors-btn",
                 "html-popovertarget": uniqueId + "predefined-colors-dropdown",
             },

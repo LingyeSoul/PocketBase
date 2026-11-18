@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 import { expandInfo } from "./expandInfo";
 import { fieldsInfo } from "./fieldsInfo";
 
@@ -56,15 +58,15 @@ export function docsAuthWithOAuth2(collection) {
             className: "content",
         },
         // description
-        t.p(null, "Authenticate with an OAuth2 provider and returns a new auth token and record data."),
+        t.p(null, __("Authenticate with an OAuth2 provider and returns a new auth token and record data.")),
         t.p(
             null,
-            "For more details please check the ",
+            __("For more details please check the "),
             t.a({
                 href: import.meta.env.PB_OAUTH2_DOCS,
                 target: "_blank",
                 rel: "noopener noreferrer",
-                textContent: "OAuth2 integration documentation",
+                textContent: __("OAuth2 integration documentation"),
             }),
             ".",
         ),
@@ -105,7 +107,7 @@ export function docsAuthWithOAuth2(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -145,7 +147,7 @@ export function docsAuthWithOAuth2(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -163,7 +165,7 @@ export function docsAuthWithOAuth2(collection) {
             ],
         }),
         // api
-        t.div({ className: "m-t-base" }, t.strong(null, "API details")),
+        t.div({ className: "m-t-base" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -175,51 +177,51 @@ export function docsAuthWithOAuth2(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "provider ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, `The name of the OAuth2 client provider (eg. "google").`),
+                    t.td({ className: "min-width" }, "provider ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __t`The name of the OAuth2 client provider (eg. "google").`),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "code ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The authorization code returned from the initial request."),
+                    t.td({ className: "min-width" }, "code ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The authorization code returned from the initial request.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "codeVerifier ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The code verifier sent with the initial request as part of the code_challenge."),
+                    t.td({ className: "min-width" }, "codeVerifier ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The code verifier sent with the initial request as part of the code_challenge.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "redirectURL ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The redirect url sent with the initial request."),
+                    t.td({ className: "min-width" }, "redirectURL ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The redirect url sent with the initial request.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "createData ", t.em(null, "(optional)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, "createData ", t.em(null, __("(optional)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(
                         null,
-                        t.p(null, "Optional data that will be used when creating the auth record on OAuth2 sign-up."),
+                        t.p(null, __("Optional data that will be used when creating the auth record on OAuth2 sign-up.")),
                         t.p(
                             null,
-                            "The created auth record must comply with the same requirements and validations in the regular create action.",
+                            __("The created auth record must comply with the same requirements and validations in the regular create action."),
                         ),
                         t.p(
                             null,
-                            "The data can only be in JSON, aka. user uploaded files currently are not supported during OAuth2 sign-ups.",
+                            __("The data can only be in JSON, aka. user uploaded files currently are not supported during OAuth2 sign-ups."),
                         ),
                     ),
                 ),
@@ -231,9 +233,9 @@ export function docsAuthWithOAuth2(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "?query params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("?query params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -241,19 +243,19 @@ export function docsAuthWithOAuth2(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "expand"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, expandInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "fields"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, fieldsInfo()),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

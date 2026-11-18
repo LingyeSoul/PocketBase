@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { logLevel } from "./logLevel";
 
 const perPage = 50;
@@ -263,11 +264,11 @@ export function logsList(logsSettings) {
                         t.div(
                             { className: "inline-flex gap-5" },
                             t.i({ className: "ri-bookmark-line", ariaHidden: true }),
-                            t.span({ textContent: "Level" }),
+                            t.span({ textContent: __("Level") }),
                             t.i({
                                 className: "ri-information-line txt-sm link-hint",
                                 ariaDescription: app.attrs.tooltip(
-                                    () => "Default levels\n" + data.paddedDefaultLogLevels.join("\n"),
+                                    () => __("Default levels\n") + data.paddedDefaultLogLevels.join("\n"),
                                     "bottom",
                                     "code",
                                 ),
@@ -279,7 +280,7 @@ export function logsList(logsSettings) {
                         t.div(
                             { className: "inline-flex gap-5" },
                             t.i({ className: "ri-file-list-2-line", ariaHidden: true }),
-                            t.span({ textContent: "Message" }),
+                            t.span({ textContent: __("Message") }),
                         ),
                     ),
                     t.th(
@@ -287,7 +288,7 @@ export function logsList(logsSettings) {
                         t.div(
                             { className: "inline-flex gap-5" },
                             t.i({ className: "ri-calendar-line", ariaHidden: true }),
-                            t.span({ textContent: "Created" }),
+                            t.span({ textContent: __("Created") }),
                         ),
                     ),
                     t.th({ className: "col-meta" }),
@@ -308,7 +309,7 @@ export function logsList(logsSettings) {
 
                                     return t.div(
                                         { className: "sticky-content txt-center txt-hint" },
-                                        t.div({ className: "txt-bold" }, "No logs found."),
+                                        t.div({ className: "txt-bold" }, __("No logs found.")),
                                         t.button(
                                             {
                                                 hidden: () =>
@@ -319,7 +320,7 @@ export function logsList(logsSettings) {
                                                     logsSettings.zoom = {};
                                                 },
                                             },
-                                            t.span({ className: "txt" }, "Reset zoom"),
+                                            t.span({ className: "txt" }, __("Reset zoom")),
                                         ),
                                         t.button(
                                             {
@@ -330,7 +331,7 @@ export function logsList(logsSettings) {
                                                     logsSettings.filter = "";
                                                 },
                                             },
-                                            t.span({ className: "txt" }, "Clear search"),
+                                            t.span({ className: "txt" }, __("Clear search")),
                                         ),
                                     );
                                 },
@@ -435,7 +436,7 @@ export function logsList(logsSettings) {
                                                     labels.push(
                                                         t.span(
                                                             { className: `label sm ${keyItem.label || ""}` },
-                                                            `${keyItem.key}: ${value}`,
+                                                            `${__(keyItem.key)}: ${value}`,
                                                         ),
                                                     );
                                                 }
@@ -475,7 +476,7 @@ export function logsList(logsSettings) {
                                 disabled: () => logsSettings.isListLoading,
                                 onclick: () => load(),
                             },
-                            t.span({ className: "txt" }, "Load older"),
+                            t.span({ className: "txt" }, __("Load older")),
                         ),
                     ),
                 ),
@@ -490,9 +491,9 @@ export function logsList(logsSettings) {
                 },
                 t.span(
                     { className: "txt" },
-                    "Selected ",
+                    __("Selected "),
                     t.strong(null, () => data.totalSelected),
-                    () => ` ${data.totalSelected == 1 ? "log" : "logs"}`,
+                    () => ` ${__("log count")}`,
                 ),
                 t.button(
                     {
@@ -500,7 +501,7 @@ export function logsList(logsSettings) {
                         className: "btn sm secondary pill m-r-auto",
                         onclick: () => selectAll(false),
                     },
-                    t.span({ className: "txt" }, "Reset"),
+                    t.span({ className: "txt" }, __("Reset")),
                 ),
                 t.button(
                     {

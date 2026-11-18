@@ -131,6 +131,43 @@
         transition-duration: var(--activeAnimationSpeed);
     }
 }
+.language-links {
+    position: fixed;
+    top: 10px;
+    right: 12px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--smFontSize);
+    color: var(--surfaceTxtHintColor);
+
+    button {
+        padding: 2px 4px;
+        border: 0;
+        border-radius: var(--borderRadius);
+        background: none;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        transition:
+            color var(--animationSpeed),
+            background var(--animationSpeed);
+
+        &:hover:not([disabled]),
+        &:focus-visible {
+            color: var(--surfaceTxtColor);
+            background: var(--surfaceAlt2Color);
+        }
+
+        &.active {
+            color: var(--surfaceTxtColor);
+            font-weight: bold;
+            cursor: default;
+        }
+    }
+}
+
 .app-header .logged-user {
     max-width: 300px;
     @media (max-width: 600px) {

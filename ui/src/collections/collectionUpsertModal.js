@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 import { toDeleteProp } from "@/base/fieldSettings";
 import { collectionAuthOptionsTab } from "./collectionAuthOptionsTab";
 import { collectionFieldsTab } from "./collectionFieldsTab";
@@ -86,7 +87,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
             return Object.keys(app.collectionTypes).map((type) => {
                 return {
                     value: type,
-                    label: app.utils.sentenize(type, false) + " collection",
+                    label: __(app.utils.sentenize(type, false) + " collection"),
                 };
             });
         },
@@ -196,8 +197,8 @@ function collectionUpsertModal(rawCollection, modalSettings) {
 
             app.toasts.success(
                 isNew
-                    ? `Successfully created collection "${data.collection.name}".`
-                    : `Successfully updated collection "${data.collection.name}".`,
+                    ? __t`Successfully created collection "${data.collection.name}".`
+                    : __t`Successfully updated collection "${data.collection.name}".`,
                 { key: "collectionSave" },
             );
 
@@ -211,7 +212,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
             if (!err?.isAbort) {
                 data.isSaving = false;
                 app.checkApiError(err, false);
-                app.toasts.error(err.message || "Failed to save collection.", { key: "collectionSave" });
+                app.toasts.error(err.message || __("Failed to save collection."), { key: "collectionSave" });
             }
         }
     }
@@ -312,7 +313,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
 
                 return new Promise((r) => {
                     app.modals.confirm(
-                        "You have unsaved changes. Do you really want to discard them?",
+                        __("You have unsaved changes. Do you really want to discard them?"),
                         () => r(modalSettings.onbeforeclose?.(el)),
                         () => r(false),
                     );
@@ -405,7 +406,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                     { className: "col-12 flex" },
                     t.h6(
                         { className: "modal-title" },
-                        t.span(null, () => (data.isNew ? "Create " : "Edit ")),
+                        t.span(null, () => (data.isNew ? __("Create collection") : __("Edit "))),
                         t.strong(
                             {
                                 hidden: () => data.isNew,
@@ -413,7 +414,11 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                             },
                             () => data.originalCollection?.name,
                         ),
-                        t.span(null, " collection"),
+                        () => {
+                            if (!data.isNew) {
+                                return t.span(null, __(" collection"));
+                            }
+                        },
                     ),
                     t.div({ className: "flex-fill" }),
                     () => {
@@ -426,7 +431,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                 {
                                     type: "button",
                                     className: "btn sm circle transparent",
-                                    title: "More options",
+                                    title: __("More options"),
                                     "html-popovertarget": uniqueId + "modal-header-dropdown",
                                 },
                                 t.i({ className: "ri-more-line", ariaHidden: true }),
@@ -446,11 +451,11 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                             app.utils.copyToClipboard(
                                                 JSON.stringify(data.originalCollection, null, 2),
                                             );
-                                            app.toasts.success("Collection copied to clipboard!");
+                                            app.toasts.success(__("Collection copied to clipboard!"));
                                         },
                                     },
                                     t.i({ className: "ri-braces-line", ariaHidden: true }),
-                                    t.span({ className: "txt" }, "Copy JSON"),
+                                    t.span({ className: "txt" }, __("Copy JSON")),
                                 ),
                                 t.button(
                                     {
@@ -461,10 +466,10 @@ function collectionUpsertModal(rawCollection, modalSettings) {
 
                                             if (data.hasChanges) {
                                                 app.modals.confirm(
-                                                    "You have unsaved changes. Do you really want to discard them?",
+                                                    __("You have unsaved changes. Do you really want to discard them?"),
                                                     duplicate,
                                                     null,
-                                                    { yesButton: "Yes, discard" },
+                                                    { yesButton: __("Yes, discard") },
                                                 );
                                             } else {
                                                 duplicate();
@@ -472,7 +477,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                         },
                                     },
                                     t.i({ className: "ri-file-copy-line", ariaHidden: true }),
-                                    t.span({ className: "txt" }, "Duplicate"),
+                                    t.span({ className: "txt" }, __("Duplicate")),
                                 ),
                                 t.hr(),
                                 () => {
@@ -500,7 +505,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                             t.label({
                                 htmlFor: uniqueId + "col_name",
                                 textContent: () => {
-                                    return `Name${data.collection?.system ? " (system)" : ""}`;
+                                    return __t`Name${data.collection?.system ? " (system)" : ""}`;
                                 },
                             }),
                             t.input({
@@ -509,7 +514,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                 name: "name",
                                 required: true,
                                 spellcheck: false,
-                                placeholder: "e.g. posts",
+                                placeholder: __("e.g. posts"),
                                 autofocus: () => data.isNew,
                                 disabled: () => !data.isNew && data.collection?.system,
                                 value: () => data.collection.name || "",
@@ -538,8 +543,8 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                 },
                                 t.span(
                                     { className: "txt" },
-                                    "Type: ",
-                                    () => app.utils.sentenize(data.collection.type, false) || "N/A",
+                                    __("Type: "),
+                                    () => data.collectionTypeOptions.find((opt) => opt.value == data.collection.type)?.label || __("N/A"),
                                 ),
                                 t.i({
                                     hidden: () => !data.isNew,
@@ -604,7 +609,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                             className: () => `tab-item ${data.activeTab == tabName ? "active" : ""}`,
                                             onclick: () => changeTab(tabName),
                                         },
-                                        t.span({ className: "txt" }, tabName),
+                                        t.span({ className: "txt" }, __(tabName)),
                                         () => {
                                             if (!data.errorTabs[tabName]) {
                                                 return;
@@ -612,7 +617,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
 
                                             return t.i({
                                                 className: "ri-error-warning-fill txt-danger txt-base",
-                                                ariaDescription: app.attrs.tooltip("Has errors"),
+                                                ariaDescription: app.attrs.tooltip(__("Has errors")),
                                             });
                                         },
                                     ),
@@ -656,7 +661,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                     disabled: () => data.isSaving,
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             () => {
                 const rawErrors = JSON.stringify(app.store.errors, null, 2);
@@ -666,7 +671,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
 
                 return t.i({
                     className: "ri-error-warning-line txt-danger",
-                    ariaDescription: app.attrs.tooltip(() => "Raw errors:\n" + rawErrors, "top", "code"),
+                    ariaDescription: app.attrs.tooltip(() => __("Raw errors:\n") + rawErrors, "top", "code"),
                 });
             },
             t.div(
@@ -678,12 +683,12 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                         disabled: () => !data.canSave,
                         onclick: () => confirmSave(true),
                     },
-                    t.span({ className: "txt" }, () => (data.isNew ? "Create" : "Save changes")),
+                    t.span({ className: "txt" }, () => (data.isNew ? __("Create") : __("Save changes"))),
                 ),
                 t.button(
                     {
                         type: "button",
-                        title: "Save options",
+                        title: __("Save options"),
                         className: () => `btn p-5`,
                         disabled: () => !data.canSave,
                         "html-popovertarget": uniqueId + "save_options",
@@ -701,7 +706,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                 confirmSave(false);
                             },
                         },
-                        t.span({ className: "txt" }, "Save and continue"),
+                        t.span({ className: "txt" }, __("Save and continue")),
                         t.small({ className: "txt-hint" }, "(Ctrl+S)"),
                     ),
                     t.hr(),
@@ -714,7 +719,7 @@ function collectionUpsertModal(rawCollection, modalSettings) {
                                 resetForm();
                             },
                         },
-                        t.span({ className: "txt" }, "Reset form"),
+                        t.span({ className: "txt" }, __("Reset form")),
                     ),
                 ),
             ),
@@ -818,7 +823,7 @@ function truncateDropdownItem(data, modalSettings) {
 
             modalSettings.ontruncate?.(JSON.parse(JSON.stringify(data.originalCollection)));
 
-            app.toasts.success(`Successfully truncated collection "${data.originalCollection.name}".`);
+            app.toasts.success(__t`Successfully truncated collection "${data.originalCollection.name}".`);
 
             local.isSubmitting = false;
 
@@ -843,21 +848,21 @@ function truncateDropdownItem(data, modalSettings) {
                         null,
                         t.h6(
                             { className: "block txt-center" },
-                            "Do you really want to delete all records of the collection?",
+                            __("Do you really want to delete all records of the collection?"),
                         ),
                         t.div(
                             { className: "confirm-collection-label txt-bold m-t-sm m-b-sm" },
-                            "Type the collection name ",
+                            __("Type the collection name "),
                             t.div(
                                 { className: "label" },
                                 () => data.originalCollection.name,
                                 app.components.copyButton(() => data.originalCollection?.name),
                             ),
-                            " to confirm:",
+                            __(" to confirm:"),
                         ),
                         t.div(
                             { className: "field" },
-                            t.label({ htmlFor: uniqueId + ".confirm_name" }, "Collection name"),
+                            t.label({ htmlFor: uniqueId + ".confirm_name" }, __("Collection name")),
                             t.input({
                                 id: uniqueId + ".confirm_name",
                                 type: "text",
@@ -885,7 +890,7 @@ function truncateDropdownItem(data, modalSettings) {
             },
         },
         t.i({ className: "ri-eraser-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Truncate"),
+        t.span({ className: "txt" }, __("Truncate")),
     );
 }
 
@@ -915,7 +920,7 @@ function deleteDropdownItem(data, modalSettings) {
 
             app.utils.removeByKey(app.store.collections, "id", data.originalCollection.id);
 
-            app.toasts.success(`Successfully deleted collection "${data.originalCollection.name}".`);
+            app.toasts.success(__t`Successfully deleted collection "${data.originalCollection.name}".`);
 
             local.isSubmitting = false;
 
@@ -945,25 +950,25 @@ function deleteDropdownItem(data, modalSettings) {
                             { className: "block txt-center" },
                             () => {
                                 if (data.originalCollection.type == "view") {
-                                    return "Do you really want to delete the selected collection?";
+                                    return __("Do you really want to delete the selected collection?");
                                 }
 
-                                return "Do you really want to delete the selected collection and all its records";
+                                return __("Do you really want to delete the selected collection and all its records");
                             },
                         ),
                         t.div(
                             { className: "confirm-collection-label txt-bold m-t-sm m-b-sm" },
-                            "Type the collection name ",
+                            __("Type the collection name "),
                             t.div(
                                 { className: "label" },
                                 () => data.originalCollection.name,
                                 app.components.copyButton(() => data.originalCollection?.name),
                             ),
-                            " to confirm:",
+                            __(" to confirm:"),
                         ),
                         t.div(
                             { className: "field" },
-                            t.label({ htmlFor: uniqueId + ".confirm_name" }, "Collection name"),
+                            t.label({ htmlFor: uniqueId + ".confirm_name" }, __("Collection name")),
                             t.input({
                                 id: uniqueId + ".confirm_name",
                                 type: "text",
@@ -991,6 +996,6 @@ function deleteDropdownItem(data, modalSettings) {
             },
         },
         t.i({ className: "ri-delete-bin-7-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Delete"),
+        t.span({ className: "txt" }, __("Delete")),
     );
 }

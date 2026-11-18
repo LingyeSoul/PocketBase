@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -62,7 +63,7 @@ function collectionsOverviewModal(settings = {}) {
                     { className: "col-12" },
                     t.div(
                         { className: "flex" },
-                        t.h6({ className: "modal-title" }, "Collections overview"),
+                        t.h6({ className: "modal-title" }, __("Collections overview")),
                         t.div({ className: "flex-fill" }),
                         t.div(
                             { className: "field" },
@@ -73,13 +74,13 @@ function collectionsOverviewModal(settings = {}) {
                                 checked: () => data.showSystemCollections,
                                 onchange: (e) => data.showSystemCollections = e.target.checked,
                             }),
-                            t.label({ htmlFor: uniqueId + ".showSystemCollections" }, "System collections"),
+                            t.label({ htmlFor: uniqueId + ".showSystemCollections" }, __("System collections")),
                         ),
                         t.button(
                             {
                                 type: "button",
                                 className: "btn sm secondary transparent circle modal-close-btn",
-                                title: "Close",
+                                title: __("Close"),
                                 onclick: () => app.modals.close(modal),
                             },
                             t.i({ className: "ri-close-line", ariaHidden: true }),
@@ -150,17 +151,17 @@ function erd(data) {
 
 function rules(data) {
     const ruleOptions = [
-        { value: "listRule", label: "List/Search rule" },
-        { value: "viewRule", label: "View rule" },
-        { value: "createRule", label: "Create rule", filter: (c) => c.type != "view" },
-        { value: "updateRule", label: "Update rule", filter: (c) => c.type != "view" },
-        { value: "deleteRule", label: "Delete rule", filter: (c) => c.type != "view" },
-        { value: "authRule", label: "Auth rule", filter: (c) => c.type == "auth" },
-        { value: "manageRule", label: "Manage rule", filter: (c) => c.type == "auth" },
+        { value: "listRule", label: __("List/Search rule") },
+        { value: "viewRule", label: __("View rule") },
+        { value: "createRule", label: __("Create rule"), filter: (c) => c.type != "view" },
+        { value: "updateRule", label: __("Update rule"), filter: (c) => c.type != "view" },
+        { value: "deleteRule", label: __("Delete rule"), filter: (c) => c.type != "view" },
+        { value: "authRule", label: __("Auth rule"), filter: (c) => c.type == "auth" },
+        { value: "manageRule", label: __("Manage rule"), filter: (c) => c.type == "auth" },
         {
             value: "mfaRule",
-            label: "MFA rule",
-            emptyLabel: t.span({ className: "label info" }, "Enabled for everyone"),
+            label: __("MFA rule"),
+            emptyLabel: t.span({ className: "label info" }, __("Enabled for everyone")),
             rule: (c) => c.mfa?.rule,
             filter: (c) => c.mfa?.enabled && c.type == "auth",
         },
@@ -216,7 +217,7 @@ function rules(data) {
                             null,
                             t.td(
                                 { colSpan: 99, className: "txt-hint" },
-                                t.p(null, "No collections with the selected rule."),
+                                t.p(null, __("No collections with the selected rule.")),
                             ),
                         );
                     }
@@ -257,7 +258,7 @@ function rules(data) {
                                                 return local.activeRuleOption.nullLabel;
                                             }
 
-                                            return t.span({ className: "label success" }, "Superusers only");
+                                            return t.span({ className: "label success" }, __("Superusers only"));
                                         }
 
                                         if (rule === "") {
@@ -265,7 +266,7 @@ function rules(data) {
                                                 return local.activeRuleOption.emptyLabel;
                                             }
 
-                                            return t.span({ className: "label info" }, "Public");
+                                            return t.span({ className: "label info" }, __("Public"));
                                         }
 
                                         return app.components.codeBlock({

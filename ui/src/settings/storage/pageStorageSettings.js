@@ -1,7 +1,8 @@
+import { __ } from "@/i18n";
 import { settingsSidebar } from "../settingsSidebar";
 
 export function pageStorageSettings() {
-    app.store.title = "File storage";
+    app.store.title = __("File storage");
 
     const data = store({
         isLoading: false,
@@ -43,7 +44,7 @@ export function pageStorageSettings() {
             const settings = await app.pb.settings.update(redacted);
             init(settings);
 
-            app.toasts.success("Successfully saved storage settings.");
+            app.toasts.success(__("Successfully saved storage settings."));
         } catch (err) {
             app.checkApiError(err);
         }
@@ -79,7 +80,7 @@ export function pageStorageSettings() {
                 { className: "page-header" },
                 t.nav(
                     { className: "breadcrumbs" },
-                    t.div({ className: "breadcrumb-item" }, "Settings"),
+                    t.div({ className: "breadcrumb-item" }, __("Settings")),
                     t.div({ className: "breadcrumb-item" }, () => app.store.title),
                 ),
             ),
@@ -104,11 +105,11 @@ export function pageStorageSettings() {
                             { className: "col-lg-12 txt-lg" },
                             t.p(
                                 null,
-                                "By default PocketBase uses and recommends the local file system to store uploaded files because it is more performant, easier to manage and backup.",
+                                __("By default PocketBase uses and recommends the local file system to store uploaded files because it is more performant, easier to manage and backup."),
                             ),
                             t.p(
                                 null,
-                                "Alternatively, if you have limited disk space available, you could opt to an S3 compatible external storage.",
+                                __("Alternatively, if you have limited disk space available, you could opt to an S3 compatible external storage."),
                             ),
                         ),
                         t.div(
@@ -124,16 +125,16 @@ export function pageStorageSettings() {
 
                                     return t.div(
                                         { className: "alert info m-t-sm" },
-                                        "If you have existing uploaded files, you'll have to migrate them manually from the ",
-                                        t.strong(null, originalEnabled ? "S3 storage" : "local file system"),
-                                        " to the ",
+                                        __("If you have existing uploaded files, you'll have to migrate them manually from the "),
+                                        t.strong(null, originalEnabled ? __("S3 storage") : __("local file system")),
+                                        __(" to the "),
                                         t.strong(
                                             null,
-                                            data.formSettings.s3?.enabled ? "S3 storage" : "local file system",
+                                            data.formSettings.s3?.enabled ? __("S3 storage") : __("local file system"),
                                         ),
                                         ".",
                                         t.br(),
-                                        "There are several command line tools that can help you, such as: ",
+                                        __("There are several command line tools that can help you, such as: "),
                                         t.a({
                                             href: "https://github.com/rclone/rclone",
                                             target: "_blank",
@@ -141,7 +142,7 @@ export function pageStorageSettings() {
                                             className: "txt-bold",
                                             textContent: "rclone",
                                         }),
-                                        ", ",
+                                        __(", "),
                                         t.a({
                                             href: "https://github.com/peak/s5cmd",
                                             target: "_blank",
@@ -149,7 +150,7 @@ export function pageStorageSettings() {
                                             className: "txt-bold",
                                             textContent: "s5cmd",
                                         }),
-                                        ", etc.",
+                                        __(", etc."),
                                     );
                                 },
                             }),
@@ -167,14 +168,14 @@ export function pageStorageSettings() {
                                         className: "btn transparent secondary",
                                         onclick: reset,
                                     },
-                                    t.span({ className: "txt" }, "Cancel"),
+                                    t.span({ className: "txt" }, __("Cancel")),
                                 ),
                                 t.button(
                                     {
                                         className: () => `btn expanded-lg ${data.isSaving ? "loading" : ""}`,
                                         disabled: () => !data.hasChanges || data.isSaving,
                                     },
-                                    t.span({ className: "txt" }, "Save changes"),
+                                    t.span({ className: "txt" }, __("Save changes")),
                                 ),
                             ),
                         ),

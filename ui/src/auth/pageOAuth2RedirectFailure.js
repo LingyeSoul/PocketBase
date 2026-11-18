@@ -1,5 +1,6 @@
+import { __ } from "@/i18n";
 export function pageOAuth2RedirectFailure(route) {
-    app.store.title = "OAuth2 auth failed";
+    app.store.title = __("OAuth2 auth failed");
 
     window.close();
 
@@ -9,10 +10,10 @@ export function pageOAuth2RedirectFailure(route) {
             { className: "page-content" },
             t.header(
                 { className: "txt-center p-base" },
-                t.h3({ className: "primary-heading m-b-sm" }, "Auth failed."),
+                t.h3({ className: "primary-heading m-b-sm" }, __("Auth failed.")),
                 t.h6(
                     { className: "secondary-heading" },
-                    "You can close this window and go back to the app to try again.",
+                    __("You can close this window and go back to the app to try again."),
                 ),
             ),
         ),

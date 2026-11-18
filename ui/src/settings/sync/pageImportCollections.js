@@ -1,7 +1,8 @@
+import { __ } from "@/i18n";
 import { settingsSidebar } from "../settingsSidebar";
 
 export function pageImportCollections(route) {
-    app.store.title = "Import collections";
+    app.store.title = __("Import collections");
 
     const uniqueId = "import_" + app.utils.randomString();
 
@@ -252,13 +253,13 @@ export function pageImportCollections(route) {
             await new Promise((r) => setTimeout(r, 0));
 
             if (!data.newCollections.length) {
-                app.toasts.error("Invalid collections configuration.");
+                app.toasts.error(__("Invalid collections configuration."));
                 clear();
             }
         };
 
         reader.onerror = (err) => {
-            app.toasts.error("Failed to load the imported JSON.");
+            app.toasts.error(__("Failed to load the imported JSON."));
             console.warn(err);
 
             data.isLoadingFile = false;
@@ -297,7 +298,7 @@ export function pageImportCollections(route) {
                 { className: "page-header" },
                 t.nav(
                     { className: "breadcrumbs" },
-                    t.div({ className: "breadcrumb-item" }, "Settings"),
+                    t.div({ className: "breadcrumb-item" }, __("Settings")),
                     t.div({ className: "breadcrumb-item" }, () => app.store.title),
                 ),
             ),
@@ -312,35 +313,35 @@ export function pageImportCollections(route) {
                         { className: "col-lg-12" },
                         t.span(
                             { className: "txt-lg m-r-5" },
-                            "Paste below the collections configuration you want to import or",
+                            __("Paste below the collections configuration you want to import or"),
                         ),
                         t.label(
                             {
                                 htmlFor: fileInput.id,
                                 className: () => `btn sm outline ${data.isLoadingFile ? "loading" : ""}`,
                             },
-                            t.span({ className: "txt" }, "Load from JSON file"),
+                            t.span({ className: "txt" }, __("Load from JSON file")),
                         ),
                         fileInput,
                         t.p(
                             { className: "txt-hint" },
                             t.em(
                                 null,
-                                "You can use the ",
+                                __("You can use the "),
                                 t.a({
                                     href: `${import.meta.env.PB_DOCS_URL}/go-migrations/`,
                                     target: "_blank",
                                     rel: "noopener noreferrer",
                                     textContent: "Go",
                                 }),
-                                " or ",
+                                __(" or "),
                                 t.a({
                                     href: `${import.meta.env.PB_DOCS_URL}/js-migrations/`,
                                     target: "_blank",
                                     rel: "noopener noreferrer",
                                     textContent: "JS",
                                 }),
-                                " migrations to manage your collections programmatically in more granular and version controlled manner.",
+                                __(" migrations to manage your collections programmatically in more granular and version controlled manner."),
                             ),
                         ),
                     ),
@@ -348,7 +349,7 @@ export function pageImportCollections(route) {
                         { className: "col-lg-12" },
                         t.div(
                             { className: "field" },
-                            t.label({ htmlFor: uniqueId + "_collections_field" }, "Collections"),
+                            t.label({ htmlFor: uniqueId + "_collections_field" }, __("Collections")),
                             t.textarea({
                                 id: uniqueId + "_collections_field",
                                 name: "collections",
@@ -367,7 +368,7 @@ export function pageImportCollections(route) {
                                 className: () =>
                                     `field-help error ${!!data.rawNewCollections && !data.isRawValid ? "" : "hidden"}`,
                             },
-                            "Invalid collections configuration.",
+                            __("Invalid collections configuration."),
                         ),
                     ),
                     t.div(
@@ -381,7 +382,7 @@ export function pageImportCollections(route) {
                                 checked: () => data.mergeWithOldCollections,
                                 onchange: (e) => (data.mergeWithOldCollections = e.target.checked),
                             }),
-                            t.label({ htmlFor: uniqueId + "_merge_checkbox" }, "Merge with the existing collections"),
+                            t.label({ htmlFor: uniqueId + "_merge_checkbox" }, __("Merge with the existing collections")),
                         ),
                     ),
                     t.div(
@@ -392,7 +393,7 @@ export function pageImportCollections(route) {
                             { className: "alert info" },
                             t.div(
                                 { className: "content" },
-                                t.p(null, "Your collections configuration is already up-to-date!"),
+                                t.p(null, __("Your collections configuration is already up-to-date!")),
                             ),
                         ),
                     ),
@@ -400,7 +401,7 @@ export function pageImportCollections(route) {
                         {
                             className: () => `col-lg-12 ${data.isRawValid && data.hasChanges ? "" : "hidden"}`,
                         },
-                        t.p({ className: "txt-hint txt-bold" }, "Detected changes"),
+                        t.p({ className: "txt-hint txt-bold" }, __("Detected changes")),
                         t.div(
                             { className: "list" },
                             // to delete
@@ -410,7 +411,7 @@ export function pageImportCollections(route) {
                                         { className: "list-item" },
                                         t.span({
                                             className: "label import-change-label danger",
-                                            textContent: "Deleted",
+                                            textContent: __("Deleted"),
                                         }),
                                         t.div(
                                             { className: "inline-flex gap-5" },
@@ -430,7 +431,7 @@ export function pageImportCollections(route) {
                                         { className: "list-item" },
                                         t.span({
                                             className: "label import-change-label warning",
-                                            textContent: "Changed",
+                                            textContent: __("Changed"),
                                         }),
                                         t.div(
                                             { className: "inline-flex gap-5" },
@@ -466,7 +467,7 @@ export function pageImportCollections(route) {
                                         { className: "list-item" },
                                         t.span({
                                             className: "label import-change-label success",
-                                            textContent: "Added",
+                                            textContent: __("Added"),
                                         }),
                                         t.div(
                                             { className: "inline-flex gap-5" },
@@ -491,15 +492,15 @@ export function pageImportCollections(route) {
                                 { className: "content" },
                                 t.p(
                                     null,
-                                    "Some of the imported collections share the same name and/or fields but are imported with different IDs.",
+                                    __("Some of the imported collections share the same name and/or fields but are imported with different IDs."),
                                 ),
                                 t.p(
                                     null,
-                                    "You can replace them in the import if you want to:",
+                                    __("You can replace them in the import if you want to:"),
                                     t.button({
                                         type: "button",
                                         className: "btn warning sm m-l-10",
-                                        textContent: "Replace with original IDs",
+                                        textContent: __("Replace with original IDs"),
                                         onclick: replaceIds,
                                     }),
                                 ),
@@ -516,7 +517,7 @@ export function pageImportCollections(route) {
                                     className: () => `btn secondary ${!data.rawNewCollections ? "hidden" : ""}`,
                                     onclick: clear,
                                 },
-                                t.span({ className: "txt" }, "Clear"),
+                                t.span({ className: "txt" }, __("Clear")),
                             ),
                             t.button(
                                 {
@@ -525,7 +526,7 @@ export function pageImportCollections(route) {
                                     disabled: () => !data.canReview,
                                     onclick: review,
                                 },
-                                t.span({ className: "txt" }, "Review"),
+                                t.span({ className: "txt" }, __("Review")),
                             ),
                         ),
                     ),

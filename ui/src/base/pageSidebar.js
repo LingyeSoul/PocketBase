@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -72,7 +73,7 @@ window.app.components.pageSidebar = function(propsArg = {}, ...children) {
                 {
                     type: "button",
                     className: "btn transparent secondary responsive-sidebar-btn",
-                    title: "Toggle sidebar",
+                    title: __("Toggle sidebar"),
                     onclick: (e) => {
                         e.stopPropagation();
                         data.responsiveShow = !data.responsiveShow;

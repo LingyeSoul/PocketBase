@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 export function backupUploadButton(onSuccess = null) {
     const uniqueId = "backup_upload_" + app.utils.randomString();
 
@@ -11,8 +13,8 @@ export function backupUploadButton(onSuccess = null) {
         }
 
         app.modals.confirm(
-            `Note that we don't perform validations for the uploaded backup files. Proceed with extreme caution and only if you trust the source.\n\n`
-                + `Do you really want to upload "${file.name}"?`,
+            __t`Note that we don't perform validations for the uploaded backup files. Proceed with extreme caution and only if you trust the source.\n\n`
+                + __t`Do you really want to upload "${file.name}"?`,
             () => {
                 uploadBackup(file);
             },
@@ -39,7 +41,7 @@ export function backupUploadButton(onSuccess = null) {
 
             onSuccess(file);
 
-            app.toasts.success("Successfully uploaded a new backup.");
+            app.toasts.success(__("Successfully uploaded a new backup."));
         } catch (err) {
             if (!err.isAbort) {
                 data.isUploading = false;
@@ -74,7 +76,7 @@ export function backupUploadButton(onSuccess = null) {
         t.button(
             {
                 type: "button",
-                ariaLabel: app.attrs.tooltip("Upload backup"),
+                ariaLabel: app.attrs.tooltip(__("Upload backup")),
                 className: () => `btn sm transparent secondary circle ${data.isUploading ? "loading" : ""}`,
                 disabled: () => data.isUploading,
                 onclick: () => fileInput?.click(),

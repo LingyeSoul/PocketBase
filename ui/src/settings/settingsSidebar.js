@@ -1,3 +1,5 @@
+import { __ } from "@/i18n";
+
 export function settingsSidebar() {
     return app.components.pageSidebar(
         {
@@ -16,7 +18,7 @@ export function settingsSidebar() {
                         { className: "nav-group", "html-data-group": groupName, open: true },
                         t.summary(
                             { tabIndex: -1, onfocusout: () => false, onclick: () => false, onkeyup: () => false },
-                            groupName,
+                            __(groupName),
                         ),
                         () => {
                             return children.map((link) => {

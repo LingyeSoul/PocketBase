@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -359,9 +360,9 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
 
             let msg;
             if (isNew) {
-                msg = `Successfully created ${collection.name} "${record.id}".`;
+                msg = __t`Successfully created ${collection.name} "${record.id}".`;
             } else {
-                msg = `Successfully updated ${collection.name} "${record.id}".`;
+                msg = __t`Successfully updated ${collection.name} "${record.id}".`;
             }
             app.toasts.success(msg, { key: "recordSave" });
 
@@ -374,7 +375,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
             if (!err?.isAbort) {
                 data.isSaving = false;
                 app.checkApiError(err, false);
-                app.toasts.error(err.message || "Failed to save record.", { key: "recordSave" });
+                app.toasts.error(err.message || __("Failed to save record."), { key: "recordSave" });
             }
         }
     }
@@ -453,20 +454,20 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                             { className: "col-12" },
                             t.div(
                                 { className: "alert warning flex gap-sm" },
-                                t.div({ className: "content" }, "The record has previous unsaved changes."),
+                                t.div({ className: "content" }, __("The record has previous unsaved changes.")),
                                 t.button(
                                     {
                                         type: "button",
                                         className: "btn sm outline",
                                         onclick: () => restoreDraft(),
                                     },
-                                    t.span({ className: "txt" }, "Restore draft"),
+                                    t.span({ className: "txt" }, __("Restore draft")),
                                 ),
                                 t.button(
                                     {
                                         type: "button",
                                         className: "btn sm secondary transparent circle m-l-auto",
-                                        ariaLabel: app.attrs.tooltip("Discard draft", "left"),
+                                        ariaLabel: app.attrs.tooltip(__("Discard draft"), "left"),
                                         onclick: () => {
                                             deleteDraft();
                                         },
@@ -577,7 +578,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                         disabled: () => data.isSaving,
                         onclick: () => app.modals.close(modal),
                     },
-                    t.span({ className: "txt" }, "Close"),
+                    t.span({ className: "txt" }, __("Close")),
                 ),
                 t.button(
                     {
@@ -588,7 +589,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                         onclick: () => data.isLocked = false,
                     },
                     t.i({ className: "ri-lock-unlock-line", ariaHidden: true }),
-                    t.span({ className: "txt" }, "Unlock to save"),
+                    t.span({ className: "txt" }, __("Unlock to save")),
                 ),
                 t.div(
                     {
@@ -602,13 +603,13 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                             disabled: () => data.isLocked || data.isFormDisabled,
                             onclick: () => save(),
                         },
-                        t.span({ className: "txt" }, () => (data.isNew ? "Create" : "Save changes")),
+                        t.span({ className: "txt" }, () => (data.isNew ? __("Create") : __("Save changes"))),
                     ),
                     t.button(
                         {
                             type: "button",
                             className: () => `btn p-5`,
-                            title: "Save options",
+                            title: __("Save options"),
                             disabled: () => data.isLocked || data.isFormDisabled,
                             "html-popovertarget": uniqueId + "save_options",
                         },
@@ -625,7 +626,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                                     save(false);
                                 },
                             },
-                            t.span({ className: "txt" }, "Save and continue"),
+                            t.span({ className: "txt" }, __("Save and continue")),
                             t.small({ className: "txt-hint" }, "(Ctrl+S)"),
                         ),
                         t.hr(),
@@ -638,7 +639,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                                     resetForm();
                                 },
                             },
-                            t.span({ className: "txt" }, "Reset form"),
+                            t.span({ className: "txt" }, __("Reset form")),
                         ),
                     ),
                 ),
@@ -673,13 +674,13 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
 
                 return new Promise((r) => {
                     app.modals.confirm(
-                        "You have unsaved changes. Do you really want to discard them?",
+                        __("You have unsaved changes. Do you really want to discard them?"),
                         () => {
                             deleteDraft();
                             return r(modalSettings.onbeforeclose?.(el));
                         },
                         () => r(false),
-                        { yesButton: "Yes, discard" },
+                        { yesButton: __("Yes, discard") },
                     );
                 });
             },
@@ -699,12 +700,12 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                     { className: "col-12 flex" },
                     t.h6(
                         { className: "modal-title" },
-                        t.span(null, () => (data.isNew ? "Create " : "Edit ")),
+                        t.span(null, () => (data.isNew ? __("Create ") : __("Edit "))),
                         t.strong(
                             { className: "txt-ellipsis collection-name", style: "max-width: 220px" },
                             () => collection.name,
                         ),
-                        t.span(null, " record"),
+                        t.span(null, __(" record")),
                     ),
                     t.div({ className: "flex-fill" }),
                     () => {
@@ -716,7 +717,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                             t.button(
                                 {
                                     type: "button",
-                                    title: "More options",
+                                    title: __("More options"),
                                     className: () => `btn sm circle transparent ${data.isLoading ? "loading" : ""}`,
                                     disabled: () => data.isLoading,
                                     "html-popovertarget": uniqueId + "modal-header-dropdown",
@@ -767,11 +768,11 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                                             app.utils.copyToClipboard(
                                                 JSON.stringify(data.originalRecord, redactedReplacer, 2),
                                             );
-                                            app.toasts.success("Record copied to clipboard!");
+                                            app.toasts.success(__("Record copied to clipboard!"));
                                         },
                                     },
                                     t.i({ className: "ri-braces-line", ariaHidden: true }),
-                                    t.span({ className: "txt" }, "Copy JSON"),
+                                    t.span({ className: "txt" }, __("Copy JSON")),
                                 ),
                                 () => {
                                     if (collection.type == "view") {
@@ -788,10 +789,10 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
 
                                                     if (data.hasChanges) {
                                                         app.modals.confirm(
-                                                            "You have unsaved changes. Do you really want to discard them?",
+                                                            __("You have unsaved changes. Do you really want to discard them?"),
                                                             duplicate,
                                                             null,
-                                                            { yesButton: "Yes, discard" },
+                                                            { yesButton: __("Yes, discard") },
                                                         );
                                                     } else {
                                                         duplicate();
@@ -799,7 +800,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                                                 },
                                             },
                                             t.i({ className: "ri-file-copy-line", ariaHidden: true }),
-                                            t.span({ className: "txt" }, "Duplicate"),
+                                            t.span({ className: "txt" }, __("Duplicate")),
                                         ),
                                         t.hr(),
                                         deleteDropdownItem(collection, data, modalSettings),
@@ -827,11 +828,11 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                                             data.activeTab == TAB_MAIN ? "active" : data.hasChanges ? "txt-warning" : ""
                                         }`,
                                     ariaDescription: app.attrs.tooltip(() =>
-                                        data.hasChanges && data.activeTab != TAB_MAIN ? "Has unsaved changes" : ""
+                                        data.hasChanges && data.activeTab != TAB_MAIN ? __("Has unsaved changes") : ""
                                     ),
                                     onclick: () => data.activeTab = TAB_MAIN,
                                 },
-                                t.span({ className: "txt" }, () => (data.isAuthCollection ? "Account" : "Main")),
+                                t.span({ className: "txt" }, () => (data.isAuthCollection ? __("Account") : __("Main"))),
                             ),
                             t.button(
                                 {
@@ -840,7 +841,7 @@ function recordUpsertModal(collection, rawRecord, modalSettings) {
                                     className: () => `tab-item ${data.activeTab == TAB_AUTH_PROVIDERS ? "active" : ""}`,
                                     onclick: () => data.activeTab = TAB_AUTH_PROVIDERS,
                                 },
-                                t.span({ className: "txt" }, "Auth providers"),
+                                t.span({ className: "txt" }, __("Auth providers")),
                             ),
                         ),
                     );
@@ -907,7 +908,7 @@ function resetTokenKeyDropdownItem(collection, data, modalSettings) {
                 data.record[field.name] = val;
             }
 
-            app.toasts.success("Successfully reset all tokens for the selected record.");
+            app.toasts.success(__("Successfully reset all tokens for the selected record."));
         } catch (err) {
             app.checkApiError(err);
         }
@@ -923,15 +924,15 @@ function resetTokenKeyDropdownItem(collection, data, modalSettings) {
             onclick: (e) => {
                 e.target.closest(".dropdown").hidePopover();
                 app.modals.confirm(
-                    "Do you really want to reset all issued tokens for the selected auth record?",
+                    __("Do you really want to reset all issued tokens for the selected auth record?"),
                     resetTokenKey,
                     null,
-                    { yesButton: "Reset all tokens" },
+                    { yesButton: __("Reset all tokens") },
                 );
             },
         },
         t.i({ className: "ri-reset-left-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Reset issued tokens"),
+        t.span({ className: "txt" }, __("Reset issued tokens")),
     );
 }
 
@@ -952,7 +953,7 @@ function sendPasswordResetEmailDropdownItem(collection, data, modalSettings) {
 
             modalSettings.onpasswordresetsend?.(JSON.parse(JSON.stringify(data.originalRecord)));
 
-            app.toasts.success(`Successfully sent password reset email to ${data.originalRecord.email}.`);
+            app.toasts.success(__t`Successfully sent password reset email to ${data.originalRecord.email}.`);
         } catch (err) {
             app.checkApiError(err);
         }
@@ -968,15 +969,15 @@ function sendPasswordResetEmailDropdownItem(collection, data, modalSettings) {
             onclick: (e) => {
                 e.target.closest(".dropdown").hidePopover();
                 app.modals.confirm(
-                    `Do you really want to send password reset email to ${data.originalRecord?.email}?`,
+                    __t`Do you really want to send password reset email to ${data.originalRecord?.email}?`,
                     sendPasswordResetEmail,
                     null,
-                    { yesButton: "Send" },
+                    { yesButton: __("Send") },
                 );
             },
         },
         t.i({ className: "ri-mail-lock-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Send password reset email"),
+        t.span({ className: "txt" }, __("Send password reset email")),
     );
 }
 
@@ -997,7 +998,7 @@ function sendVerificationDropdownItem(collection, data, modalSettings) {
 
             modalSettings.onverificationsend?.(JSON.parse(JSON.stringify(data.originalRecord)));
 
-            app.toasts.success(`Successfully sent verification email to ${data.originalRecord.email}.`);
+            app.toasts.success(__t`Successfully sent verification email to ${data.originalRecord.email}.`);
         } catch (err) {
             app.checkApiError(err);
         }
@@ -1013,15 +1014,15 @@ function sendVerificationDropdownItem(collection, data, modalSettings) {
             onclick: (e) => {
                 e.target.closest(".dropdown").hidePopover();
                 app.modals.confirm(
-                    `Do you really want to send verification email to ${data.originalRecord?.email}?`,
+                    __t`Do you really want to send verification email to ${data.originalRecord?.email}?`,
                     sendVerificationEmail,
                     null,
-                    { yesButton: "Send" },
+                    { yesButton: __("Send") },
                 );
             },
         },
         t.i({ className: "ri-mail-check-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Send verification email"),
+        t.span({ className: "txt" }, __("Send verification email")),
     );
 }
 
@@ -1036,7 +1037,7 @@ function impersonateDropdownItem(collection, data, modalSettings) {
             },
         },
         t.i({ className: "ri-id-card-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Impersonate"),
+        t.span({ className: "txt" }, __("Impersonate")),
     );
 }
 
@@ -1057,7 +1058,7 @@ function deleteDropdownItem(collection, data, modalSettings) {
 
             modalSettings.ondelete?.(JSON.parse(JSON.stringify(data.originalRecord)));
 
-            app.toasts.success(`Successfully deleted record "${data.originalRecord.id}".`);
+            app.toasts.success(__t`Successfully deleted record "${data.originalRecord.id}".`);
         } catch (err) {
             app.checkApiError(err);
         }
@@ -1073,18 +1074,18 @@ function deleteDropdownItem(collection, data, modalSettings) {
             onclick: (e) => {
                 e.target.closest(".dropdown").hidePopover();
                 app.modals.confirm(
-                    `Do you really want to delete the selected record?`,
+                    __t`Do you really want to delete the selected record?`,
                     async () => {
                         await deleteRecord();
                         app.modals.close(e.target.closest(".modal"), true);
                     },
                     null,
-                    { yesButton: "Delete record" },
+                    { yesButton: __("Delete record") },
                 );
             },
         },
         t.i({ className: "ri-delete-bin-7-line", ariaHidden: true }),
-        t.span({ className: "txt" }, "Delete"),
+        t.span({ className: "txt" }, __("Delete")),
     );
 }
 
@@ -1127,12 +1128,12 @@ function authFieldEmail(collection, data) {
                     {
                         type: "button",
                         className: () => `btn sm transparent ${data.record.emailVisibility ? "success" : "secondary"}`,
-                        ariaDescription: app.attrs.tooltip("Make email public or private", "top-right"),
+                        ariaDescription: app.attrs.tooltip(__("Make email public or private"), "top-right"),
                         onclick: () => {
                             data.record.emailVisibility = !data.record.emailVisibility;
                         },
                     },
-                    t.span({ className: "txt" }, "Public: ", () => (data.record.emailVisibility ? "On" : "Off")),
+                    t.span({ className: "txt" }, __("Public: "), () => (data.record.emailVisibility ? __("On") : __("Off"))),
                 ),
             ),
         ),
@@ -1172,13 +1173,13 @@ function authFieldVerified(collection, data) {
         }
 
         app.modals.confirm(
-            `Do you really want to manually change the verified account state from "${!data.record
+            __t`Do you really want to manually change the verified account state from "${!data.record
                 .verified}" to "${data.record.verified}"?`,
             null,
             () => {
                 data.record.verified = !data.record.verified;
             },
-            { yesButton: "Yes, " + (data.record.verified ? "verify" : "unverify") },
+            { yesButton: __("Yes, ") + (data.record.verified ? __("verify") : __("unverify")) },
         );
     });
 
@@ -1250,7 +1251,7 @@ function authFieldPassword(collection, data) {
                     }
                 },
             }),
-            t.label({ htmlFor: uniqueId + "_change" }, t.span({ className: "txt" }, "change password")),
+            t.label({ htmlFor: uniqueId + "_change" }, t.span({ className: "txt" }, __("change password"))),
         ),
         app.components.slide(
             () => local.isNew || local.changePassword,
@@ -1261,7 +1262,7 @@ function authFieldPassword(collection, data) {
                     t.label(
                         { htmlFor: uniqueId + "_password" },
                         t.i({ className: "ri-lock-line", ariaHidden: true }),
-                        t.span({ className: "txt" }, "Password"),
+                        t.span({ className: "txt" }, __("Password")),
                     ),
                     t.input({
                         type: "password",
@@ -1288,7 +1289,7 @@ function authFieldPassword(collection, data) {
                     t.label(
                         { htmlFor: uniqueId + "_password_confirm" },
                         t.i({ className: "ri-lock-line", ariaHidden: true }),
-                        t.span({ className: "txt" }, "Confirm"),
+                        t.span({ className: "txt" }, __("Confirm")),
                     ),
                     t.input({
                         type: "password",
@@ -1330,10 +1331,10 @@ function authFieldPassword(collection, data) {
                             data.record.password = random;
                             data.record.passwordConfirm = random;
                             app.utils.copyToClipboard(random);
-                            app.toasts.info("Generated and copied random password to clipboard.");
+                            app.toasts.info(__("Generated and copied random password to clipboard."));
                         },
                     },
-                    "Generate and set random password",
+                    __("Generate and set random password"),
                 ),
             ),
         ),
@@ -1371,13 +1372,13 @@ function authProvidersTab(collection, data) {
         const name = providerInfo.displayName || externalAuth.provider;
 
         app.modals.confirm(
-            `Do you really want to unlink the ${name} provider?`,
+            __t`Do you really want to unlink the ${name} provider?`,
             () => {
                 return app.pb
                     .collection("_externalAuths")
                     .delete(externalAuth.id)
                     .then(() => {
-                        app.toasts.success(`Successfully unlinked ${name}.`);
+                        app.toasts.success(__t`Successfully unlinked ${name}.`);
                         loadExternalAuths(); // reload list
                     })
                     .catch((err) => {
@@ -1385,7 +1386,7 @@ function authProvidersTab(collection, data) {
                     });
             },
             null,
-            { yesButton: "Unlink" },
+            { yesButton: __("Unlink") },
         );
     }
 
@@ -1407,7 +1408,7 @@ function authProvidersTab(collection, data) {
                     if (!local.externalAuths.length) {
                         return t.div(
                             { className: "list-item" },
-                            t.div({ className: "block txt-hint txt-center" }, "No external auth providers found."),
+                            t.div({ className: "block txt-hint txt-center" }, __("No external auth providers found.")),
                         );
                     }
 
@@ -1436,7 +1437,7 @@ function authProvidersTab(collection, data) {
                                     { className: "txt-nowrap" },
                                     () => providerInfo.displayName || externalAuth.provider,
                                 ),
-                                t.small({ className: "txt-hint" }, "ID: ", () => externalAuth.providerId),
+                                t.small({ className: "txt-hint" }, __("ID: "), () => externalAuth.providerId),
                             ),
                             t.div(
                                 { className: "actions" },
@@ -1444,7 +1445,7 @@ function authProvidersTab(collection, data) {
                                     {
                                         type: "button",
                                         className: "btn sm secondary transparent circle",
-                                        ariaLabel: app.attrs.tooltip("Unlink", "left"),
+                                        ariaLabel: app.attrs.tooltip(__("Unlink"), "left"),
                                         onclick: () => confirmAndUnlink(externalAuth),
                                     },
                                     t.i({ className: "ri-close-line", ariaHidden: true }),
@@ -1463,7 +1464,7 @@ function authProvidersTab(collection, data) {
                     className: "btn transparent m-r-auto",
                     onclick: () => app.modals.close(),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
         ),
     ];

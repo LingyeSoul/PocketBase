@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 import { collectionsSidebar } from "./collectionsSidebar";
 
 const SORT_QUERY_KEY = "sort";
@@ -61,7 +63,7 @@ export function pageCollections(route) {
         watch(
             () => (app.store.activeCollection?.name || "") + (app.store.activeCollection?.updated || ""),
             (newVal, oldVal) => {
-                app.store.title = app.store.activeCollection?.name || "Collections";
+                app.store.title = app.store.activeCollection?.name || __("Collections");
 
                 const hasChanged = oldVal && oldVal != newVal;
 
@@ -200,7 +202,7 @@ export function pageCollections(route) {
                 { className: "page-header flex-nowrap" },
                 t.nav(
                     { className: "breadcrumbs" },
-                    t.div(null, "Collections"),
+                    t.div(null, __("Collections")),
                     () => {
                         if (app.store.activeCollection?.name) {
                             return t.div({
@@ -220,7 +222,7 @@ export function pageCollections(route) {
                         {
                             type: "button",
                             className: "btn circle transparent secondary tooltip-bottom btn-collection-settings",
-                            ariaLabel: app.attrs.tooltip("Collection settings"),
+                            ariaLabel: app.attrs.tooltip(__("Collection settings")),
                             onclick: () => {
                                 app.modals.openCollectionUpsert(app.store.activeCollection, {
                                     ontruncate: () => refreshRecordsList(),
@@ -241,7 +243,7 @@ export function pageCollections(route) {
                         onclick: () => refreshRecordsList(),
                         className: () =>
                             `btn transparent circle rotate-btn ${pageData.suggestReset ? "warning" : "secondary"}`,
-                        tooltip: () => `Refresh${pageData.suggestReset ? "\n(list changed)" : ""}`,
+                        tooltip: () => __t`Refresh${pageData.suggestReset ? __("\n(list changed)") : ""}`,
                     }),
                 ),
                 t.div(
@@ -257,7 +259,7 @@ export function pageCollections(route) {
                             onclick: () => app.modals.openApiPreview(app.store.activeCollection),
                         },
                         t.i({ className: "ri-code-s-slash-line", ariaHidden: true }),
-                        t.span({ className: "txt", textContent: "API preview" }),
+                        t.span({ className: "txt", textContent: __("API preview") }),
                     ),
                     () => {
                         if (app.store.activeCollection?.type == "view") {
@@ -271,7 +273,7 @@ export function pageCollections(route) {
                                 onclick: () => app.modals.openRecordUpsert(app.store.activeCollection),
                             },
                             t.i({ className: "ri-add-line", ariaHidden: true }),
-                            t.span({ className: "txt", textContent: "New record" }),
+                            t.span({ className: "txt", textContent: __("New record") }),
                         );
                     },
                 ),
@@ -294,9 +296,9 @@ export function pageCollections(route) {
                     { className: "txt" },
                     () => {
                         if (app.store.collections?.length) {
-                            return "Select collection from the sidebar.";
+                            return __("Select collection from the sidebar.");
                         }
-                        return "No collections found.";
+                        return __("No collections found.");
                     },
                 ),
             ),
@@ -339,7 +341,7 @@ export function pageCollections(route) {
                     {
                         className: () => `total-count ${pageData.isTotalCountLoading ? "faded" : ""}`,
                     },
-                    "Total: ",
+                    __("Total: "),
                     () => pageData.totalCount,
                 ),
                 app.components.credits(),

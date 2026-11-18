@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import cssVars from "@/css/vars.css?inline";
 
 window.app = window.app || {};
@@ -340,7 +341,7 @@ function registerDirectionButton(editor) {
             const items = [
                 {
                     type: "menuitem",
-                    text: "LTR content",
+                    text: __("LTR content"),
                     icon: "ltr",
                     onAction: () => {
                         window?.localStorage?.setItem(lastDirectionKey, "ltr");
@@ -349,7 +350,7 @@ function registerDirectionButton(editor) {
                 },
                 {
                     type: "menuitem",
-                    text: "RTL content",
+                    text: __("RTL content"),
                     icon: "rtl",
                     onAction: () => {
                         window?.localStorage?.setItem(lastDirectionKey, "rtl");
@@ -365,20 +366,20 @@ function registerDirectionButton(editor) {
 
 function registerMediaButton(editor) {
     editor.ui.registry.addMenuButton("media_picker", {
-        tooltip: "Insert media",
+        tooltip: __("Insert media"),
         icon: "embed",
         fetch: (callback) => {
             const items = [
                 {
                     type: "menuitem",
-                    text: "Inline image (Base64)",
+                    text: __("Inline image (Base64)"),
                     onAction: () => {
                         editor.execCommand("mceImage");
                     },
                 },
                 {
                     type: "menuitem",
-                    text: "Media from collection",
+                    text: __("Media from collection"),
                     onAction: () => {
                         app.modals.openRecordFilePicker({
                             fileTypes: ["image", "audio", "video"],
@@ -417,7 +418,7 @@ function registerMediaButton(editor) {
                 },
                 {
                     type: "menuitem",
-                    text: "Manual embed",
+                    text: __("Manual embed"),
                     onAction: () => {
                         tinymce.activeEditor.execCommand("mceMedia");
                     },

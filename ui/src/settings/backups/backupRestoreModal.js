@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 export function openBackupRestoreModal(key) {
     const modal = backupRestoreModal(key);
 
@@ -65,7 +66,7 @@ function backupRestoreModal(key) {
             { className: "modal-header" },
             t.h5(
                 { className: "m-auto txt-center" },
-                "Restore ",
+                __("Restore "),
                 t.strong(null, () => data.key),
             ),
         ),
@@ -89,42 +90,42 @@ function backupRestoreModal(key) {
                             { className: "content" },
                             t.p(
                                 { className: "txt-bold" },
-                                "Please proceed with extreme caution and use it only with trusted backups!",
+                                __("Please proceed with extreme caution and use it only with trusted backups!"),
                             ),
-                            t.p(null, "Backup restore currently works only on UNIX based systems."),
+                            t.p(null, __("Backup restore currently works only on UNIX based systems.")),
                             t.p(
                                 null,
-                                "The restore operation will attempt to replace your existing ",
+                                __("The restore operation will attempt to replace your existing "),
                                 t.code(null, "pb_data"),
-                                " with the one from the backup and will restart the application process.",
+                                __(" with the one from the backup and will restart the application process."),
                             ),
                             t.p(
                                 null,
-                                "This means that on success all of your data (including app settings, users, superusers, etc.) will be replaced with the ones from the backup.",
+                                __("This means that on success all of your data (including app settings, users, superusers, etc.) will be replaced with the ones from the backup."),
                             ),
                             t.p(
                                 null,
-                                "The operation will be reverted if the backup is invalid (ex. missing ",
+                                __("The operation will be reverted if the backup is invalid (ex. missing "),
                                 t.code(null, "data.db"),
-                                " file).",
+                                __(" file)."),
                             ),
-                            t.p(null, "Below is an oversimplified version of the restore flow:"),
+                            t.p(null, __("Below is an oversimplified version of the restore flow:")),
                             t.ol(
                                 null,
                                 t.li(
                                     null,
-                                    "Replaces the current ",
+                                    __("Replaces the current "),
                                     t.code(null, "pb_data"),
-                                    " with the content from the backup.",
+                                    __(" with the content from the backup."),
                                 ),
-                                t.li(null, "Triggers app restart."),
+                                t.li(null, __("Triggers app restart.")),
                                 t.li(
                                     null,
-                                    "Applies all migrations that are missing in the restored ",
+                                    __("Applies all migrations that are missing in the restored "),
                                     t.code(null, "pb_data"),
                                     ".",
                                 ),
-                                t.li(null, "Initializes the app server as usual."),
+                                t.li(null, __("Initializes the app server as usual.")),
                             ),
                         ),
                     ),
@@ -133,17 +134,17 @@ function backupRestoreModal(key) {
                     { className: "col-lg-12" },
                     t.div(
                         { className: "confirm-key-label m-b-sm" },
-                        "Type the backup name ",
+                        __("Type the backup name "),
                         t.div(
                             { className: "label" },
                             () => data.key,
                             app.components.copyButton(() => data.key),
                         ),
-                        " to confirm:",
+                        __(" to confirm:"),
                     ),
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + "_key" }, "Backup name"),
+                        t.label({ htmlFor: uniqueId + "_key" }, __("Backup name")),
                         t.input({
                             id: uniqueId + "_key",
                             name: "key",
@@ -165,7 +166,7 @@ function backupRestoreModal(key) {
                     onclick: () => app.modals.close(),
                     disabled: () => data.isSubmitting,
                 },
-                t.span({ className: "txt" }, "Cancel"),
+                t.span({ className: "txt" }, __("Cancel")),
             ),
             t.button(
                 {
@@ -174,7 +175,7 @@ function backupRestoreModal(key) {
                     className: () => `btn ${data.isSubmitting ? "loading" : ""}`,
                     disabled: () => data.isSubmitting || !data.canSubmit,
                 },
-                t.span({ className: "txt" }, "Restore backup"),
+                t.span({ className: "txt" }, __("Restore backup")),
             ),
         ),
     );

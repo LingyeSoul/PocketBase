@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 // {
 //     originalCollection: undefined,
 //     collection: undefined,
@@ -9,8 +11,8 @@ export function settings(props) {
     const uniqueId = "f_" + app.utils.randomString();
 
     const isMultipleOptions = [
-        { label: "Single", value: false },
-        { label: "Multiple", value: true },
+        { label: __("Single"), value: false },
+        { label: __("Multiple"), value: true },
     ];
 
     return app.components.fieldSettings(props, {
@@ -46,17 +48,17 @@ export function settings(props) {
                         { className: "field" },
                         t.label(
                             { htmlFor: uniqueId + ".mimeTypes" },
-                            t.span({ className: "txt" }, "Allowed mime types"),
+                            t.span({ className: "txt" }, __("Allowed mime types")),
                             t.i({
                                 className: "ri-information-line link-hint",
                                 ariaDescription: app.attrs.tooltip(
-                                    "Allow files ONLY with the listed mime types.\n Leave empty for no restriction.",
+                                    __("Allow files ONLY with the listed mime types.\n Leave empty for no restriction."),
                                 ),
                             }),
                         ),
                         app.components.select({
                             max: 99,
-                            placeholder: "No restriction",
+                            placeholder: __("No restriction"),
                             options: app.utils.mimeTypes.map((opt) => {
                                 return {
                                     value: opt.mimeType,
@@ -81,7 +83,7 @@ export function settings(props) {
                                 "className": "link-hint gap-0",
                                 "html-popovertarget": uniqueId + "mimeTypesDropdown",
                             },
-                            t.span({ className: "txt" }, "Choose presets"),
+                            t.span({ className: "txt" }, __("Choose presets")),
                             t.i({ className: "ri-arrow-drop-down-fill", ariaHidden: true }),
                         ),
                         t.div(
@@ -105,7 +107,7 @@ export function settings(props) {
 
                                     e.target.closest(".dropdown").hidePopover();
                                 },
-                                textContent: "Images (jpg, png, svg, gif, webp)",
+                                textContent: __("Images (jpg, png, svg, gif, webp)"),
                             }),
                             t.button({
                                 type: "button",
@@ -122,7 +124,7 @@ export function settings(props) {
 
                                     e.target.closest(".dropdown").hidePopover();
                                 },
-                                textContent: "Documents (pdf, doc/docx, xls/xlsx)",
+                                textContent: __("Documents (pdf, doc/docx, xls/xlsx)"),
                             }),
                             t.button({
                                 type: "button",
@@ -139,7 +141,7 @@ export function settings(props) {
 
                                     e.target.closest(".dropdown").hidePopover();
                                 },
-                                textContent: "Videos (mp4, mpeg, avi, mov, 3gp)",
+                                textContent: __("Videos (mp4, mpeg, avi, mov, 3gp)"),
                             }),
                             t.button({
                                 type: "button",
@@ -154,7 +156,7 @@ export function settings(props) {
 
                                     e.target.closest(".dropdown").hidePopover();
                                 },
-                                textContent: "Archives (zip, 7zip, rar)",
+                                textContent: __("Archives (zip, 7zip, rar)"),
                             }),
                         ),
                     ),
@@ -167,18 +169,18 @@ export function settings(props) {
                             {
                                 htmlFor: uniqueId + ".thumbs",
                             },
-                            t.span({ className: "txt" }, "Thumb sizes"),
+                            t.span({ className: "txt" }, __("Thumb sizes")),
                             t.i({
                                 className: "ri-information-line link-hint",
                                 ariaDescription: app.attrs.tooltip(
-                                    "List of additional thumb sizes for image files, along with the default thumb size of 100x100. The thumbs are generated lazily on first access.",
+                                    __("List of additional thumb sizes for image files, along with the default thumb size of 100x100. The thumbs are generated lazily on first access."),
                                 ),
                             }),
                         ),
                         t.input({
                             type: "text",
                             id: uniqueId + ".thumbs",
-                            placeholder: "e.g. 50x50, 480x720",
+                            placeholder: __("e.g. 50x50, 480x720"),
                             name: () => `fields.${props.fieldIndex}.thumbs`,
                             value: () => app.utils.joinNonEmpty(props.field.thumbs),
                             onchange: (e) => (props.field.thumbs = app.utils.splitNonEmpty(e.target.value, ",")),
@@ -186,14 +188,14 @@ export function settings(props) {
                     ),
                     t.div(
                         { className: "field-help" },
-                        t.span({ className: "txt m-r-5" }, "Use comma as separator."),
+                        t.span({ className: "txt m-r-5" }, __("Use comma as separator.")),
                         t.button(
                             {
                                 "type": "button",
                                 "className": "link-hint gap-0",
                                 "html-popovertarget": uniqueId + "thumbFormatsDropdown",
                             },
-                            t.span({ className: "txt" }, "Supported formats"),
+                            t.span({ className: "txt" }, __("Supported formats")),
                             t.i({ className: "ri-arrow-drop-down-fill", ariaHidden: true }),
                         ),
                         t.div(
@@ -207,32 +209,32 @@ export function settings(props) {
                                 t.li(
                                     null,
                                     t.strong(null, "WxH"),
-                                    t.span(null, " (e.g. 100x50) - crop to WxH viewbox (from center)"),
+                                    t.span(null, __(" (e.g. 100x50) - crop to WxH viewbox (from center)")),
                                 ),
                                 t.li(
                                     null,
                                     t.strong(null, "WxHt"),
-                                    t.span(null, " (e.g. 100x50t) - crop to WxH viewbox (from top)"),
+                                    t.span(null, __(" (e.g. 100x50t) - crop to WxH viewbox (from top)")),
                                 ),
                                 t.li(
                                     null,
                                     t.strong(null, "WxHb"),
-                                    t.span(null, " (e.g. 100x50b) - crop to WxH viewbox (from bottom)"),
+                                    t.span(null, __(" (e.g. 100x50b) - crop to WxH viewbox (from bottom)")),
                                 ),
                                 t.li(
                                     null,
                                     t.strong(null, "WxHf"),
-                                    t.span(null, " (e.g. 100x50f) - fit inside a WxH viewbox (without cropping)"),
+                                    t.span(null, __(" (e.g. 100x50f) - fit inside a WxH viewbox (without cropping)")),
                                 ),
                                 t.li(
                                     null,
                                     t.strong(null, "0xH"),
-                                    t.span(null, " (e.g. 0x50) - resize to H height preserving the aspect ratio"),
+                                    t.span(null, __(" (e.g. 0x50) - resize to H height preserving the aspect ratio")),
                                 ),
                                 t.li(
                                     null,
                                     t.strong(null, "Wx0"),
-                                    t.span(null, " (e.g. 100x0) - resize to W width preserving the aspect ratio"),
+                                    t.span(null, __(" (e.g. 100x0) - resize to W width preserving the aspect ratio")),
                                 ),
                             ),
                         ),
@@ -242,14 +244,14 @@ export function settings(props) {
                     { className: "col-sm-3" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".maxSize" }, "Max size"),
+                        t.label({ htmlFor: uniqueId + ".maxSize" }, __("Max size")),
                         t.input({
                             type: "number",
                             id: uniqueId + ".maxSize",
                             step: 1,
                             min: 0,
                             max: Number.MAX_SAFE_INTEGER,
-                            placeholder: "~5MB default",
+                            placeholder: __("~5MB default"),
                             name: () => `fields.${props.fieldIndex}.maxSize`,
                             value: () => props.field.maxSize || "",
                             oninput: (e) => {
@@ -267,17 +269,17 @@ export function settings(props) {
                             },
                         }),
                     ),
-                    t.div({ className: "field-help" }, "In bytes."),
+                    t.div({ className: "field-help" }, __("In bytes.")),
                 ),
                 t.div(
                     { className: "col-sm-3", hidden: () => props.field.maxSelect << 0 < 2 },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".maxSelect" }, "Max select"),
+                        t.label({ htmlFor: uniqueId + ".maxSelect" }, __("Max select")),
                         t.input({
                             type: "number",
                             id: uniqueId + ".maxSelect",
-                            placeholder: "Default to single",
+                            placeholder: __("Default to single"),
                             step: 1,
                             min: 2,
                             required: true,
@@ -309,15 +311,15 @@ export function settings(props) {
                         }),
                         t.label(
                             { htmlFor: uniqueId + ".protected" },
-                            t.span({ className: "txt" }, "Protected"),
+                            t.span({ className: "txt" }, __("Protected")),
                             t.small(
                                 { className: "txt-hint" },
-                                "File download requests will need to satisfy the View API rule (",
+                                __("File download requests will need to satisfy the View API rule ("),
                                 t.a({
                                     href: import.meta.env.PB_PROTECTED_FILE_DOCS,
                                     target: "_blank",
                                     rel: "noopener noreferrer",
-                                    textContent: "Learn more",
+                                    textContent: __("Learn more"),
                                 }),
                                 ").",
                             ),
@@ -328,7 +330,7 @@ export function settings(props) {
                     { className: "col-sm-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".help" }, "Help text"),
+                        t.label({ htmlFor: uniqueId + ".help" }, __("Help text")),
                         t.input({
                             type: "text",
                             id: uniqueId + ".help",
@@ -352,12 +354,12 @@ export function settings(props) {
                 }),
                 t.label(
                     { htmlFor: uniqueId + ".required" },
-                    t.span({ className: "txt" }, "Required"),
+                    t.span({ className: "txt" }, __("Required")),
                     t.small({ className: "txt-hint" }, () => props.field.maxSelect > 1 ? "(!=[])" : "(!='')"),
                     t.i({
                         className: "ri-information-line link-hint",
                         ariaDescription: app.attrs.tooltip(() =>
-                            `Requires the field value to be nonempty ${props.field.maxSelect > 1 ? "array" : "string"}.`
+                            __t`Requires the field value to be nonempty ${props.field.maxSelect > 1 ? "array" : "string"}.`
                         ),
                     }),
                 ),

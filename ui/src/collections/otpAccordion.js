@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 export function otpAccordion(collection) {
     const uniqueId = "otp_" + app.utils.randomString();
 
@@ -27,10 +28,10 @@ export function otpAccordion(collection) {
         t.summary(
             null,
             t.i({ className: "ri-time-line", ariaHidden: true }),
-            t.span({ className: "txt", textContent: "One-time password (OTP)" }),
+            t.span({ className: "txt", textContent: __("One-time password (OTP)") }),
             t.span({
                 className: () => `label m-l-auto ${data.config.enabled ? "success" : ""}`,
-                textContent: () => (data.config.enabled ? "Enabled" : "Disabled"),
+                textContent: () => (data.config.enabled ? __("Enabled") : __("Disabled")),
             }),
             () => {
                 if (!app.store.errors?.otp) {
@@ -39,7 +40,7 @@ export function otpAccordion(collection) {
 
                 return t.i({
                     className: "ri-error-warning-fill txt-danger",
-                    ariaDescription: app.attrs.tooltip("Has errors", "left"),
+                    ariaDescription: app.attrs.tooltip(__("Has errors"), "left"),
                 });
             },
         ),
@@ -65,7 +66,7 @@ export function otpAccordion(collection) {
                     }),
                     t.label({
                         htmlFor: uniqueId + ".enabled",
-                        textContent: "Enable",
+                        textContent: __("Enable"),
                     }),
                     () => {
                         if (!data.isSuperusers) {
@@ -75,7 +76,7 @@ export function otpAccordion(collection) {
                         return t.i({
                             className: "ri-information-line link-hint",
                             ariaDescription: app.attrs.tooltip(
-                                "Superusers can have OTP only as part of Two-factor authentication.",
+                                __("Superusers can have OTP only as part of Two-factor authentication."),
                             ),
                         });
                     },
@@ -87,7 +88,7 @@ export function otpAccordion(collection) {
                     { className: "field" },
                     t.label({
                         htmlFor: uniqueId + ".duration",
-                        textContent: "Duration (in seconds)",
+                        textContent: __("Duration (in seconds)"),
                     }),
                     t.input({
                         type: "number",
@@ -107,7 +108,7 @@ export function otpAccordion(collection) {
                     { className: "field" },
                     t.label({
                         htmlFor: uniqueId + ".length",
-                        textContent: "Generated password length",
+                        textContent: __("Generated password length"),
                     }),
                     t.input({
                         type: "number",

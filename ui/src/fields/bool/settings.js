@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     originalCollection: undefined,
 //     collection: undefined,
@@ -16,7 +17,7 @@ export function settings(props) {
                     { className: "col-sm-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".help" }, "Help text"),
+                        t.label({ htmlFor: uniqueId + ".help" }, __("Help text")),
                         t.input({
                             type: "text",
                             id: uniqueId + ".help",
@@ -40,11 +41,11 @@ export function settings(props) {
                 }),
                 t.label(
                     { htmlFor: uniqueId + ".required" },
-                    t.span({ className: "txt" }, "Required"),
+                    t.span({ className: "txt" }, __("Required")),
                     t.small({ className: "txt-hint" }, "(=true)"),
                     t.i({
                         className: "ri-information-line link-hint",
-                        ariaDescription: app.attrs.tooltip("Requires the field value to be true."),
+                        ariaDescription: app.attrs.tooltip(__("Requires the field value to be true.")),
                     }),
                 ),
             ),

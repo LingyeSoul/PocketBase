@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 export function collectionFieldsTab(upsertData) {
     return t.div(
         { className: "collection-tab-content collection-fields-tab-content" },
@@ -35,9 +36,9 @@ export function collectionFieldsTab(upsertData) {
         t.hr(),
         t.p(
             { className: "txt-bold" },
-            "Unique constraints and indexes (",
+            __("Unique constraints and indexes ("),
             () => upsertData.collection.indexes?.length,
-            ")",
+            "）",
         ),
         app.components.sortable({
             className: "indexes-list",
@@ -60,10 +61,10 @@ export function collectionFieldsTab(upsertData) {
                     },
                     () => {
                         if (parsed.unique) {
-                            return t.strong(null, "Unique:");
+                            return t.strong(null, __("Unique:"));
                         }
                     },
-                    t.span({ className: "txt" }, () => parsed.columns?.map((c) => c.name).join(", ")),
+                    t.span({ className: "txt" }, () => parsed.columns?.map((c) => c.name).join(__(", "))),
                 );
             },
             after: () => {
@@ -74,7 +75,7 @@ export function collectionFieldsTab(upsertData) {
                         onclick: () => app.modals.openIndexUpsert(upsertData.collection),
                     },
                     t.i({ className: "ri-add-line", ariaHidden: true }),
-                    t.span({ className: "txt" }, "New index"),
+                    t.span({ className: "txt" }, __("New index")),
                 );
             },
         }),

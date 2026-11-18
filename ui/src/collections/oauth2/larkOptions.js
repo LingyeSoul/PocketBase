@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.oauth2 = window.app.oauth2 || {};
 
@@ -6,8 +7,8 @@ window.app.oauth2.lark = function(providerInfo, namePrefix, data) {
     const uniqueId = "lark_" + app.utils.randomString();
 
     const domainOptions = [
-        { label: "Feishu (China)", value: "feishu.cn" },
-        { label: "Lark (International)", value: "larksuite.com" },
+        { label: __("Feishu (China)"), value: "feishu.cn" },
+        { label: __("Lark (International)"), value: "larksuite.com" },
     ];
 
     const local = store({
@@ -40,7 +41,7 @@ window.app.oauth2.lark = function(providerInfo, namePrefix, data) {
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".site" }, "Site"),
+                    t.label({ htmlFor: uniqueId + ".site" }, __("Site")),
                     app.components.select({
                         id: uniqueId + ".site",
                         options: domainOptions,
@@ -56,15 +57,15 @@ window.app.oauth2.lark = function(providerInfo, namePrefix, data) {
                 { className: "col-12" },
                 t.div(
                     { className: "alert info" },
-                    "Note that the Lark user's ",
+                    __("Note that the Lark user's "),
                     t.strong(null, "Union ID"),
-                    " will be used for the association with the PocketBase user (see ",
+                    __(" will be used for the association with the PocketBase user (see "),
                     t.a({
                         href:
                             "https://open.feishu.cn/document/platform-overveiw/basic-concepts/user-identity-introduction/introduction#3f2d4b63",
                         target: "_blank",
                         rel: "noopener noreferrer",
-                        textContent: "Different Types of Lark User IDs",
+                        textContent: __("Different Types of Lark User IDs"),
                     }),
                     ").",
                 ),

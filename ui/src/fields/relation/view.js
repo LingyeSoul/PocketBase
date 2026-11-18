@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 const maxNestedLazyExpand = 10;
 const lazyLoadBatchSize = 500;
 const LAZY_EXPAND_EVENT_NAME = "pb:lazyExpandSummaryRels";
@@ -35,7 +36,7 @@ export function view(props) {
             const meta = props.meta || {};
             let parents = app.utils.toArray(meta.parents);
             if (parents.includes(props.record.id)) {
-                return t.span({ className: "marker recursive" }, "(recursive)");
+                return t.span({ className: "marker recursive" }, __("(recursive)"));
             }
 
             const newMeta = JSON.parse(JSON.stringify(meta));
@@ -50,7 +51,7 @@ export function view(props) {
 
             for (let i = 0; i < ids.length; i++) {
                 if (i >= maxIndex) {
-                    result.push(t.span({ className: "marker more" }, "(", ids.length - maxIndex, " more)"));
+                    result.push(t.span({ className: "marker more" }, "(", ids.length - maxIndex, __(" more)")));
                     break;
                 }
 

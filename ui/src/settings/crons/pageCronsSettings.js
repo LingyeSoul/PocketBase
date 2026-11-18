@@ -1,8 +1,9 @@
+import { __ } from "@/i18n";
 import { settingsSidebar } from "../settingsSidebar";
 import { cronsList } from "./cronsList";
 
 export function pageCronsSettings(route) {
-    app.store.title = "Crons";
+    app.store.title = __("Crons");
 
     const data = store({
         resetList: null,
@@ -21,7 +22,7 @@ export function pageCronsSettings(route) {
                 { className: "page-header" },
                 t.nav(
                     { className: "breadcrumbs" },
-                    t.div({ className: "breadcrumb-item" }, "Settings"),
+                    t.div({ className: "breadcrumb-item" }, __("Settings")),
                     t.div({ className: "breadcrumb-item" }, () => app.store.title),
                 ),
             ),
@@ -29,7 +30,7 @@ export function pageCronsSettings(route) {
                 { className: "wrapper m-b-base" },
                 t.div(
                     { className: "flex gap-10 m-b-sm" },
-                    t.div({ className: "txt-lg" }, "Registered app cron jobs"),
+                    t.div({ className: "txt-lg" }, __("Registered app cron jobs")),
                     app.components.refreshButton({
                         className: "btn sm transparent secondary circle",
                         onclick: resetCronsList,
@@ -40,14 +41,14 @@ export function pageCronsSettings(route) {
                 }),
                 t.div(
                     { className: "txt-sm txt-hint m-t-sm" },
-                    "App cron jobs can be registered only programmatically with ",
+                    __("App cron jobs can be registered only programmatically with "),
                     t.a({
                         href: `${import.meta.env.PB_DOCS_URL}/go-jobs-scheduling/`,
                         target: "_blank",
                         rel: "noopener noreferrer",
                         textContent: "Go",
                     }),
-                    " or ",
+                    __(" or "),
                     t.a({
                         href: `${import.meta.env.PB_DOCS_URL}/js-jobs-scheduling/`,
                         target: "_blank",

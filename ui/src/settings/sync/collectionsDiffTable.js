@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 export function collectionsDiffTable(propsArg = {}) {
     const props = store({
         rid: undefined,
@@ -96,7 +97,7 @@ export function collectionsDiffTable(propsArg = {}) {
                     return [
                         t.span({
                             className: "label import-change-label success",
-                            textContent: "Added",
+                            textContent: __("Added"),
                         }),
                         t.strong({ textContent: () => props.collectionB?.name }),
                     ];
@@ -106,7 +107,7 @@ export function collectionsDiffTable(propsArg = {}) {
                     return [
                         t.span({
                             className: "label import-change-label danger",
-                            textContent: "Deleted",
+                            textContent: __("Deleted"),
                         }),
                         t.strong({ textContent: () => props.collectionA?.name }),
                     ];
@@ -116,7 +117,7 @@ export function collectionsDiffTable(propsArg = {}) {
                     t.span({
                         hidden: () => !data.hasAnyChange,
                         className: "label import-change-label warning",
-                        textContent: "Changed",
+                        textContent: __("Changed"),
                     }),
                     t.div(
                         { className: "inline-flex gap-5" },
@@ -147,9 +148,9 @@ export function collectionsDiffTable(propsArg = {}) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width" }, "Props"),
-                    t.th({ width: "40%" }, "Old"),
-                    t.th({ width: "40%" }, "New"),
+                    t.th({ className: "min-width" }, __("Props")),
+                    t.th({ width: "40%" }, __("Old")),
+                    t.th({ width: "40%" }, __("New")),
                 ),
             ),
             t.tbody(
@@ -204,11 +205,11 @@ export function collectionsDiffTable(propsArg = {}) {
                                 null,
                                 t.th(
                                     { className: "min-width", colSpan: 3 },
-                                    t.span({ className: "txt" }, "field: ", field.name),
+                                    t.span({ className: "txt" }, __("field: "), field.name),
                                     t.span(
                                         { className: "label danger m-l-5" },
-                                        "Deleted - ",
-                                        t.small(null, `All stored data related to '${field.name}' will be deleted!`),
+                                        __("Deleted - "),
+                                        t.small(null, __t`All stored data related to '${field.name}' will be deleted!`),
                                     ),
                                 ),
                             ),
@@ -247,10 +248,10 @@ export function collectionsDiffTable(propsArg = {}) {
                                 null,
                                 t.th(
                                     { className: "min-width", colSpan: 3 },
-                                    t.span({ className: "txt" }, "field: ", field.name),
+                                    t.span({ className: "txt" }, __("field: "), field.name),
                                     t.span({
                                         className: `label warning m-l-5 ${!hasFieldChanged ? "hidden" : ""}`,
-                                        textContent: "Changed",
+                                        textContent: __("Changed"),
                                     }),
                                 ),
                             ),
@@ -289,8 +290,8 @@ export function collectionsDiffTable(propsArg = {}) {
                                 null,
                                 t.th(
                                     { className: "min-width", colSpan: 3 },
-                                    t.span({ className: "txt" }, "field: ", field.name),
-                                    t.span({ className: "label success m-l-5" }, "Added"),
+                                    t.span({ className: "txt" }, __("field: "), field.name),
+                                    t.span({ className: "label success m-l-5" }, __("Added")),
                                 ),
                             ),
                         );

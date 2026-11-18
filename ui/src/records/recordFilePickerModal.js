@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -247,7 +248,7 @@ function recordFilePickerModal(settings = defaultSettings) {
                 },
                 t.span(
                     { className: "txt-lg collection-name m-r-auto" },
-                    () => data.activeCollection?.name || "Select collection",
+                    () => data.activeCollection?.name || __("Select collection"),
                 ),
                 t.i({ className: "ri-arrow-drop-down-line", ariaHidden: true }),
             ),
@@ -281,7 +282,7 @@ function recordFilePickerModal(settings = defaultSettings) {
                 {
                     type: "button",
                     className: "btn circle transparent",
-                    ariaLabel: app.attrs.tooltip("Add new record"),
+                    ariaLabel: app.attrs.tooltip(__("Add new record")),
                     onclick: () => app.modals.openRecordUpsert(data.activeCollection),
                 },
                 t.i({ className: "ri-add-line txt-hint", ariaHidden: true }),
@@ -347,7 +348,7 @@ function recordFilePickerModal(settings = defaultSettings) {
                         disabled: () => data.isLoadingRecords,
                         onclick: () => loadRecords(),
                     },
-                    t.span({ className: "txt" }, "Load more"),
+                    t.span({ className: "txt" }, __("Load more")),
                 ),
             ),
             // no files
@@ -358,14 +359,14 @@ function recordFilePickerModal(settings = defaultSettings) {
                 },
                 () => {
                     if (app.utils.isEmpty(settings.fileTypes)) {
-                        return t.p(null, "No records with selectable files found.");
+                        return t.p(null, __("No records with selectable files found."));
                     }
-                    return t.p(null, `No "${settings.fileTypes.join("\", \"")}" files found.`);
+                    return t.p(null, __t`No "${settings.fileTypes.join("\", \"")}" files found.`);
                 },
                 t.button({
                     type: "button",
                     className: "btn sm secondary",
-                    textContent: "Clear search",
+                    textContent: __("Clear search"),
                     hidden: () => !data.searchTerm?.length,
                     onclick: () => {
                         data.searchTerm = "";
@@ -381,7 +382,7 @@ function recordFilePickerModal(settings = defaultSettings) {
                     className: "btn transparent m-r-auto",
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             // image thumb selector
             () => {
@@ -390,8 +391,8 @@ function recordFilePickerModal(settings = defaultSettings) {
                 }
 
                 const options = [
-                    { value: "", label: "Original size" },
-                    { value: "100x100", label: "100x100 thumb" },
+                    { value: "", label: __("Original size") },
+                    { value: "100x100", label: __("100x100 thumb") },
                 ];
 
                 // find the related field and its thumbs
@@ -402,7 +403,7 @@ function recordFilePickerModal(settings = defaultSettings) {
                 for (let thumb of thumbs) {
                     options.push({
                         value: thumb,
-                        label: `${thumb} thumb`,
+                        label: __t`${thumb} thumb`,
                     });
                 }
 

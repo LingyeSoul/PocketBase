@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -347,7 +348,7 @@ window.app.components.erd = function(propsArg = {}) {
                                             if (field.hidden) {
                                                 return t.span(
                                                     { className: "label danger field-hidden-label" },
-                                                    "Hidden",
+                                                    __("Hidden"),
                                                 );
                                             }
                                         },
@@ -355,7 +356,7 @@ window.app.components.erd = function(propsArg = {}) {
                                             if (typeof field.maxSelect != "undefined") {
                                                 return t.span(
                                                     { className: "meta" },
-                                                    field.maxSelect > 1 ? "multiple" : "single",
+                                                    field.maxSelect > 1 ? __("multiple") : __("single"),
                                                 );
                                             }
                                         },
@@ -379,7 +380,7 @@ window.app.components.erd = function(propsArg = {}) {
                 {
                     type: "button",
                     className: "btn sm circle secondary",
-                    title: "Zoom in",
+                    title: __("Zoom in"),
                     onclick: () => {
                         props.scale += 0.05;
                     },
@@ -390,7 +391,7 @@ window.app.components.erd = function(propsArg = {}) {
                 {
                     type: "button",
                     className: "btn sm circle secondary",
-                    title: "Zoom out",
+                    title: __("Zoom out"),
                     onclick: () => {
                         props.scale -= 0.05;
                     },

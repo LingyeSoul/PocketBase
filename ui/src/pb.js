@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import PocketBase, { isTokenExpired, LocalAuthStore } from "pocketbase";
 
 const LOGIN_PATH = "#/login";
@@ -210,7 +211,7 @@ window.app.checkApiError = function(err, showToast = true) {
     const response = err?.response || {};
 
     // add toast error notification
-    let msg = showToast && (response.message || err.message || "Something went wrong!");
+    let msg = showToast && (response.message || err.message || __("Something went wrong!"));
     if (msg) {
         app.toasts.error(msg);
     }

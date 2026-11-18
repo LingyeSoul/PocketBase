@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -77,12 +78,12 @@ window.app.components.searchHistoryButton = function(propsArg = {}) {
                 return false;
             },
         },
-        t.div({ className: "block p-5" }, t.small({ className: "txt-hint" }, "Search history")),
+        t.div({ className: "block p-5" }, t.small({ className: "txt-hint" }, __("Search history"))),
         () => {
             if (!history.items?.length) {
                 return t.div(
                     { rid: "no-history", className: "block p-5" },
-                    t.span(null, "Your recent searches will show up here."),
+                    t.span(null, __("Your recent searches will show up here.")),
                 );
             }
 
@@ -116,7 +117,7 @@ window.app.components.searchHistoryButton = function(propsArg = {}) {
                         {
                             role: "button",
                             className: "remove-btn link-hint m-l-auto p-l-5 p-r-5",
-                            title: "Clear",
+                            title: __("Clear"),
                             onauxclick: (e) => {
                                 e.stopPropagation();
                                 return false;
@@ -141,7 +142,7 @@ window.app.components.searchHistoryButton = function(propsArg = {}) {
             hidden: () => props.hidden,
             inert: () => props.inert,
             type: "button",
-            title: "Search history",
+            title: __("Search history"),
             className: () => props.btnClassName,
             "html-popovertarget": uniqueId,
             onunmount: () => {

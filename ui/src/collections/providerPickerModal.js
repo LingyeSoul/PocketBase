@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -60,7 +61,7 @@ function providerPickerModal(settings = {}) {
         },
         t.header(
             { className: "modal-header" },
-            t.h6({ className: "modal-title" }, t.span({ className: "txt" }, "Select OAuth2 provider")),
+            t.h6({ className: "modal-title" }, t.span({ className: "txt" }, __("Select OAuth2 provider"))),
         ),
         t.div(
             { className: "modal-content" },
@@ -74,7 +75,7 @@ function providerPickerModal(settings = {}) {
                         t.div(
                             { className: "field" },
                             t.input({
-                                placeholder: "Search...",
+                                placeholder: __("Search..."),
                                 className: "p-l-20",
                                 value: () => data.searchTerm,
                                 oninput: (e) => data.searchTerm = e.target.value,
@@ -93,7 +94,7 @@ function providerPickerModal(settings = {}) {
                                         className: "btn sm pill secondary transparent",
                                         onclick: () => clearSearch(),
                                     },
-                                    "Clear",
+                                    __("Clear"),
                                 ),
                             );
                         },
@@ -107,11 +108,11 @@ function providerPickerModal(settings = {}) {
 
                     return t.div(
                         { rid: "notfound", className: "block txt-center txt-hint" },
-                        t.p(null, "No providers found."),
+                        t.p(null, __("No providers found.")),
                         t.button({
                             type: "button",
                             className: "btn sm secondary",
-                            textContent: "Clear search",
+                            textContent: __("Clear search"),
                             onclick: () => clearSearch(),
                         }),
                     );
@@ -166,7 +167,7 @@ function providerPickerModal(settings = {}) {
                     className: "btn transparent m-r-auto",
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
         ),
     );

@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 // {
 //     originalCollection: undefined,
 //     collection: undefined,
@@ -22,8 +23,8 @@ export function settings(props) {
                         { className: "field" },
                         t.label(
                             { htmlFor: uniqueId + ".maxSize" },
-                            t.span(null, "Max size "),
-                            t.small(null, "(bytes)"),
+                            t.span(null, __("Max size ")),
+                            t.small(null, __("(bytes)")),
                         ),
                         t.input({
                             type: "number",
@@ -32,7 +33,7 @@ export function settings(props) {
                             min: 0,
                             step: 1,
                             max: Number.MAX_SAFE_INTEGER,
-                            placeholder: "Default to max ~1MB",
+                            placeholder: __("Default to max ~1MB"),
                             value: () => props.field.maxSize || "",
                             oninput: (e) => {
                                 // temp skip invalid numbers with leading 0 while typing to avoid reseting the entire input
@@ -54,7 +55,7 @@ export function settings(props) {
                     { className: "col-sm-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".help" }, "Help text"),
+                        t.label({ htmlFor: uniqueId + ".help" }, __("Help text")),
                         t.input({
                             type: "text",
                             id: uniqueId + ".help",
@@ -72,7 +73,7 @@ export function settings(props) {
                             className: () => `btn sm secondary ${local.showInfo ? "" : "transparent"}`,
                             onclick: () => (local.showInfo = !local.showInfo),
                         },
-                        t.span({ className: "txt" }, "String value normalizations"),
+                        t.span({ className: "txt" }, __("String value normalizations")),
                         t.i({
                             className: () => (local.showInfo ? "ri-arrow-up-s-line" : "ri-arrow-down-s-line"),
                             ariaHidden: true,
@@ -84,32 +85,32 @@ export function settings(props) {
                             { className: "alert m-t-10 info" },
                             t.div(
                                 { className: "content" },
-                                "In order to support seamlessly both ",
+                                __("In order to support seamlessly both "),
                                 t.code(null, "application/json"),
-                                " and ",
+                                __(" and "),
                                 t.code(null, "multipart/form-data"),
-                                "requests, the following normalization rules are applied if the ",
+                                __("requests, the following normalization rules are applied if the "),
                                 t.code(null, "json"),
-                                " field is a plain string:",
+                                __(" field is a plain string:"),
                                 t.ul(
                                     null,
-                                    t.li(null, `"true" is converted to the json `, t.code(null, "true")),
-                                    t.li(null, `"false" is converted to the json `, t.code(null, "false")),
-                                    t.li(null, `"null" is converted to the json `, t.code(null, "null")),
-                                    t.li(null, `"[1,2,3]" is converted to the json `, t.code(null, "[1,2,3]")),
+                                    t.li(null, __t`"true" is converted to the json `, t.code(null, "true")),
+                                    t.li(null, __t`"false" is converted to the json `, t.code(null, "false")),
+                                    t.li(null, __t`"null" is converted to the json `, t.code(null, "null")),
+                                    t.li(null, __t`"[1,2,3]" is converted to the json `, t.code(null, "[1,2,3]")),
                                     t.li(
                                         null,
-                                        `'{"a":1,"b":2}' is converted to the json `,
+                                        __t`'{"a":1,"b":2}' is converted to the json `,
                                         t.code(null, `{"a":1,"b":2}`),
                                     ),
-                                    t.li(null, `numeric strings are converted to json number`),
+                                    t.li(null, __t`numeric strings are converted to json number`),
                                     t.li(
                                         null,
-                                        `double quoted strings are left as they are (aka. without normalizations)`,
+                                        __t`double quoted strings are left as they are (aka. without normalizations)`,
                                     ),
-                                    t.li(null, `any other string (empty string too) is double quoted`),
+                                    t.li(null, __t`any other string (empty string too) is double quoted`),
                                 ),
-                                "Alternatively, if you want to avoid the string value normalizations, you can wrap your data inside an object, eg. ",
+                                __("Alternatively, if you want to avoid the string value normalizations, you can wrap your data inside an object, eg. "),
                                 t.code(null, "{\"data\": anything}"),
                                 ".",
                             ),
@@ -130,10 +131,10 @@ export function settings(props) {
                 }),
                 t.label(
                     { htmlFor: uniqueId + ".required" },
-                    t.span({ className: "txt" }, "Required"),
+                    t.span({ className: "txt" }, __("Required")),
                     t.i({
                         className: "ri-information-line link-hint",
-                        ariaDescription: app.attrs.tooltip("Requires the field value NOT to be null, '', [], {}."),
+                        ariaDescription: app.attrs.tooltip(__("Requires the field value NOT to be null, '', [], {}.")),
                     }),
                 ),
             ),

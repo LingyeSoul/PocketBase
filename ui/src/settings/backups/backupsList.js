@@ -1,3 +1,4 @@
+import { __t, __ } from "@/i18n";
 import { openBackupCreateModal } from "./backupCreateModal";
 import { openBackupRestoreModal } from "./backupRestoreModal";
 
@@ -45,7 +46,7 @@ export function backupsList(propsArg = {}) {
     }
 
     async function confirmBackupDelete(key) {
-        app.modals.confirm(`Do you really want to delete ${key}?`, () => deleteBackup(key));
+        app.modals.confirm(__t`Do you really want to delete ${key}?`, () => deleteBackup(key));
     }
 
     async function deleteBackup(key) {
@@ -58,7 +59,7 @@ export function backupsList(propsArg = {}) {
         try {
             await app.pb.backups.delete(key);
             loadBackups();
-            app.toasts.success(`Successfully deleted ${key}.`);
+            app.toasts.success(__t`Successfully deleted ${key}.`);
         } catch (err) {
             app.checkApiError(err);
         }
@@ -130,7 +131,7 @@ export function backupsList(propsArg = {}) {
                     hidden: () => data.isLoading || data.backups.length,
                     className: () => "list-item",
                 },
-                t.div({ className: "content block txt-hint" }, "No backups found."),
+                t.div({ className: "content block txt-hint" }, __("No backups found.")),
             ),
             () => {
                 return data.backups.map((backup) => {
@@ -159,7 +160,7 @@ export function backupsList(propsArg = {}) {
                             t.button(
                                 {
                                     type: "button",
-                                    ariaLabel: app.attrs.tooltip("Download"),
+                                    ariaLabel: app.attrs.tooltip(__("Download")),
                                     className: () =>
                                         `btn sm circle secondary transparent ${
                                             data.isDownloading[backup.key] ? "loading" : ""
@@ -172,7 +173,7 @@ export function backupsList(propsArg = {}) {
                             t.button(
                                 {
                                     type: "button",
-                                    ariaLabel: app.attrs.tooltip("Restore"),
+                                    ariaLabel: app.attrs.tooltip(__("Restore")),
                                     className: () => `btn sm circle secondary transparent`,
                                     disabled: () => data.isDeleting[backup.key] || data.isDownloading[backup.key],
                                     onclick: () => openBackupRestoreModal(backup.key),
@@ -182,7 +183,7 @@ export function backupsList(propsArg = {}) {
                             t.button(
                                 {
                                     type: "button",
-                                    ariaLabel: app.attrs.tooltip("Delete"),
+                                    ariaLabel: app.attrs.tooltip(__("Delete")),
                                     className: () =>
                                         `btn sm circle secondary transparent ${
                                             data.isDeleting[backup.key] ? "loading" : ""
@@ -214,13 +215,13 @@ export function backupsList(propsArg = {}) {
                     if (data.canBackup) {
                         return [
                             t.i({ className: "ri-play-circle-line", ariaHidden: true }),
-                            t.span({ className: "txt" }, "Initialize new backup"),
+                            t.span({ className: "txt" }, __("Initialize new backup")),
                         ];
                     }
 
                     return [
                         t.span({ className: "loader sm" }),
-                        t.span({ className: "txt" }, "Backup/restore operation is in process"),
+                        t.span({ className: "txt" }, __("Backup/restore operation is in process")),
                     ];
                 },
             ),

@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 export function docsBatch(collection) {
     const baseURL = app.utils.getApiExampleURL();
 
@@ -67,23 +69,23 @@ export function docsBatch(collection) {
     return t.div(
         { pbEvent: "apiPreviewBatch", className: "content" },
         // description
-        t.p(null, `Batch and transactional create/update/upsert/delete of multiple records in a single request.`),
+        t.p(null, __t`Batch and transactional create/update/upsert/delete of multiple records in a single request.`),
         t.div(
             { className: "alert warning" },
             t.p(
                 { className: "txt-bold" },
-                "The batch Web API need to be explicitly enabled and configured from the ",
+                __("The batch Web API need to be explicitly enabled and configured from the "),
                 t.a({
                     href: "#/settings",
                     target: "_blank",
-                    title: "Open in new tab",
-                    textContent: "App settings",
+                    title: __("Open in new tab"),
+                    textContent: __("App settings"),
                 }),
                 ".",
             ),
             t.p(
                 null,
-                "Because this endpoint process the requests in a single DB transaction it could degrade the performance of your application if not used with proper care and configuration (use smaller max processing and body size limits, avoid large file uploads over slow S3 networks and custom hooks that communicate with slow external APIs).",
+                __("Because this endpoint process the requests in a single DB transaction it could degrade the performance of your application if not used with proper care and configuration (use smaller max processing and body size limits, avoid large file uploads over slow S3 networks and custom hooks that communicate with slow external APIs)."),
             ),
         ),
         app.components.codeBlockTabs({
@@ -115,7 +117,7 @@ export function docsBatch(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -144,7 +146,7 @@ export function docsBatch(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -162,7 +164,7 @@ export function docsBatch(collection) {
             ],
         }),
         // api
-        t.div({ className: "block m-t-sm" }, t.strong(null, "API details")),
+        t.div({ className: "block m-t-sm" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -170,29 +172,29 @@ export function docsBatch(collection) {
         ),
         t.p(
             null,
-            "The request accepts only 1 required ",
+            __("The request accepts only 1 required "),
             t.code(null, "requests: Array<Request>"),
-            " parameter that defines the list of the batch requests to process.",
+            __(" parameter that defines the list of the batch requests to process."),
         ),
         t.p(
             null,
-            "When using the official SDKs the batch requests are transparently constructed by their service handler.",
+            __("When using the official SDKs the batch requests are transparently constructed by their service handler."),
         ),
-        t.p(null, "For the cases when you don't use the SDKs, the she supported batch request actions are:"),
+        t.p(null, __("For the cases when you don't use the SDKs, the she supported batch request actions are:")),
         t.ul(
             null,
-            t.li(null, "record create - ", t.code(null, "POST /api/collections/{collection}/records")),
-            t.li(null, "record update - ", t.code(null, "PATCH /api/collections/{collection}/records")),
+            t.li(null, __("record create - "), t.code(null, "POST /api/collections/{collection}/records")),
+            t.li(null, __("record update - "), t.code(null, "PATCH /api/collections/{collection}/records")),
             t.li(
                 null,
-                "record upsert - ",
+                __("record upsert - "),
                 t.code(null, "PUT /api/collections/{collection}/records"),
                 t.br(),
                 t.small({ className: "txt-hint" }, `(the body must have an "id" field)`),
             ),
-            t.li(null, "record delete - ", t.code(null, "DELETE /api/collections/{collection}/records/{id}")),
+            t.li(null, __("record delete - "), t.code(null, "DELETE /api/collections/{collection}/records/{id}")),
         ),
-        t.p(null, "Each batch ", t.em(null, "Request"), " element has the following properties:"),
+        t.p(null, __("Each batch "), t.em(null, "Request"), __(" element has the following properties:")),
         t.ul(
             null,
             t.li(null, t.code(null, "url"), t.em(null, " (could include query parameters)")),
@@ -210,19 +212,19 @@ export function docsBatch(collection) {
                 null,
                 t.code(null, "body"),
                 t.br(),
-                "When the batch request is send as ",
+                __("When the batch request is send as "),
                 t.code(null, "multipart/form-data"),
-                ", the regular batch action fields are expected to be submitted as serialized json under the ",
+                __(", the regular batch action fields are expected to be submitted as serialized json under the "),
                 t.code(null, "@jsonPayload"),
-                " field and file keys need to follow the pattern ",
+                __(" field and file keys need to follow the pattern "),
                 t.code(null, "requests.N.fileField"),
-                " or ",
+                __(" or "),
                 t.code(null, "requests[N].fileField"),
                 ".",
                 t.br(),
-                "Again this is handled transparently by the official SDKs, but for example if you prefer to manually construct a JS ",
+                __("Again this is handled transparently by the official SDKs, but for example if you prefer to manually construct a JS "),
                 t.code(null, "FormData"),
-                " body, then it could look something like:",
+                __(" body, then it could look something like:"),
                 app.components.codeBlock({
                     className: "m-t-10",
                     value: `
@@ -255,7 +257,7 @@ export function docsBatch(collection) {
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

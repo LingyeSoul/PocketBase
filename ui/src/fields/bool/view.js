@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 // {
 //     record: undefined,
 //     field: undefined,
@@ -8,7 +9,7 @@ export function view(props) {
         { className: "record-field-view field-type-bool" },
         t.span(
             { className: () => `label ${props.record[props.field.name] ? "success" : ""}` },
-            () => props.record[props.field.name] ? "True" : "False",
+            () => props.record[props.field.name] ? __("True") : __("False"),
         ),
     );
 }

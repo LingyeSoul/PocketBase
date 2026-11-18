@@ -1,3 +1,5 @@
+import { __ } from "@/i18n";
+
 const notifyChannel = new BroadcastChannel("tabsSync");
 
 const SETTINGS_STORAGE_KEY = "pbSettings";
@@ -16,7 +18,7 @@ window.app.store = store({
 
     page: t.div({ className: "page" }, () => {
         if (!app.store._ready) {
-            return t.span({ className: "loader lg m-auto", title: "Loading plugins..." });
+            return t.span({ className: "loader lg m-auto", title: __("Loading plugins...") });
         }
     }),
 
@@ -46,7 +48,7 @@ window.app.store = store({
             // optional: isActive
             href: import.meta.env.PB_DOCS_URL,
             icon: "ri-book-open-line",
-            label: "Docs",
+            label: __("Docs"),
         },
         {
             href: import.meta.env.PB_RELEASES,
@@ -60,17 +62,17 @@ window.app.store = store({
             // optional: isActive
             href: "#/collections",
             icon: "ri-database-2-line",
-            label: "Collections",
+            label: __("Collections"),
         },
         {
             href: "#/logs",
             icon: "ri-bar-chart-box-line",
-            label: "Logs",
+            label: __("Logs"),
         },
         {
             href: "#/settings",
             icon: "ri-settings-3-line",
-            label: "Settings",
+            label: __("Settings"),
         },
     ],
 
@@ -80,46 +82,46 @@ window.app.store = store({
                 // optional: isActive
                 href: "#/settings",
                 icon: "ri-home-gear-line",
-                label: "Application",
+                label: __("Application"),
             },
             {
                 href: "#/settings/mail",
                 icon: "ri-send-plane-2-line",
-                label: "Mail settings",
+                label: __("Mail settings"),
             },
             {
                 href: "#/settings/storage",
                 icon: "ri-archive-drawer-line",
-                label: "Files storage",
+                label: __("Files storage"),
             },
             {
                 href: "#/settings/backups",
                 icon: "ri-archive-line",
-                label: "Backups",
+                label: __("Backups"),
             },
             {
                 href: "#/settings/crons",
                 icon: "ri-time-line",
-                label: "Crons",
+                label: __("Crons"),
             },
         ],
         Sync: [
             {
                 href: "#/settings/export-collections",
                 icon: "ri-uninstall-line",
-                label: "Export collections",
+                label: __("Export collections"),
             },
             {
                 href: "#/settings/import-collections",
                 icon: "ri-install-line",
-                label: "Import collections",
+                label: __("Import collections"),
             },
         ],
         Debug: [
             {
                 href: "#/settings/sql",
                 icon: "ri-terminal-box-line",
-                label: "SQL console",
+                label: __("SQL console"),
             },
         ],
     },

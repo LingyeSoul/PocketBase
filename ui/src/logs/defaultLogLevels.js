@@ -1,7 +1,8 @@
+import { __ } from "@/i18n";
 export function defaultLogLevels() {
     return t.div(
         { className: "inline-flex gap-5" },
-        t.span(null, "Default log levels:"),
+        t.span(null, __("Default log levels:")),
         () => {
             const result = [];
 

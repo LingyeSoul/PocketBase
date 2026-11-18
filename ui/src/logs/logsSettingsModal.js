@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 import { defaultLogLevels } from "./defaultLogLevels";
 
 window.app = window.app || {};
@@ -76,7 +78,7 @@ function logsSettingsModal(modalSettings) {
 
             init(settings);
 
-            app.toasts.success("Successfully saved logs settings.");
+            app.toasts.success(__("Successfully saved logs settings."));
 
             data.isSaving = false;
 
@@ -97,7 +99,7 @@ function logsSettingsModal(modalSettings) {
 
             modalSettings.ondelete?.();
 
-            app.toasts.success("Successfully deleted all logs.");
+            app.toasts.success(__("Successfully deleted all logs."));
 
             data.isDeleting = false;
 
@@ -114,10 +116,10 @@ function logsSettingsModal(modalSettings) {
 
     function confirmLogsDelete() {
         app.modals.confirm(
-            "Do you really want to delete all logs?",
+            __("Do you really want to delete all logs?"),
             () => deleteLogs(),
             null,
-            { yesButton: "Yes, delete" },
+            { yesButton: __("Yes, delete") },
         );
     }
 
@@ -140,7 +142,7 @@ function logsSettingsModal(modalSettings) {
                 el?.remove();
             },
         },
-        t.header({ className: "modal-header" }, t.h5({ className: "m-auto" }, "Logs settings")),
+        t.header({ className: "modal-header" }, t.h5({ className: "m-auto" }, __("Logs settings"))),
         () => {
             if (data.isLoading) {
                 return t.div(
@@ -166,7 +168,7 @@ function logsSettingsModal(modalSettings) {
                             { className: "col-lg-12" },
                             t.field(
                                 { className: "field" },
-                                t.label({ htmlFor: "logs.maxDays" }, "Max days retention"),
+                                t.label({ htmlFor: "logs.maxDays" }, __("Max days retention")),
                                 t.input({
                                     type: "number",
                                     id: "logs.maxDays",
@@ -179,16 +181,16 @@ function logsSettingsModal(modalSettings) {
                             ),
                             t.div(
                                 { className: "field-help" },
-                                "Set to ",
+                                __("Set to "),
                                 t.code(null, 0),
-                                " to delete all logs and disable logs persistence.",
+                                __(" to delete all logs and disable logs persistence."),
                             ),
                         ),
                         t.div(
                             { className: "col-lg-12" },
                             t.field(
                                 { className: "field" },
-                                t.label({ htmlFor: "logs.minLevel" }, "Min log level"),
+                                t.label({ htmlFor: "logs.minLevel" }, __("Min log level")),
                                 t.input({
                                     type: "number",
                                     id: "logs.minLevel",
@@ -202,7 +204,7 @@ function logsSettingsModal(modalSettings) {
                             ),
                             t.div(
                                 { className: "field-help" },
-                                t.div(null, "Logs with level below the minimum will be ignored."),
+                                t.div(null, __("Logs with level below the minimum will be ignored.")),
                                 defaultLogLevels(),
                             ),
                         ),
@@ -212,12 +214,12 @@ function logsSettingsModal(modalSettings) {
                                 { className: "field" },
                                 t.label(
                                     { htmlFor: "logs.maxDataSize" },
-                                    t.span({ className: "txt" }, "Max data size"),
-                                    t.small(null, "(bytes)"),
+                                    t.span({ className: "txt" }, __("Max data size")),
+                                    t.small(null, __("(bytes)")),
                                     t.i({
                                         className: "ri-information-line link-hint",
                                         ariaDescription: app.attrs.tooltip(
-                                            `The max size in bytes of the serialized log JSON data field (truncated on "best-effort" basis).`,
+                                            __t`The max size in bytes of the serialized log JSON data field (truncated on "best-effort" basis).`,
                                         ),
                                     }),
                                 ),
@@ -227,7 +229,7 @@ function logsSettingsModal(modalSettings) {
                                     name: "logs.maxDataSize",
                                     min: 0,
                                     max: Number.MAX_SAFE_INTEGER,
-                                    placeholder: "Default to ~16KB",
+                                    placeholder: __("Default to ~16KB"),
                                     value: () => data.formSettings.logs.maxDataSize || "",
                                     oninput: (e) => {
                                         if (e.target.value <= 0) {
@@ -258,7 +260,7 @@ function logsSettingsModal(modalSettings) {
                                     checked: () => data.formSettings.logs.logIP,
                                     onchange: (e) => (data.formSettings.logs.logIP = e.target.checked),
                                 }),
-                                t.label({ htmlFor: "logs.logIP" }, "Enable IP logging"),
+                                t.label({ htmlFor: "logs.logIP" }, __("Enable IP logging")),
                             ),
                         ),
                         t.div(
@@ -273,7 +275,7 @@ function logsSettingsModal(modalSettings) {
                                     checked: () => data.formSettings.logs.logAuthId,
                                     onchange: (e) => (data.formSettings.logs.logAuthId = e.target.checked),
                                 }),
-                                t.label({ htmlFor: "logs.logAuthId" }, "Enable Auth Id logging"),
+                                t.label({ htmlFor: "logs.logAuthId" }, __("Enable Auth Id logging")),
                             ),
                         ),
                     ),
@@ -287,12 +289,12 @@ function logsSettingsModal(modalSettings) {
                             onclick: () => app.modals.close(modal),
                             disabled: () => data.isSaving,
                         },
-                        t.span({ className: "txt" }, "Close"),
+                        t.span({ className: "txt" }, __("Close")),
                     ),
                     t.button(
                         {
                             type: "button",
-                            ariaLabel: app.attrs.tooltip("Delete all logs", "left"),
+                            ariaLabel: app.attrs.tooltip(__("Delete all logs"), "left"),
                             className: () =>
                                 `btn circle sm secondary transparent link-faded ${data.isDeleting ? "loading" : ""}`,
                             disabled: () => data.isDeleting || data.isSaving,
@@ -309,7 +311,7 @@ function logsSettingsModal(modalSettings) {
                             className: () => `btn ${data.isSaving ? "loading" : ""}`,
                             disabled: () => !data.hasChanges || data.isSaving,
                         },
-                        t.span({ className: "txt" }, "Save changes"),
+                        t.span({ className: "txt" }, __("Save changes")),
                     ),
                 ),
             ];

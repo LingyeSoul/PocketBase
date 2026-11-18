@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -165,7 +167,7 @@ function indexUpsertModal(collection, index = "", settings = {}) {
             { className: "modal-header" },
             t.h6(
                 { className: "modal-title" },
-                t.span({ className: "txt" }, () => (data.isNew ? "Create index" : "Update index")),
+                t.span({ className: "txt" }, () => (data.isNew ? __("Create index") : __("Update index"))),
             ),
         ),
         t.div(
@@ -195,7 +197,7 @@ function indexUpsertModal(collection, index = "", settings = {}) {
                                 data.index = app.utils.buildIndex(newIndexParts);
                             },
                         }),
-                        t.label({ htmlFor: uniqueId + "checkbox_unique" }, "Unique"),
+                        t.label({ htmlFor: uniqueId + "checkbox_unique" }, __("Unique")),
                     ),
                 ),
                 t.div(
@@ -206,7 +208,7 @@ function indexUpsertModal(collection, index = "", settings = {}) {
                             required: true,
                             className: "collection-index-input pre-wrap",
                             name: () => "indexes." + collection.indexes?.findIndex((idx) => idx == data.originalIndex),
-                            placeholder: () => `e.g. CREATE INDEX idx_test on ${collection?.name || "X"} (created)`,
+                            placeholder: () => __t`e.g. CREATE INDEX idx_test on ${collection?.name || "X"} (created)`,
                             value: () => data.index,
                             oninput: (val) => (data.index = val),
                         }),
@@ -215,7 +217,7 @@ function indexUpsertModal(collection, index = "", settings = {}) {
                         { hidden: () => !presetColumns.length, className: "field-help m-t-sm" },
                         t.div(
                             { className: "flex flex-wrap gap-5" },
-                            t.span({ className: "txt", textContent: "Presets:" }),
+                            t.span({ className: "txt", textContent: __("Presets:") }),
                             () => {
                                 return presetColumns?.map((col) => {
                                     const isSelected = data.lowerCasedIndexColumnNames.includes(col.toLowerCase());
@@ -240,17 +242,17 @@ function indexUpsertModal(collection, index = "", settings = {}) {
                     className: "btn transparent m-r-auto",
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Close"),
+                t.span({ className: "txt" }, __("Close")),
             ),
             t.button(
                 {
                     hidden: () => data.isNew,
                     type: "button",
                     className: () => "btn sm circle transparent secondary",
-                    ariaLabel: app.attrs.tooltip("Delete index", "left"),
+                    ariaLabel: app.attrs.tooltip(__("Delete index"), "left"),
                     onclick: () => {
                         app.modals.confirm(
-                            "Do you really want to remove the selected index from the collection?",
+                            __("Do you really want to remove the selected index from the collection?"),
                             deleteIndex,
                         );
                     },
@@ -264,7 +266,7 @@ function indexUpsertModal(collection, index = "", settings = {}) {
                     "disabled": () => !data.canSave,
                     "className": () => "btn expanded",
                 },
-                t.span({ className: "txt" }, "Set index"),
+                t.span({ className: "txt" }, __("Set index")),
             ),
         ),
     );

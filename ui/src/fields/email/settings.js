@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 // {
 //     originalCollection: undefined,
 //     collection: undefined,
@@ -18,11 +20,11 @@ export function settings(props) {
                         { className: "field" },
                         t.label(
                             { htmlFor: uniqueId + ".exceptDomains" },
-                            t.span({ className: "txt" }, "Except domains"),
+                            t.span({ className: "txt" }, __("Except domains")),
                             t.i({
                                 className: "ri-information-line link-hint",
                                 ariaDescription: app.attrs.tooltip(
-                                    `List of domains that are NOT allowed.\nThis field is disabled if "Only domains" is set.`,
+                                    __t`List of domains that are NOT allowed.\nThis field is disabled if "Only domains" is set.`,
                                 ),
                             }),
                         ),
@@ -37,7 +39,7 @@ export function settings(props) {
                             ) => (props.field.exceptDomains = app.utils.splitNonEmpty(e.target.value, ",")),
                         }),
                     ),
-                    t.div({ className: "field-help" }, "Use comma as separator."),
+                    t.div({ className: "field-help" }, __("Use comma as separator.")),
                 ),
                 t.div(
                     { className: "col-sm-6" },
@@ -45,11 +47,11 @@ export function settings(props) {
                         { className: "field" },
                         t.label(
                             { htmlFor: uniqueId + ".onlyDomains" },
-                            t.span({ className: "txt" }, "Only domains"),
+                            t.span({ className: "txt" }, __("Only domains")),
                             t.i({
                                 className: "ri-information-line link-hint",
                                 ariaDescription: app.attrs.tooltip(
-                                    `List of domains that are ONLY allowed.\nThis field is disabled if "Except domains" is set.`,
+                                    __t`List of domains that are ONLY allowed.\nThis field is disabled if "Except domains" is set.`,
                                 ),
                             }),
                         ),
@@ -62,13 +64,13 @@ export function settings(props) {
                             onchange: (e) => (props.field.onlyDomains = app.utils.splitNonEmpty(e.target.value, ",")),
                         }),
                     ),
-                    t.div({ className: "field-help" }, "Use comma as separator."),
+                    t.div({ className: "field-help" }, __("Use comma as separator.")),
                 ),
                 t.div(
                     { className: "col-sm-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + ".help" }, "Help text"),
+                        t.label({ htmlFor: uniqueId + ".help" }, __("Help text")),
                         t.input({
                             type: "text",
                             id: uniqueId + ".help",
@@ -92,11 +94,11 @@ export function settings(props) {
                 }),
                 t.label(
                     { htmlFor: uniqueId + ".required" },
-                    t.span({ className: "txt" }, "Required"),
+                    t.span({ className: "txt" }, __("Required")),
                     t.small({ className: "txt-hint" }, "(!='')"),
                     t.i({
                         className: "ri-information-line link-hint",
-                        ariaDescription: app.attrs.tooltip("Requires the field value to be nonempty string."),
+                        ariaDescription: app.attrs.tooltip(__("Requires the field value to be nonempty string.")),
                     }),
                 ),
             ),

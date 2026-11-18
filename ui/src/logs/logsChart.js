@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 function getChartHeight() {
     return document.body.clientWidth > 600 && document.body.clientHeight >= 720 ? 150 : 100;
 }
@@ -145,8 +146,8 @@ export function logsChart(logsSettings) {
                     logsSettings.zoom = {};
                 },
             },
-            t.div({ className: "content-primary" }, "Reset zoom"),
-            t.div({ className: "content-secondary" }, "(drag the timeline to pan)"),
+            t.div({ className: "content-primary" }, __("Reset zoom")),
+            t.div({ className: "content-secondary" }, __("(drag the timeline to pan)")),
         ),
         t.div(
             {

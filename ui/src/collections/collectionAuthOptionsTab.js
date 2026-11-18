@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 import { emailTemplateAccordion } from "./emailTemplateAccordion";
 import { mfaAccordion } from "./mfaAccordion";
 import { oauth2Accordion } from "./oauth2Accordion";
@@ -16,7 +17,7 @@ export function collectionAuthOptionsTab(upsertData) {
                 { className: "col-12" },
                 t.div(
                     { className: "section-heading" },
-                    t.strong(null, "Auth methods"),
+                    t.strong(null, __("Auth methods")),
                     t.div({ className: "flex-fill" }),
                     t.div(
                         { className: "field" },
@@ -31,7 +32,7 @@ export function collectionAuthOptionsTab(upsertData) {
                                 upsertData.collection.authAlert.enabled = e.target.checked;
                             },
                         }),
-                        t.label({ htmlFor: uniqueId + ".authAlert" }, "Send email alert for new logins"),
+                        t.label({ htmlFor: uniqueId + ".authAlert" }, __("Send email alert for new logins")),
                     ),
                 ),
                 passwordAuthAccordion(upsertData.collection),
@@ -49,39 +50,39 @@ export function collectionAuthOptionsTab(upsertData) {
                 { className: "col-12" },
                 t.div(
                     { className: "section-heading" },
-                    t.strong(null, "Mail templates"),
+                    t.strong(null, __("Mail templates")),
                     t.button({
                         tabIndex: -1,
                         type: "buttton",
                         className: "m-l-auto label handle txt-bold",
-                        textContent: "Send test email",
+                        textContent: __("Send test email"),
                         onclick: () => app.modals.openMailTest(upsertData.collection?.name),
                     }),
                 ),
                 emailTemplateAccordion(upsertData.collection, "verificationTemplate", {
-                    title: "Default Verification email template",
+                    title: __("Default Verification email template"),
                     placeholders: ["{APP_NAME}", "{APP_URL}", "{RECORD:*}", "{TOKEN}"],
                 }),
                 emailTemplateAccordion(upsertData.collection, "resetPasswordTemplate", {
-                    title: "Default Password reset email template",
+                    title: __("Default Password reset email template"),
                     placeholders: ["{APP_NAME}", "{APP_URL}", "{RECORD:*}", "{TOKEN}"],
                 }),
                 emailTemplateAccordion(upsertData.collection, "confirmEmailChangeTemplate", {
-                    title: "Default Confirm email change email template",
+                    title: __("Default Confirm email change email template"),
                     placeholders: ["{APP_NAME}", "{APP_URL}", "{RECORD:*}", "{TOKEN}"],
                 }),
                 emailTemplateAccordion(upsertData.collection, "otp.emailTemplate", {
-                    title: "Default OTP email template",
+                    title: __("Default OTP email template"),
                     placeholders: ["{APP_NAME}", "{APP_URL}", "{RECORD:*}", "{OTP}", "{OTP_ID}"],
                 }),
                 emailTemplateAccordion(upsertData.collection, "authAlert.emailTemplate", {
-                    title: "Default Login alert email template",
+                    title: __("Default Login alert email template"),
                     placeholders: ["{APP_NAME}", "{APP_URL}", "{RECORD:*}", "{ALERT_INFO}"],
                 }),
             ),
             t.div(
                 { className: "col-12" },
-                t.div({ className: "section-heading" }, t.strong(null, "Other")),
+                t.div({ className: "section-heading" }, t.strong(null, __("Other"))),
                 tokenOptionsAccordion(upsertData.collection),
             ),
         ),

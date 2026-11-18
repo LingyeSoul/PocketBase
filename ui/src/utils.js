@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 const DEFAULT_RANDOM_ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 const navigationStore = store({
@@ -614,7 +615,7 @@ const utils = {
      * @param  {string} [missingValue]
      * @return {string}
      */
-    displayValue(val, truncateLength = 150, missingValue = "N/A") {
+    displayValue(val, truncateLength = 150, missingValue = __("N/A")) {
         // check the raw value for "emptiness"
         if (utils.isEmpty(val)) {
             return missingValue;
@@ -623,10 +624,10 @@ const utils = {
         if (typeof val == "string") {
             // already a string
         } else if (typeof val == "boolean") {
-            val = val ? "True" : "False";
+            val = val ? __("True") : __("False");
         } else if (Array.isArray(val) && typeof val[0] != "object") {
             // assuming primitive array values
-            val = val.map((child) => utils.displayValue(child, truncateLength, missingValue)).join(", ");
+            val = val.map((child) => utils.displayValue(child, truncateLength, missingValue)).join(__(", "));
         } else {
             try {
                 val = JSON.stringify(val) || "";
@@ -666,7 +667,7 @@ const utils = {
      * @param  {string} [separator]
      * @return {Array}
      */
-    joinNonEmpty(items, separator = ", ") {
+    joinNonEmpty(items, separator = __(", ")) {
         items = items || [];
 
         const result = [];
@@ -1157,7 +1158,7 @@ const utils = {
     logDataFormatters: {
         execTime: function (log) {
             if (typeof log?.data?.execTime == "undefined") {
-                return "N/A";
+                return __("N/A");
             }
             return log.data.execTime + "ms";
         },

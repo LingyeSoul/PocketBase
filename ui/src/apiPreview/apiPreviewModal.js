@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.modals = window.app.modals || {};
 
@@ -179,7 +180,7 @@ function apiPreviewModal(collection, settings) {
                                         className: () => `nav-item ${data.activeTab == title ? "active" : ""}`,
                                         disabled: isDisabled,
                                         ariaDescription: app.attrs.tooltip(
-                                            () => isDisabled ? "Not enabled for the collection" : "",
+                                            () => isDisabled ? __("Not enabled for the collection") : "",
                                             "left",
                                         ),
                                         onclick: () => {
@@ -188,7 +189,7 @@ function apiPreviewModal(collection, settings) {
                                             }
                                         },
                                     },
-                                    title,
+                                    __(title),
                                 ),
                             );
                         }
@@ -205,7 +206,7 @@ function apiPreviewModal(collection, settings) {
                 },
                 t.header(
                     { className: "api-preview-content-header" },
-                    t.h6(null, () => data.activeTab + ` (${collection.name})`),
+                    t.h6(null, () => __(data.activeTab) + ` (${collection.name})`),
                     t.button(
                         {
                             type: "button",
@@ -213,7 +214,7 @@ function apiPreviewModal(collection, settings) {
                                 `btn sm circle transparent secondary m-l-auto preview-close-btn ${
                                     data.isLoading ? "loading" : ""
                                 }`,
-                            title: "Close",
+                            title: __("Close"),
                             onclick: () => app.modals.close(modal),
                         },
                         t.i({ className: "ri-close-line", ariaHidden: true }),

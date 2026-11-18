@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -40,8 +41,8 @@ window.app.components.select = function(propsArg = {}) {
         searchThreshold: 6,
         required: false,
         disabled: false,
-        placeholder: "- Select -",
-        noItemsFoundText: "No items found",
+        placeholder: __("- Select -"),
+        noItemsFoundText: __("No items found"),
         onchange: function(selectedOpts) {},
         ondropdowntoggle: function(e) {},
     });
@@ -139,7 +140,7 @@ window.app.components.select = function(propsArg = {}) {
 
     const searchInput = t.input({
         type: "text",
-        placeholder: "Search...",
+        placeholder: __("Search..."),
         value: () => internalData.search,
         oninput: (e) => (internalData.search = e.target.value),
     });
@@ -202,7 +203,7 @@ window.app.components.select = function(propsArg = {}) {
                 t.button(
                     {
                         type: "button",
-                        title: "Clear",
+                        title: __("Clear"),
                         className: "btn sm secondary transparent circle",
                         onclick: () => clearSearch(true),
                     },
@@ -264,7 +265,7 @@ window.app.components.select = function(propsArg = {}) {
                         tabIndex: -1,
                         role: "button",
                         className: "ri-close-line link-hint btn-option-unset",
-                        ariaLabel: app.attrs.tooltip("Unset"),
+                        ariaLabel: app.attrs.tooltip(__("Unset")),
                         onclick: () => {
                             toggle(opt);
                             return false;

@@ -1,3 +1,5 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 import { expandInfo } from "./expandInfo";
 import { fieldsInfo } from "./fieldsInfo";
 
@@ -47,7 +49,7 @@ export function docsView(collection) {
     return t.div(
         { pbEvent: "apiPreviewView", className: "content" },
         // description
-        t.p(null, `Fetch a single ${collection.name} record.`),
+        t.p(null, __t`Fetch a single ${collection.name} record.`),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
             historyKey: "pbLastSDK",
@@ -72,7 +74,7 @@ export function docsView(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -96,7 +98,7 @@ export function docsView(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -112,14 +114,14 @@ export function docsView(collection) {
             ],
         }),
         // api
-        t.div({ className: "block m-t-base" }, t.strong(null, "API details")),
+        t.div({ className: "block m-t-base" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert info api-preview-alert" },
             t.span({ className: "label method" }, "GET"),
             t.span({ className: "path" }, `/api/collections/${collection.name}/records/`, t.strong(null, ":id")),
             () => {
                 if (isSuperusersOnly) {
-                    return t.small({ className: "extra" }, "Requires superuser Authorization:TOKEN header");
+                    return t.small({ className: "extra" }, __("Requires superuser Authorization:TOKEN header"));
                 }
             },
         ),
@@ -129,9 +131,9 @@ export function docsView(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Path params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Path params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -139,8 +141,8 @@ export function docsView(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "id"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "ID of the record to view."),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("ID of the record to view.")),
                 ),
             ),
         ),
@@ -150,9 +152,9 @@ export function docsView(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "?query params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("?query params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
@@ -160,19 +162,19 @@ export function docsView(collection) {
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "expand"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, expandInfo()),
                 ),
                 t.tr(
                     null,
                     t.td({ className: "min-width" }, "fields"),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
                     t.td(null, fieldsInfo()),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

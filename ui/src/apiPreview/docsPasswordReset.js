@@ -1,9 +1,11 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 export function docsPasswordReset(collection) {
     const baseURL = app.utils.getApiExampleURL();
 
     const actionTabs = [
-        { title: "Request password reset", content: request },
-        { title: "Confirm password reset", content: confirm },
+        { title: __("Request password reset"), content: request },
+        { title: __("Confirm password reset"), content: confirm },
     ];
 
     const data = store({
@@ -16,10 +18,10 @@ export function docsPasswordReset(collection) {
             className: "content",
         },
         // description
-        t.p(null, `Sends ${collection.name} password reset email request.`),
+        t.p(null, __t`Sends ${collection.name} password reset email request.`),
         t.p(
             null,
-            "On successful password reset all previously issued auth tokens for the specific record will be invalidated (and the user will be marked as verified if not already).",
+            __("On successful password reset all previously issued auth tokens for the specific record will be invalidated (and the user will be marked as verified if not already)."),
         ),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
@@ -55,7 +57,7 @@ export function docsPasswordReset(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -89,7 +91,7 @@ export function docsPasswordReset(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -157,7 +159,7 @@ function request(collection) {
 
     return [
         // api
-        t.div({ className: "block" }, t.strong(null, "API details")),
+        t.div({ className: "block" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -169,23 +171,23 @@ function request(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "email ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The auth record email address to send the password reset request (if exists)."),
+                    t.td({ className: "min-width" }, "email ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The auth record email address to send the password reset request (if exists).")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),
@@ -217,7 +219,7 @@ function confirm(collection) {
 
     return [
         // api
-        t.div({ className: "block" }, t.strong(null, "API details")),
+        t.div({ className: "block" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -229,35 +231,35 @@ function confirm(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "token ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The token from the password reset request email."),
+                    t.td({ className: "min-width" }, "token ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The token from the password reset request email.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "password ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The new password to set."),
+                    t.td({ className: "min-width" }, "password ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The new password to set.")),
                 ),
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "passwordConfirm ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "Confirmation of the new password."),
+                    t.td({ className: "min-width" }, "passwordConfirm ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("Confirmation of the new password.")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

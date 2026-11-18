@@ -1,3 +1,4 @@
+import { __, __t } from "@/i18n";
 export function openBackupCreateModal(settings = {
     oncreated: null,
 }) {
@@ -44,7 +45,7 @@ function backupCreateModal(settings) {
                 settings.oncreated(data.name);
             }
 
-            app.toasts.success("Successfully generated new backup.");
+            app.toasts.success(__("Successfully generated new backup."));
 
             app.modals.close(modal);
         } catch (err) {
@@ -63,7 +64,7 @@ function backupCreateModal(settings) {
             onbeforeclose: () => {
                 if (data.isSubmitting) {
                     app.toasts.info(
-                        "The backup was started but may take a while to complete. You can come back later.",
+                        __("The backup was started but may take a while to complete. You can come back later."),
                     );
                 }
             },
@@ -74,7 +75,7 @@ function backupCreateModal(settings) {
         },
         t.header(
             { className: "modal-header" },
-            t.h5({ className: "m-auto txt-center" }, "Initialize new backup"),
+            t.h5({ className: "m-auto txt-center" }, __("Initialize new backup")),
         ),
         t.form(
             {
@@ -96,11 +97,11 @@ function backupCreateModal(settings) {
                             { className: "content" },
                             t.p(
                                 null,
-                                `Please note that during the backup the performance could be slightly degraded and some queries may take longer to complete than usual.`,
+                                __t`Please note that during the backup the performance could be slightly degraded and some queries may take longer to complete than usual.`,
                             ),
                             t.p(
                                 { className: "txt-bold" },
-                                `If you are using S3 storage for the collections file upload, you'll have to backup them separately since they are not locally stored and they will not be included in the generated backup!`,
+                                __t`If you are using S3 storage for the collections file upload, you'll have to backup them separately since they are not locally stored and they will not be included in the generated backup!`,
                             ),
                         ),
                     ),
@@ -109,18 +110,18 @@ function backupCreateModal(settings) {
                     { className: "col-lg-12" },
                     t.div(
                         { className: "field" },
-                        t.label({ htmlFor: uniqueId + "_name" }, "Backup name"),
+                        t.label({ htmlFor: uniqueId + "_name" }, __("Backup name")),
                         t.input({
                             id: uniqueId + "_name",
                             name: "name",
                             type: "text",
                             pattern: "^[a-z0-9_-]+\.zip$",
-                            placeholder: "Leave empty to autogenerate",
+                            placeholder: __("Leave empty to autogenerate"),
                             value: () => data.name,
                             oninput: (e) => (data.name = e.target.value),
                         }),
                     ),
-                    t.div({ className: "field-help" }, "Must be in the format [a-z0-9_-].zip"),
+                    t.div({ className: "field-help" }, __("Must be in the format [a-z0-9_-].zip")),
                 ),
             ),
         ),
@@ -133,7 +134,7 @@ function backupCreateModal(settings) {
                     disabled: () => data.isSubmitting,
                     onclick: () => app.modals.close(modal),
                 },
-                t.span({ className: "txt" }, "Cancel"),
+                t.span({ className: "txt" }, __("Cancel")),
             ),
             t.button(
                 {
@@ -142,7 +143,7 @@ function backupCreateModal(settings) {
                     className: () => `btn ${data.isSubmitting ? "loading" : ""}`,
                     disabled: () => data.isSubmitting,
                 },
-                t.span({ className: "txt" }, "Start backup"),
+                t.span({ className: "txt" }, __("Start backup")),
             ),
         ),
     );

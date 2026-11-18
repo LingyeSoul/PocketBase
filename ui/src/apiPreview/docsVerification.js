@@ -1,9 +1,11 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 export function docsVerification(collection) {
     const baseURL = app.utils.getApiExampleURL();
 
     const actionTabs = [
-        { title: "Request verification", content: request },
-        { title: "Confirm verification", content: confirm },
+        { title: __("Request verification"), content: request },
+        { title: __("Confirm verification"), content: confirm },
     ];
 
     const data = store({
@@ -16,7 +18,7 @@ export function docsVerification(collection) {
             className: "content",
         },
         // description
-        t.p(null, `Sends ${collection.name} account verification request.`),
+        t.p(null, __t`Sends ${collection.name} account verification request.`),
         app.components.codeBlockTabs({
             className: "sdk-examples m-t-sm",
             historyKey: "pbLastSDK",
@@ -45,7 +47,7 @@ export function docsVerification(collection) {
                             href: import.meta.env.PB_JS_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "JS SDK docs",
+                            textContent: __("JS SDK docs"),
                         }),
                     ),
                 },
@@ -73,7 +75,7 @@ export function docsVerification(collection) {
                             href: import.meta.env.PB_DART_SDK_URL,
                             target: "_blank",
                             rel: "noopener noreferrer",
-                            textContent: "Dart SDK docs",
+                            textContent: __("Dart SDK docs"),
                         }),
                     ),
                 },
@@ -138,7 +140,7 @@ function request(collection) {
 
     return [
         // api
-        t.div({ className: "block" }, t.strong(null, "API details")),
+        t.div({ className: "block" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -150,23 +152,23 @@ function request(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "email ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The auth record email address to send the verification request (if exists)."),
+                    t.td({ className: "min-width" }, "email ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The auth record email address to send the verification request (if exists).")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),
@@ -198,7 +200,7 @@ function confirm(collection) {
 
     return [
         // api
-        t.div({ className: "block" }, t.strong(null, "API details")),
+        t.div({ className: "block" }, t.strong(null, __("API details"))),
         t.div(
             { className: "alert success api-preview-alert" },
             t.span({ className: "label method" }, "POST"),
@@ -210,23 +212,23 @@ function confirm(collection) {
                 null,
                 t.tr(
                     null,
-                    t.th({ className: "min-width txt-primary" }, "Body params"),
-                    t.th({ className: "min-width" }, "Type"),
-                    t.th(null, "Description"),
+                    t.th({ className: "min-width txt-primary" }, __("Body params")),
+                    t.th({ className: "min-width" }, __("Type")),
+                    t.th(null, __("Description")),
                 ),
             ),
             t.tbody(
                 null,
                 t.tr(
                     null,
-                    t.td({ className: "min-width" }, "token ", t.em(null, "(required)")),
-                    t.td({ className: "min-width" }, t.span({ className: "label" }, "String")),
-                    t.td(null, "The token from the verification request email."),
+                    t.td({ className: "min-width" }, "token ", t.em(null, __("(required)"))),
+                    t.td({ className: "min-width" }, t.span({ className: "label" }, __("String"))),
+                    t.td(null, __("The token from the verification request email.")),
                 ),
             ),
         ),
         // responses
-        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, "Example responses")),
+        t.div({ className: "block m-t-base m-b-sm" }, t.strong(null, __("Example responses"))),
         app.components.codeBlockTabs({
             tabs: responses,
         }),

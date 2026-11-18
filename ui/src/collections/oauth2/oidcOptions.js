@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.oauth2 = window.app.oauth2 || {};
 
@@ -6,8 +7,8 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
     const uniqueId = "oidc_" + app.utils.randomString();
 
     const userInfoOptions = [
-        { label: "User info URL", value: true },
-        { label: "ID Token", value: false },
+        { label: __("User info URL"), value: true },
+        { label: __("ID Token"), value: false },
     ];
 
     const local = store({
@@ -58,7 +59,7 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".displayName" }, "Display name"),
+                    t.label({ htmlFor: uniqueId + ".displayName" }, __("Display name")),
                     t.input({
                         id: uniqueId + ".displayName",
                         name: namePrefix + ".displayName",
@@ -71,10 +72,10 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
             ),
             t.div(
                 { className: "col-12" },
-                t.p({ className: "txt-bold" }, "Endpoints"),
+                t.p({ className: "txt-bold" }, __("Endpoints")),
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".authURL" }, "Auth URL"),
+                    t.label({ htmlFor: uniqueId + ".authURL" }, __("Auth URL")),
                     t.input({
                         id: uniqueId + ".authURL",
                         name: namePrefix + ".authURL",
@@ -89,7 +90,7 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".tokenURL" }, "Token URL"),
+                    t.label({ htmlFor: uniqueId + ".tokenURL" }, __("Token URL")),
                     t.input({
                         id: uniqueId + ".tokenURL",
                         name: namePrefix + ".tokenURL",
@@ -105,7 +106,7 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".userInfoSelect" }, "Fetch user info from"),
+                    t.label({ htmlFor: uniqueId + ".userInfoSelect" }, __("Fetch user info from")),
                     app.components.select({
                         id: uniqueId + ".userInfoSelect",
                         required: true,
@@ -118,7 +119,7 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                     if (local.useUserInfoUrl) {
                         return t.div(
                             { className: "field" },
-                            t.label({ htmlFor: uniqueId + ".userInfoURL" }, "User info URL"),
+                            t.label({ htmlFor: uniqueId + ".userInfoURL" }, __("User info URL")),
                             t.input({
                                 id: uniqueId + ".userInfoURL",
                                 name: namePrefix + ".userInfoURL",
@@ -136,9 +137,9 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                             { className: "col-12 txt-hint txt-sm" },
                             t.em(
                                 null,
-                                "Both fields are considered optional because the parsed ",
+                                __("Both fields are considered optional because the parsed "),
                                 t.code(null, "id_token"),
-                                " is a direct result of the TLS code->token exchange server response.",
+                                __(" is a direct result of the TLS code->token exchange server response."),
                             ),
                         ),
                         t.div(
@@ -147,11 +148,11 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                                 { className: "field" },
                                 t.label(
                                     { htmlFor: uniqueId + ".extra.jwksURL" },
-                                    t.span({ className: "txt" }, "JWKS verification URL"),
+                                    t.span({ className: "txt" }, __("JWKS verification URL")),
                                     t.i({
                                         className: "ri-information-line link-hint",
                                         ariaDescription: app.attrs.tooltip(
-                                            "URL to the public token verification keys.",
+                                            __("URL to the public token verification keys."),
                                         ),
                                     }),
                                 ),
@@ -173,11 +174,11 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                                 { className: "field" },
                                 t.label(
                                     { htmlFor: uniqueId + ".extra.issuers" },
-                                    t.span({ className: "txt" }, "Issuers"),
+                                    t.span({ className: "txt" }, __("Issuers")),
                                     t.i({
                                         className: "ri-information-line link-hint",
                                         ariaDescription: app.attrs.tooltip(
-                                            "Comma separated list of accepted values for the iss token claim validation.",
+                                            __("Comma separated list of accepted values for the iss token claim validation."),
                                         ),
                                     }),
                                 ),
@@ -216,11 +217,11 @@ window.app.oauth2.oidc = function(providerInfo, namePrefix, data) {
                     }),
                     t.label(
                         { htmlFor: uniqueId + ".pkce" },
-                        t.span({ className: "txt", textContent: "Support PKCE" }),
+                        t.span({ className: "txt", textContent: __("Support PKCE") }),
                         t.i({
                             className: "ri-information-line link-hint",
                             ariaDescription: app.attrs.tooltip(
-                                "Usually it should be safe to be always enabled as most providers will just ignore the extra query parameters if they don't support PKCE.",
+                                __("Usually it should be safe to be always enabled as most providers will just ignore the extra query parameters if they don't support PKCE."),
                             ),
                         }),
                     ),

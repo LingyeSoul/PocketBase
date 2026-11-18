@@ -1,16 +1,19 @@
+import { __ } from "@/i18n";
 import PocketBase, { getTokenPayload } from "pocketbase";
+
+import { languageLinks } from "@/base/languagePicker";
 
 export function pageConfirmEmailChange(route) {
     const token = route.params?.token || "";
     const tokenPayload = getTokenPayload(token);
 
     if (!tokenPayload.newEmail || !tokenPayload.collectionId) {
-        app.toasts.error("Invalid or expired email change token.");
+        app.toasts.error(__("Invalid or expired email change token."));
         window.location.hash = "#/";
         return;
     }
 
-    app.store.title = "Confirm email change";
+    app.store.title = __("Confirm email change");
 
     const data = store({
         password: "",
@@ -45,9 +48,10 @@ export function pageConfirmEmailChange(route) {
             pbEvent: "pageConfirmEmailChange",
             className: "wrapper sm m-auto p-b-base",
         },
+        languageLinks(),
         t.header(
             { className: "txt-center m-b-base" },
-            t.img({ className: "main-logo", src: () => app.store.mainLogo, ariaHidden: true, alt: "App logo" }),
+            t.img({ className: "main-logo", src: () => app.store.mainLogo, ariaHidden: true, alt: __("App logo") }),
             t.h5({ className: "m-t-10" }, () => app.store.title),
         ),
         () => {
@@ -57,8 +61,8 @@ export function pageConfirmEmailChange(route) {
                         pbEvent: "confirmEmailChangeAlert",
                         className: "alert success txt-center",
                     },
-                    t.p(null, "The email was successfully changed."),
-                    t.p(null, "You can go back and sign in with your new email address."),
+                    t.p(null, __("The email was successfully changed.")),
+                    t.p(null, __("You can go back and sign in with your new email address.")),
                 );
             }
 
@@ -75,7 +79,7 @@ export function pageConfirmEmailChange(route) {
                     { className: "col-12" },
                     t.div(
                         { className: "content txt-center m-b-sm" },
-                        "Type your password to confirm changing your email address to ",
+                        __("Type your password to confirm changing your email address to "),
                         t.strong(null, tokenPayload.newEmail),
                         ":",
                     ),
@@ -83,7 +87,7 @@ export function pageConfirmEmailChange(route) {
                         { className: "fields" },
                         t.div(
                             { className: "field" },
-                            t.label({ htmlFor: "password_confirm" }, "Password"),
+                            t.label({ htmlFor: "password_confirm" }, __("Password")),
                             t.input({
                                 id: "password_confirm",
                                 name: "password",
@@ -102,7 +106,7 @@ export function pageConfirmEmailChange(route) {
                                     tabIndex: -1,
                                     className: "btn sm transparent secondary circle tooltip-right",
                                     ariaLabel: app.attrs.tooltip(() =>
-                                        data.showPassword ? "Hide password" : "Show password"
+                                        data.showPassword ? __("Hide password") : __("Show password")
                                     ),
                                     onclick: () => (data.showPassword = !data.showPassword),
                                 },
@@ -121,7 +125,7 @@ export function pageConfirmEmailChange(route) {
                             className: () => `btn lg block ${data.isSubmitting ? "loading" : ""}`,
                             disabled: () => data.isSubmitting,
                         },
-                        t.span({ className: "txt" }, "Confirm new email"),
+                        t.span({ className: "txt" }, __("Confirm new email")),
                     ),
                 ),
             );

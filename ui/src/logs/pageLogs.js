@@ -1,8 +1,9 @@
+import { __ } from "@/i18n";
 import { logsChart } from "./logsChart";
 import { logsList } from "./logsList";
 
 export function pageLogs(route) {
-    app.store.title = "Logs";
+    app.store.title = __("Logs");
 
     const LOG_QUERY_KEY = "logId";
     const FILTER_QUERY_KEY = "filter";
@@ -103,13 +104,13 @@ export function pageLogs(route) {
                 { className: "page-content full-height" },
                 t.header(
                     { className: "page-header" },
-                    t.nav({ className: "breadcrumbs" }, t.div(null, "Logs")),
+                    t.nav({ className: "breadcrumbs" }, t.div(null, __("Logs"))),
                     t.div(
                         { className: "inline-flex gap-sm" },
                         t.button(
                             {
                                 className: "btn circle transparent secondary tooltip-right",
-                                ariaLabel: app.attrs.tooltip("Logs settings"),
+                                ariaLabel: app.attrs.tooltip(__("Logs settings")),
                                 onclick: () =>
                                     app.modals.openLogsSettings({
                                         onsave: () => refreshLogsList(),
@@ -125,7 +126,7 @@ export function pageLogs(route) {
                     app.components.searchbar({
                         className: "logs-searchbar",
                         historyKey: "pbLogsSearchHistory",
-                        placeholder: "Search term or filter like `level > 0`",
+                        placeholder: __("Search term or filter like `level > 0`"),
                         value: () => logsSettings.filter || "",
                         onsubmit: (val) => logsSettings.filter = val,
                         autocomplete: [
@@ -155,7 +156,7 @@ export function pageLogs(route) {
                             }),
                             t.label(
                                 { htmlFor: "logs_checkbox" },
-                                t.small({ className: "txt" }, "Include requests by superusers"),
+                                t.small({ className: "txt" }, __("Include requests by superusers")),
                             ),
                         ),
                     ),
@@ -165,7 +166,7 @@ export function pageLogs(route) {
                     { className: "page-footer" },
                     t.span(
                         { className: "txt total-logs" },
-                        "Total: ",
+                        __("Total: "),
                         () => {
                             if (logsSettings.totalFound == null) {
                                 return "...";

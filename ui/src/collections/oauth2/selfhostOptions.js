@@ -1,3 +1,4 @@
+import { __ } from "@/i18n";
 window.app = window.app || {};
 window.app.components = window.app.components || {};
 
@@ -7,7 +8,7 @@ window.app.components.oauth2EndpointFields = function(providerInfo, namePrefix, 
 
     const settings = store({
         required: true,
-        title: "Provider endpoints",
+        title: __("Provider endpoints"),
     });
 
     const watchers = app.utils.extendStore(settings, settingsArg);
@@ -35,7 +36,7 @@ window.app.components.oauth2EndpointFields = function(providerInfo, namePrefix, 
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".authURL" }, "Auth URL"),
+                    t.label({ htmlFor: uniqueId + ".authURL" }, __("Auth URL")),
                     t.input({
                         id: uniqueId + ".authURL",
                         name: namePrefix + ".authURL",
@@ -50,7 +51,7 @@ window.app.components.oauth2EndpointFields = function(providerInfo, namePrefix, 
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".tokenURL" }, "Token URL"),
+                    t.label({ htmlFor: uniqueId + ".tokenURL" }, __("Token URL")),
                     t.input({
                         id: uniqueId + ".tokenURL",
                         name: namePrefix + ".tokenURL",
@@ -65,7 +66,7 @@ window.app.components.oauth2EndpointFields = function(providerInfo, namePrefix, 
                 { className: "col-12" },
                 t.div(
                     { className: "field" },
-                    t.label({ htmlFor: uniqueId + ".userInfoURL" }, "User info URL"),
+                    t.label({ htmlFor: uniqueId + ".userInfoURL" }, __("User info URL")),
                     t.input({
                         id: uniqueId + ".userInfoURL",
                         name: namePrefix + ".userInfoURL",
@@ -89,7 +90,7 @@ window.app.oauth2.gitlab = function(providerInfo, namePrefix, data) {
         data,
         {
             required: false,
-            title: "Self-hosted endpoints (optional)",
+            title: __("Self-hosted endpoints (optional)"),
         },
     );
 };
@@ -101,7 +102,7 @@ window.app.oauth2.gitea = function(providerInfo, namePrefix, data) {
         data,
         {
             required: false,
-            title: "Self-hosted endpoints (optional)",
+            title: __("Self-hosted endpoints (optional)"),
         },
     );
 };

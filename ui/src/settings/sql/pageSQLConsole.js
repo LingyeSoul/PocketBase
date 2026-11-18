@@ -1,9 +1,11 @@
+import { __t } from "@/i18n";
+import { __ } from "@/i18n";
 import { settingsSidebar } from "../settingsSidebar";
 
 const SQL_HISTORY_STORAGE_KEY = "pbSQLConsoleHistory";
 
 export function pageSQLConsole(route) {
-    app.store.title = "SQL console";
+    app.store.title = __("SQL console");
 
     const uniqueId = "sql_console_" + app.utils.randomString();
     const editorId = uniqueId + "editor";
@@ -99,12 +101,12 @@ export function pageSQLConsole(route) {
                 { className: "txt-center" },
                 t.h6(
                     null,
-                    "Be careful and continue only if you really know what you are doing because, depending on the query, the operation could break your application and may not be reversible.",
+                    __("Be careful and continue only if you really know what you are doing because, depending on the query, the operation could break your application and may not be reversible."),
                 ),
             ),
             () => executeSQL(),
             null,
-            { yesButton: "Execute", noButton: "Cancel" },
+            { yesButton: __("Execute"), noButton: __("Cancel") },
         );
     }
 
@@ -133,7 +135,7 @@ export function pageSQLConsole(route) {
         } catch (err) {
             if (!err?.isAbort) {
                 pageData.isExecuting = false;
-                pageData.errorMsg = err?.response?.message || err?.message || "Failed to execute query.";
+                pageData.errorMsg = err?.response?.message || err?.message || __("Failed to execute query.");
             }
         }
     }
@@ -216,7 +218,7 @@ export function pageSQLConsole(route) {
                 { className: "page-header" },
                 t.nav(
                     { className: "breadcrumbs" },
-                    t.div({ className: "breadcrumb-item" }, "Settings"),
+                    t.div({ className: "breadcrumb-item" }, __("Settings")),
                     t.div({ className: "breadcrumb-item" }, () => app.store.title),
                 ),
                 t.div(
@@ -225,7 +227,7 @@ export function pageSQLConsole(route) {
                         {
                             type: "button",
                             className: "btn circle transparent secondary",
-                            ariaDescription: app.attrs.tooltip("Recently executed queries", "right"),
+                            ariaDescription: app.attrs.tooltip(__("Recently executed queries"), "right"),
                             "html-popovertarget": "sql-console-history-dropdown",
                         },
                         t.i({ className: "ri-history-line", ariaHidden: true }),
@@ -241,7 +243,7 @@ export function pageSQLConsole(route) {
                         },
                         () => {
                             if (!pageData.executedHistory.length) {
-                                return t.span({ className: "txt txt-hint p-5" }, "No recently executed queries.");
+                                return t.span({ className: "txt txt-hint p-5" }, __("No recently executed queries."));
                             }
 
                             return pageData.executedHistory.map((item) => {
@@ -264,7 +266,7 @@ export function pageSQLConsole(route) {
                                         {
                                             role: "button",
                                             className: "remove-btn link-hint m-l-auto p-l-5 p-r-5",
-                                            title: "Clear",
+                                            title: __("Clear"),
                                             onauxclick: (e) => {
                                                 e.stopPropagation();
                                                 return false;
@@ -292,7 +294,7 @@ export function pageSQLConsole(route) {
                             onclick: () => executeSQLWithConfirm(),
                         },
                         t.i({ className: "ri-play-large-line", ariaHidden: true }),
-                        t.span({ className: "txt" }, "Execute"),
+                        t.span({ className: "txt" }, __("Execute")),
                     ),
                 ),
             ),
@@ -303,7 +305,7 @@ export function pageSQLConsole(route) {
                     language: "sql",
                     required: true,
                     name: "query",
-                    placeholder: "e.g. EXPLAIN QUERY PLAN SELECT * from users WHERE verified=true",
+                    placeholder: __("e.g. EXPLAIN QUERY PLAN SELECT * from users WHERE verified=true"),
                     value: () => pageData.query,
                     oninput: (val) => pageData.query = val,
                     onblur: (val) => pageData.query = val.trim(),
@@ -317,7 +319,7 @@ export function pageSQLConsole(route) {
                         className: "link-hint m-l-auto",
                         "html-popovertarget": uniqueId + "caveats_dropdown",
                     },
-                    () => "SQL console caveats",
+                    () => __("SQL console caveats"),
                 ),
                 t.div(
                     {
@@ -327,10 +329,10 @@ export function pageSQLConsole(route) {
                     },
                     t.ul(
                         null,
-                        t.li(null, "The returned rows are limited up to 1000."),
-                        t.li(null, "The executed queries have a max timeout of 3 minutes."),
-                        t.li(null, "The data is returned as byte strings without any additional formatting."),
-                        t.li(null, "Multiple queries are supported but only the result of the last one is returned."),
+                        t.li(null, __("The returned rows are limited up to 1000.")),
+                        t.li(null, __("The executed queries have a max timeout of 3 minutes.")),
+                        t.li(null, __("The data is returned as byte strings without any additional formatting.")),
+                        t.li(null, __("Multiple queries are supported but only the result of the last one is returned.")),
                     ),
                 ),
             ),
@@ -350,12 +352,12 @@ export function pageSQLConsole(route) {
                         || app.utils.isEmpty(pageData.result),
                     className: "alert success m-b-sm",
                 },
-                t.p({ className: "txt-bold" }, "Query executed successfully!"),
+                t.p({ className: "txt-bold" }, __("Query executed successfully!")),
                 () => {
                     // show the affected rows only when a non empty value is returned
                     // to avoid ambiguity with drivers that don't support it
                     if (pageData.result?.affectedRows) {
-                        return t.p(null, "Affected rows: ", pageData.result?.affectedRows);
+                        return t.p(null, __("Affected rows: "), pageData.result?.affectedRows);
                     }
                 },
             ),
@@ -395,7 +397,7 @@ export function pageSQLConsole(route) {
                                     null,
                                     t.td(
                                         { colSpan: pageData.result?.columns?.length || 1, className: "txt-center" },
-                                        t.span({ className: "txt-hint" }, "No rows found."),
+                                        t.span({ className: "txt-hint" }, __("No rows found.")),
                                     ),
                                 );
                             }
@@ -436,7 +438,7 @@ export function pageSQLConsole(route) {
                                     },
                                     t.span({
                                         className: "txt",
-                                        textContent: () => `Load remaining (${pageData.totalRemainingRows})`,
+                                        textContent: () => __t`Load remaining (${pageData.totalRemainingRows})`,
                                     }),
                                 ),
                             ),
@@ -450,7 +452,7 @@ export function pageSQLConsole(route) {
                     {
                         className: () => `exec-time ${pageData.isExecuting ? "faded" : ""}`,
                     },
-                    "Time: ",
+                    __("Time: "),
                     () => (pageData.result?.execTime || 0) + "ms",
                 ),
                 t.span(
@@ -458,7 +460,7 @@ export function pageSQLConsole(route) {
                         hidden: () => !pageData.result?.columns?.length,
                         className: () => `total-count ${pageData.isExecuting ? "faded" : ""}`,
                     },
-                    "Rows: ",
+                    __("Rows: "),
                     () => pageData.result?.rows?.length || 0,
                     () => {
                         if (!pageData.result?.rows?.length) {
@@ -470,7 +472,7 @@ export function pageSQLConsole(route) {
                             t.span({
                                 role: "button",
                                 className: "link-hint",
-                                textContent: "Export as CSV",
+                                textContent: __("Export as CSV"),
                                 onclick: downloadCSV,
                             }),
                             ")",
